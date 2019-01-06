@@ -44,6 +44,8 @@ import TezosGetPublicKey from './TezosGetPublicKey';
 import TezosSignTransaction from './TezosSignTransaction';
 import VerifyMessage from './VerifyMessage';
 import WipeDevice from './WipeDevice';
+import TronGetAddress from "./TronGetAddress";
+import TronSignTransaction from "./TronSignTransaction";
 
 const classes: {[k: string]: any} = {
     'blockchainDisconnect': BlockchainDisconnect,
@@ -83,6 +85,8 @@ const classes: {[k: string]: any} = {
     'tezosGetAddress': TezosGetAddress,
     'tezosGetPublicKey': TezosGetPublicKey,
     'tezosSignTransaction': TezosSignTransaction,
+    'tronGetAddress': TronGetAddress,
+    'tronSignTransaction': TronSignTransaction,
     'verifyMessage': VerifyMessage,
     'wipeDevice': WipeDevice,
 };

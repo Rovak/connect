@@ -342,6 +342,33 @@ export default class DeviceCommands {
     }
     // Tezos: end
 
+    // TRON: begin
+    async tronGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise {
+        const response: MessageResponse<trezor.EthereumAddress> = await this.typedCall('TronGetAddress', 'TronAddress', {
+            address_n: address_n,
+            show_display: !!showOnTrezor,
+        });
+        return {
+            path: address_n,
+            address: response.message.address,
+        };
+    }
+
+    async tronSignTransaction(address_n: Array<number>, transaction): Promise {
+
+        const response = await this.typedCall('TronSignTx', 'TronSignedTx', {
+            transaction: transaction.transaction,
+            address_n: address_n,
+        });
+
+        return {
+            path: address_n,
+            signature: response.message.signature,
+        };
+    }
+
+    // TRON: end
+
     async cipherKeyValue(
         address_n: Array<number>,
         key: string,
