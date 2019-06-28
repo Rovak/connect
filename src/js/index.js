@@ -494,6 +494,14 @@ class TrezorConnect {
         return await call({ method: 'tezosSignTransaction', ...params });
     }
 
+    static tronGetAddress: $T.TezosGetPublicKey = async (params) => {
+        return await call({ method: 'tronGetAddress', ...params });
+    }
+
+    static tronSignTransaction: $T.TezosSignTransaction = async (params) => {
+        return await call({ method: 'tronSignTransaction', ...params });
+    }
+
     static verifyMessage: $T.VerifyMessage = async (params) => {
         return await call({ method: 'verifyMessage', ...params });
     }

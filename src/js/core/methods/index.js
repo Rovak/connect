@@ -50,6 +50,8 @@ import StellarSignTransaction from './StellarSignTransaction';
 import TezosGetAddress from './TezosGetAddress';
 import TezosGetPublicKey from './TezosGetPublicKey';
 import TezosSignTransaction from './TezosSignTransaction';
+import TronGetAddress from './TronGetAddress';
+import TronSignTransaction from './TronSignTransaction';
 import VerifyMessage from './VerifyMessage';
 import WipeDevice from './WipeDevice';
 import ApplyFlags from './ApplyFlags';
@@ -106,6 +108,8 @@ const classes: {[k: string]: any} = {
     'tezosGetAddress': TezosGetAddress,
     'tezosGetPublicKey': TezosGetPublicKey,
     'tezosSignTransaction': TezosSignTransaction,
+    'tronGetAddress': TronGetAddress,
+    'tronSignTransaction': TronSignTransaction,
     'verifyMessage': VerifyMessage,
     'wipeDevice': WipeDevice,
     'applyFlags': ApplyFlags,
