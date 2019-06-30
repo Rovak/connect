@@ -2,6 +2,408 @@
     "package": null,
     "messages": [
         {
+            "name": "BinanceGetAddress",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "show_display",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinanceAddress",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "address",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinanceGetPublicKey",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "show_display",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinancePublicKey",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "public_key",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinanceSignTx",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "msg_count",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "sint64",
+                    "name": "account_number",
+                    "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "chain_id",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "memo",
+                    "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "sint64",
+                    "name": "sequence",
+                    "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "sint64",
+                    "name": "source",
+                    "id": 7
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinanceTxRequest",
+            "fields": [],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinanceTransferMsg",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "BinanceInputOutput",
+                    "name": "inputs",
+                    "id": 1
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "BinanceInputOutput",
+                    "name": "outputs",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [
+                {
+                    "name": "BinanceInputOutput",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "string",
+                            "name": "address",
+                            "id": 1
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "BinanceCoin",
+                            "name": "coins",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "BinanceCoin",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "sint64",
+                            "name": "amount",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "string",
+                            "name": "denom",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                }
+            ],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinanceOrderMsg",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "id",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "BinanceOrderType",
+                    "name": "ordertype",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "sint64",
+                    "name": "price",
+                    "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "sint64",
+                    "name": "quantity",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "sender",
+                    "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "BinanceOrderSide",
+                    "name": "side",
+                    "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "symbol",
+                    "id": 7
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "BinanceTimeInForce",
+                    "name": "timeinforce",
+                    "id": 8
+                }
+            ],
+            "enums": [
+                {
+                    "name": "BinanceOrderType",
+                    "values": [
+                        {
+                            "name": "OT_UNKNOWN",
+                            "id": 0
+                        },
+                        {
+                            "name": "MARKET",
+                            "id": 1
+                        },
+                        {
+                            "name": "LIMIT",
+                            "id": 2
+                        },
+                        {
+                            "name": "OT_RESERVED",
+                            "id": 3
+                        }
+                    ],
+                    "options": {}
+                },
+                {
+                    "name": "BinanceOrderSide",
+                    "values": [
+                        {
+                            "name": "SIDE_UNKNOWN",
+                            "id": 0
+                        },
+                        {
+                            "name": "BUY",
+                            "id": 1
+                        },
+                        {
+                            "name": "SELL",
+                            "id": 2
+                        }
+                    ],
+                    "options": {}
+                },
+                {
+                    "name": "BinanceTimeInForce",
+                    "values": [
+                        {
+                            "name": "TIF_UNKNOWN",
+                            "id": 0
+                        },
+                        {
+                            "name": "GTE",
+                            "id": 1
+                        },
+                        {
+                            "name": "TIF_RESERVED",
+                            "id": 2
+                        },
+                        {
+                            "name": "IOC",
+                            "id": 3
+                        }
+                    ],
+                    "options": {}
+                }
+            ],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinanceCancelMsg",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "refid",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "sender",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "symbol",
+                    "id": 3
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinanceSignedTx",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "signature",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "public_key",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "json",
+                    "id": 3
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
             "name": "MultisigRedeemScriptType",
             "fields": [
                 {
@@ -24,6 +426,20 @@
                     "type": "uint32",
                     "name": "m",
                     "id": 3
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "HDNodeType",
+                    "name": "nodes",
+                    "id": 4
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 5
                 }
             ],
             "enums": [],
@@ -107,7 +523,7 @@
             "name": "PublicKey",
             "fields": [
                 {
-                    "rule": "required",
+                    "rule": "optional",
                     "options": {},
                     "type": "HDNodeType",
                     "name": "node",
@@ -364,6 +780,13 @@
                     "type": "uint32",
                     "name": "timestamp",
                     "id": 9
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "branch_id",
+                    "id": 10
                 }
             ],
             "enums": [],
@@ -602,6 +1025,13 @@
                             "type": "uint32",
                             "name": "timestamp",
                             "id": 13
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "branch_id",
+                            "id": 14
                         }
                     ],
                     "enums": [],
@@ -1035,8 +1465,8 @@
                     "rule": "optional",
                     "options": {},
                     "type": "uint32",
-                    "name": "network",
-                    "id": 4
+                    "name": "protocol_magic",
+                    "id": 5
                 }
             ],
             "enums": [],
@@ -1946,8 +2376,8 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "string",
-                    "name": "mnemonic",
+                    "type": "bytes",
+                    "name": "mnemonic_secret",
                     "id": 4
                 },
                 {
@@ -1998,6 +2428,13 @@
                     "type": "uint32",
                     "name": "reset_word_pos",
                     "id": 11
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "mnemonic_type",
+                    "id": 12
                 }
             ],
             "enums": [],
@@ -2129,6 +2566,964 @@
             "oneofs": {}
         },
         {
+            "name": "EosGetPublicKey",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "show_display",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EosPublicKey",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "wif_public_key",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "raw_public_key",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EosSignTx",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "chain_id",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosTxHeader",
+                    "name": "header",
+                    "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "num_actions",
+                    "id": 4
+                }
+            ],
+            "enums": [],
+            "messages": [
+                {
+                    "name": "EosTxHeader",
+                    "fields": [
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "expiration",
+                            "id": 1
+                        },
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "ref_block_num",
+                            "id": 2
+                        },
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "ref_block_prefix",
+                            "id": 3
+                        },
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "max_net_usage_words",
+                            "id": 4
+                        },
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "max_cpu_usage_ms",
+                            "id": 5
+                        },
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "delay_sec",
+                            "id": 6
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                }
+            ],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EosTxActionRequest",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "data_size",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EosTxActionAck",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionCommon",
+                    "name": "common",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionTransfer",
+                    "name": "transfer",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionDelegate",
+                    "name": "delegate",
+                    "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionUndelegate",
+                    "name": "undelegate",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionRefund",
+                    "name": "refund",
+                    "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionBuyRam",
+                    "name": "buy_ram",
+                    "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionBuyRamBytes",
+                    "name": "buy_ram_bytes",
+                    "id": 7
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionSellRam",
+                    "name": "sell_ram",
+                    "id": 8
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionVoteProducer",
+                    "name": "vote_producer",
+                    "id": 9
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionUpdateAuth",
+                    "name": "update_auth",
+                    "id": 10
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionDeleteAuth",
+                    "name": "delete_auth",
+                    "id": 11
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionLinkAuth",
+                    "name": "link_auth",
+                    "id": 12
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionUnlinkAuth",
+                    "name": "unlink_auth",
+                    "id": 13
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionNewAccount",
+                    "name": "new_account",
+                    "id": 14
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionUnknown",
+                    "name": "unknown",
+                    "id": 15
+                }
+            ],
+            "enums": [],
+            "messages": [
+                {
+                    "name": "EosAsset",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "sint64",
+                            "name": "amount",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "symbol",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosPermissionLevel",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "actor",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "permission",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosAuthorizationKey",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "type",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "key",
+                            "id": 2
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "address_n",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "weight",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosAuthorizationAccount",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosPermissionLevel",
+                            "name": "account",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "weight",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosAuthorizationWait",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "wait_sec",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "weight",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosAuthorization",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "threshold",
+                            "id": 1
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "EosAuthorizationKey",
+                            "name": "keys",
+                            "id": 2
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "EosAuthorizationAccount",
+                            "name": "accounts",
+                            "id": 3
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "EosAuthorizationWait",
+                            "name": "waits",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionCommon",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "account",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "name",
+                            "id": 2
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "EosPermissionLevel",
+                            "name": "authorization",
+                            "id": 3
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionTransfer",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "sender",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "receiver",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAsset",
+                            "name": "quantity",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "string",
+                            "name": "memo",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionDelegate",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "sender",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "receiver",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAsset",
+                            "name": "net_quantity",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAsset",
+                            "name": "cpu_quantity",
+                            "id": 4
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bool",
+                            "name": "transfer",
+                            "id": 5
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionUndelegate",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "sender",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "receiver",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAsset",
+                            "name": "net_quantity",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAsset",
+                            "name": "cpu_quantity",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionRefund",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "owner",
+                            "id": 1
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionBuyRam",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "payer",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "receiver",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAsset",
+                            "name": "quantity",
+                            "id": 3
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionBuyRamBytes",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "payer",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "receiver",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "bytes",
+                            "id": 3
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionSellRam",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "account",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "bytes",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionVoteProducer",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "voter",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "proxy",
+                            "id": 2
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "producers",
+                            "id": 3
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionUpdateAuth",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "account",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "permission",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "parent",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAuthorization",
+                            "name": "auth",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionDeleteAuth",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "account",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "permission",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionLinkAuth",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "account",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "code",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "type",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "requirement",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionUnlinkAuth",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "account",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "code",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "type",
+                            "id": 3
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionNewAccount",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "creator",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "name",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAuthorization",
+                            "name": "owner",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAuthorization",
+                            "name": "active",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionUnknown",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "data_size",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "data_chunk",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                }
+            ],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EosSignedTx",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "signature",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EthereumGetPublicKey",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "show_display",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EthereumPublicKey",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "HDNodeType",
+                    "name": "node",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "xpub",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
             "name": "EthereumGetAddress",
             "fields": [
                 {
@@ -2155,11 +3550,20 @@
             "name": "EthereumAddress",
             "fields": [
                 {
-                    "rule": "required",
-                    "options": {},
+                    "rule": "optional",
+                    "options": {
+                        "deprecated": true
+                    },
                     "type": "bytes",
-                    "name": "address",
+                    "name": "old_address",
                     "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "address",
+                    "id": 2
                 }
             ],
             "enums": [],
@@ -2201,9 +3605,9 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "bytes",
+                    "type": "string",
                     "name": "to",
-                    "id": 5
+                    "id": 11
                 },
                 {
                     "rule": "optional",
@@ -2310,7 +3714,7 @@
                     "id": 1
                 },
                 {
-                    "rule": "required",
+                    "rule": "optional",
                     "options": {},
                     "type": "bytes",
                     "name": "message",
@@ -2329,15 +3733,15 @@
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
-                    "name": "address",
-                    "id": 1
+                    "name": "signature",
+                    "id": 2
                 },
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "bytes",
-                    "name": "signature",
-                    "id": 2
+                    "type": "string",
+                    "name": "address",
+                    "id": 3
                 }
             ],
             "enums": [],
@@ -2352,13 +3756,6 @@
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
-                    "name": "address",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
                     "name": "signature",
                     "id": 2
                 },
@@ -2368,6 +3765,13 @@
                     "type": "bytes",
                     "name": "message",
                     "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "address",
+                    "id": 4
                 }
             ],
             "enums": [],
@@ -3071,6 +4475,13 @@
                     "type": "uint32",
                     "name": "auto_lock_delay_ms",
                     "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "display_rotation",
+                    "id": 7
                 }
             ],
             "enums": [
@@ -3350,6 +4761,13 @@
                     "type": "bool",
                     "name": "no_backup",
                     "id": 9
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "slip39",
+                    "id": 10
                 }
             ],
             "enums": [],
@@ -3627,7 +5045,7 @@
                         {
                             "rule": "optional",
                             "options": {},
-                            "type": "MoneroRctKey",
+                            "type": "MoneroRctKeyPublic",
                             "name": "key",
                             "id": 2
                         }
@@ -3635,7 +5053,7 @@
                     "enums": [],
                     "messages": [
                         {
-                            "name": "MoneroRctKey",
+                            "name": "MoneroRctKeyPublic",
                             "fields": [
                                 {
                                     "rule": "optional",
@@ -3648,7 +5066,7 @@
                                     "rule": "optional",
                                     "options": {},
                                     "type": "bytes",
-                                    "name": "mask",
+                                    "name": "commitment",
                                     "id": 2
                                 }
                             ],
@@ -3725,6 +5143,20 @@
                     "type": "bool",
                     "name": "is_subaddress",
                     "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "original",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "is_integrated",
+                    "id": 5
                 }
             ],
             "enums": [],
@@ -3763,85 +5195,50 @@
                     "rule": "optional",
                     "options": {},
                     "type": "uint32",
-                    "name": "version",
+                    "name": "rsig_type",
                     "id": 1
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "uint32",
-                    "name": "rsig_type",
-                    "id": 2
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
                     "name": "offload_type",
-                    "id": 3
+                    "id": 2
                 },
                 {
                     "rule": "repeated",
                     "options": {},
                     "type": "uint64",
                     "name": "grouping",
-                    "id": 4
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "step",
-                    "id": 5
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint64",
-                    "name": "operation",
-                    "id": 6
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "seed",
-                    "id": 7
+                    "id": 3
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
                     "name": "mask",
-                    "id": 8
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "amount",
-                    "id": 9
+                    "id": 4
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
                     "name": "rsig",
-                    "id": 10
+                    "id": 5
                 },
                 {
                     "rule": "repeated",
                     "options": {},
                     "type": "bytes",
                     "name": "rsig_parts",
-                    "id": 11
+                    "id": 6
                 },
                 {
-                    "rule": "repeated",
+                    "rule": "optional",
                     "options": {},
-                    "type": "MoneroTransactionDestinationEntry",
-                    "name": "outputs",
-                    "id": 12
+                    "type": "uint32",
+                    "name": "bp_version",
+                    "id": 7
                 }
             ],
             "enums": [],
@@ -3886,6 +5283,13 @@
                     "type": "uint32",
                     "name": "minor",
                     "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "payment_id",
+                    "id": 6
                 }
             ],
             "enums": [],
@@ -4065,36 +5469,36 @@
                         {
                             "rule": "optional",
                             "options": {},
-                            "type": "bool",
-                            "name": "is_multisig",
-                            "id": 11
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bytes",
-                            "name": "exp_tx_prefix_hash",
-                            "id": 12
-                        },
-                        {
-                            "rule": "repeated",
-                            "options": {},
-                            "type": "bytes",
-                            "name": "use_tx_keys",
-                            "id": 13
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
                             "type": "MoneroTransactionRsigData",
                             "name": "rsig_data",
-                            "id": 14
+                            "id": 11
                         },
                         {
                             "rule": "repeated",
                             "options": {},
                             "type": "uint32",
                             "name": "integrated_indices",
+                            "id": 12
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "client_version",
+                            "id": 13
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "hard_fork",
+                            "id": 14
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "monero_version",
                             "id": 15
                         }
                     ],
@@ -4111,53 +5515,18 @@
             "name": "MoneroTransactionInitAck",
             "fields": [
                 {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "version",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "status",
-                    "id": 2
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "in_memory",
-                    "id": 3
-                },
-                {
                     "rule": "repeated",
                     "options": {},
                     "type": "bytes",
                     "name": "hmacs",
-                    "id": 4
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "many_inputs",
-                    "id": 5
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "many_outputs",
-                    "id": 6
+                    "id": 1
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "MoneroTransactionRsigData",
                     "name": "rsig_data",
-                    "id": 7
+                    "id": 2
                 }
             ],
             "enums": [],
@@ -4171,16 +5540,9 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "uint32",
-                    "name": "version",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
                     "type": "MoneroTransactionSourceEntry",
                     "name": "src_entr",
-                    "id": 2
+                    "id": 1
                 }
             ],
             "enums": [],
@@ -4223,14 +5585,14 @@
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
-                    "name": "alpha_enc",
+                    "name": "pseudo_out_alpha",
                     "id": 5
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
-                    "name": "spend_enc",
+                    "name": "spend_key",
                     "id": 6
                 }
             ],
@@ -4317,15 +5679,7 @@
         },
         {
             "name": "MoneroTransactionAllInputsSetRequest",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "MoneroTransactionRsigData",
-                    "name": "rsig_data",
-                    "id": 1
-                }
-            ],
+            "fields": [],
             "enums": [],
             "messages": [],
             "options": {},
@@ -4370,6 +5724,13 @@
                     "type": "MoneroTransactionRsigData",
                     "name": "rsig_data",
                     "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "is_offloaded_bp",
+                    "id": 4
                 }
             ],
             "enums": [],
@@ -4457,16 +5818,16 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "MoneroTransactionRsigData",
-                    "name": "rsig_data",
-                    "id": 3
+                    "type": "MoneroRingCtSig",
+                    "name": "rv",
+                    "id": 4
                 },
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "MoneroRingCtSig",
-                    "name": "rv",
-                    "id": 4
+                    "type": "bytes",
+                    "name": "full_message_hash",
+                    "id": 5
                 }
             ],
             "enums": [],
@@ -4502,30 +5863,6 @@
                     "oneofs": {}
                 }
             ],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "MoneroTransactionMlsagDoneRequest",
-            "fields": [],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "MoneroTransactionMlsagDoneAck",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "full_message_hash",
-                    "id": 1
-                }
-            ],
-            "enums": [],
-            "messages": [],
             "options": {},
             "oneofs": {}
         },
@@ -4571,14 +5908,14 @@
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
-                    "name": "alpha_enc",
+                    "name": "pseudo_out_alpha",
                     "id": 6
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
-                    "name": "spend_enc",
+                    "name": "spend_key",
                     "id": 7
                 }
             ],
@@ -4601,7 +5938,7 @@
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
-                    "name": "cout",
+                    "name": "pseudo_out",
                     "id": 2
                 }
             ],
@@ -4812,13 +6149,6 @@
                             "rule": "optional",
                             "options": {},
                             "type": "bytes",
-                            "name": "tag",
-                            "id": 2
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bytes",
                             "name": "blob",
                             "id": 3
                         }
@@ -4851,6 +6181,215 @@
                     "id": 1
                 }
             ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroGetTxKeyRequest",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "network_type",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "salt1",
+                    "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "salt2",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "tx_enc_keys",
+                    "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "tx_prefix_hash",
+                    "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "reason",
+                    "id": 7
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "view_public_key",
+                    "id": 8
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroGetTxKeyAck",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "salt",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "tx_keys",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "tx_derivations",
+                    "id": 3
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroLiveRefreshStartRequest",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "network_type",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroLiveRefreshStartAck",
+            "fields": [],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroLiveRefreshStepRequest",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "out_key",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "recv_deriv",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint64",
+                    "name": "real_out_idx",
+                    "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "sub_addr_major",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "sub_addr_minor",
+                    "id": 5
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroLiveRefreshStepAck",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "salt",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "key_image",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroLiveRefreshFinalRequest",
+            "fields": [],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroLiveRefreshFinalAck",
+            "fields": [],
             "enums": [],
             "messages": [],
             "options": {},
@@ -5629,548 +7168,6 @@
             "oneofs": {}
         },
         {
-            "name": "OntologyTransaction",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "version",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "type",
-                    "id": 2
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "nonce",
-                    "id": 3
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint64",
-                    "name": "gas_price",
-                    "id": 4
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint64",
-                    "name": "gas_limit",
-                    "id": 5
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "string",
-                    "name": "payer",
-                    "id": 6
-                },
-                {
-                    "rule": "repeated",
-                    "options": {},
-                    "type": "OntologyTxAttribute",
-                    "name": "tx_attributes",
-                    "id": 7
-                }
-            ],
-            "enums": [],
-            "messages": [
-                {
-                    "name": "OntologyTxAttribute",
-                    "fields": [
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "uint32",
-                            "name": "usage",
-                            "id": 1
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bytes",
-                            "name": "data",
-                            "id": 2
-                        }
-                    ],
-                    "enums": [],
-                    "messages": [],
-                    "options": {},
-                    "oneofs": {}
-                }
-            ],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "OntologyGetPublicKey",
-            "fields": [
-                {
-                    "rule": "repeated",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "address_n",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "show_display",
-                    "id": 2
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "OntologyPublicKey",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "public_key",
-                    "id": 1
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "OntologyGetAddress",
-            "fields": [
-                {
-                    "rule": "repeated",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "address_n",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "show_display",
-                    "id": 2
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "OntologyAddress",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "string",
-                    "name": "address",
-                    "id": 1
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "OntologySignTransfer",
-            "fields": [
-                {
-                    "rule": "repeated",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "address_n",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "OntologyTransaction",
-                    "name": "transaction",
-                    "id": 2
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "OntologyTransfer",
-                    "name": "transfer",
-                    "id": 3
-                }
-            ],
-            "enums": [],
-            "messages": [
-                {
-                    "name": "OntologyTransfer",
-                    "fields": [
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "OntologyAsset",
-                            "name": "asset",
-                            "id": 1
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "uint64",
-                            "name": "amount",
-                            "id": 2
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "string",
-                            "name": "from_address",
-                            "id": 3
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "string",
-                            "name": "to_address",
-                            "id": 4
-                        }
-                    ],
-                    "enums": [
-                        {
-                            "name": "OntologyAsset",
-                            "values": [
-                                {
-                                    "name": "ONT",
-                                    "id": 1
-                                },
-                                {
-                                    "name": "ONG",
-                                    "id": 2
-                                }
-                            ],
-                            "options": {}
-                        }
-                    ],
-                    "messages": [],
-                    "options": {},
-                    "oneofs": {}
-                }
-            ],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "OntologySignedTransfer",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "signature",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "payload",
-                    "id": 2
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "OntologySignWithdrawOng",
-            "fields": [
-                {
-                    "rule": "repeated",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "address_n",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "OntologyTransaction",
-                    "name": "transaction",
-                    "id": 2
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "OntologyWithdrawOng",
-                    "name": "withdraw_ong",
-                    "id": 3
-                }
-            ],
-            "enums": [],
-            "messages": [
-                {
-                    "name": "OntologyWithdrawOng",
-                    "fields": [
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "uint64",
-                            "name": "amount",
-                            "id": 1
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "string",
-                            "name": "from_address",
-                            "id": 2
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "string",
-                            "name": "to_address",
-                            "id": 3
-                        }
-                    ],
-                    "enums": [],
-                    "messages": [],
-                    "options": {},
-                    "oneofs": {}
-                }
-            ],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "OntologySignedWithdrawOng",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "signature",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "payload",
-                    "id": 2
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "OntologySignOntIdRegister",
-            "fields": [
-                {
-                    "rule": "repeated",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "address_n",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "OntologyTransaction",
-                    "name": "transaction",
-                    "id": 2
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "OntologyOntIdRegister",
-                    "name": "ont_id_register",
-                    "id": 3
-                }
-            ],
-            "enums": [],
-            "messages": [
-                {
-                    "name": "OntologyOntIdRegister",
-                    "fields": [
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "string",
-                            "name": "ont_id",
-                            "id": 1
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bytes",
-                            "name": "public_key",
-                            "id": 2
-                        }
-                    ],
-                    "enums": [],
-                    "messages": [],
-                    "options": {},
-                    "oneofs": {}
-                }
-            ],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "OntologySignedOntIdRegister",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "signature",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "payload",
-                    "id": 2
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "OntologySignOntIdAddAttributes",
-            "fields": [
-                {
-                    "rule": "repeated",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "address_n",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "OntologyTransaction",
-                    "name": "transaction",
-                    "id": 2
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "OntologyOntIdAddAttributes",
-                    "name": "ont_id_add_attributes",
-                    "id": 3
-                }
-            ],
-            "enums": [],
-            "messages": [
-                {
-                    "name": "OntologyOntIdAddAttributes",
-                    "fields": [
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "string",
-                            "name": "ont_id",
-                            "id": 1
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bytes",
-                            "name": "public_key",
-                            "id": 2
-                        },
-                        {
-                            "rule": "repeated",
-                            "options": {},
-                            "type": "OntologyOntIdAttribute",
-                            "name": "ont_id_attributes",
-                            "id": 3
-                        }
-                    ],
-                    "enums": [],
-                    "messages": [
-                        {
-                            "name": "OntologyOntIdAttribute",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "key",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "type",
-                                    "id": 2
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "value",
-                                    "id": 3
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        }
-                    ],
-                    "options": {},
-                    "oneofs": {}
-                }
-            ],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "OntologySignedOntIdAddAttributes",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "signature",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "payload",
-                    "id": 2
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
             "name": "RippleGetAddress",
             "fields": [
                 {
@@ -6273,6 +7270,13 @@
                             "type": "string",
                             "name": "destination",
                             "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "destination_tag",
+                            "id": 3
                         }
                     ],
                     "enums": [],
@@ -7099,6 +8103,20 @@
                     "type": "TezosDelegationOp",
                     "name": "delegation",
                     "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "TezosProposalOp",
+                    "name": "proposal",
+                    "id": 7
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "TezosBallotOp",
+                    "name": "ballot",
+                    "id": 8
                 }
             ],
             "enums": [],
@@ -7393,6 +8411,92 @@
                     "messages": [],
                     "options": {},
                     "oneofs": {}
+                },
+                {
+                    "name": "TezosProposalOp",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "source",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "period",
+                            "id": 2
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "proposals",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "TezosBallotOp",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "source",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "period",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "proposal",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "TezosBallotType",
+                            "name": "ballot",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [
+                        {
+                            "name": "TezosBallotType",
+                            "values": [
+                                {
+                                    "name": "Yay",
+                                    "id": 0
+                                },
+                                {
+                                    "name": "Nay",
+                                    "id": 1
+                                },
+                                {
+                                    "name": "Pass",
+                                    "id": 2
+                                }
+                            ],
+                            "options": {}
+                        }
+                    ],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
                 }
             ],
             "options": {},
@@ -7636,9 +8740,66 @@
                             "type": "TronProposalDeleteContract",
                             "name": "proposal_delete_contract",
                             "id": 18
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "TronSetAccountIdContract",
+                            "name": "set_account_id",
+                            "id": 19
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "TronTriggerSmartContract",
+                            "name": "trigger_smart_contract",
+                            "id": 31
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "TronExchangeCreateContract",
+                            "name": "exchange_create_contract",
+                            "id": 41
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "TronExchangeInjectContract",
+                            "name": "exchange_inject_contract",
+                            "id": 42
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "TronExchangeWithdrawContract",
+                            "name": "exchange_withdraw_contract",
+                            "id": 43
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "TronExchangeTransactionContract",
+                            "name": "exchange_transaction_contract",
+                            "id": 44
                         }
                     ],
-                    "enums": [],
+                    "enums": [
+                        {
+                            "name": "TronResourceCode",
+                            "values": [
+                                {
+                                    "name": "BANDWIDTH",
+                                    "id": 0
+                                },
+                                {
+                                    "name": "ENERGY",
+                                    "id": 1
+                                }
+                            ],
+                            "options": {}
+                        }
+                    ],
                     "messages": [
                         {
                             "name": "TronAccountUpdateContract",
@@ -7662,7 +8823,7 @@
                                 {
                                     "rule": "optional",
                                     "options": {},
-                                    "type": "bytes",
+                                    "type": "string",
                                     "name": "to_address",
                                     "id": 1
                                 },
@@ -7686,22 +8847,43 @@
                                     "rule": "optional",
                                     "options": {},
                                     "type": "string",
-                                    "name": "asset_name",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "bytes",
                                     "name": "to_address",
-                                    "id": 2
+                                    "id": 1
                                 },
                                 {
                                     "rule": "optional",
                                     "options": {},
                                     "type": "uint64",
                                     "name": "amount",
+                                    "id": 2
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "asset_id",
                                     "id": 3
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "asset_name",
+                                    "id": 4
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint32",
+                                    "name": "asset_decimals",
+                                    "id": 5
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "asset_signature",
+                                    "id": 6
                                 }
                             ],
                             "enums": [],
@@ -7728,7 +8910,7 @@
                                         {
                                             "rule": "optional",
                                             "options": {},
-                                            "type": "bytes",
+                                            "type": "string",
                                             "name": "vote_address",
                                             "id": 1
                                         },
@@ -7823,36 +9005,43 @@
                                     "rule": "optional",
                                     "options": {},
                                     "type": "uint32",
-                                    "name": "num",
+                                    "name": "precision",
                                     "id": 7
                                 },
                                 {
                                     "rule": "optional",
                                     "options": {},
-                                    "type": "uint64",
-                                    "name": "start_time",
+                                    "type": "uint32",
+                                    "name": "num",
                                     "id": 8
                                 },
                                 {
                                     "rule": "optional",
                                     "options": {},
                                     "type": "uint64",
-                                    "name": "end_time",
+                                    "name": "start_time",
                                     "id": 9
                                 },
                                 {
                                     "rule": "optional",
                                     "options": {},
-                                    "type": "string",
-                                    "name": "description",
+                                    "type": "uint64",
+                                    "name": "end_time",
                                     "id": 10
                                 },
                                 {
                                     "rule": "optional",
                                     "options": {},
                                     "type": "string",
-                                    "name": "url",
+                                    "name": "description",
                                     "id": 11
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "url",
+                                    "id": 12
                                 }
                             ],
                             "enums": [],
@@ -7890,23 +9079,44 @@
                                 {
                                     "rule": "optional",
                                     "options": {},
-                                    "type": "bytes",
+                                    "type": "string",
                                     "name": "to_address",
                                     "id": 1
                                 },
                                 {
                                     "rule": "optional",
                                     "options": {},
-                                    "type": "string",
-                                    "name": "asset_name",
+                                    "type": "uint64",
+                                    "name": "amount",
                                     "id": 2
                                 },
                                 {
                                     "rule": "optional",
                                     "options": {},
-                                    "type": "uint64",
-                                    "name": "amount",
+                                    "type": "string",
+                                    "name": "asset_id",
                                     "id": 3
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "asset_name",
+                                    "id": 4
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint32",
+                                    "name": "asset_decimals",
+                                    "id": 5
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "asset_signature",
+                                    "id": 6
                                 }
                             ],
                             "enums": [],
@@ -7930,6 +9140,20 @@
                                     "type": "uint64",
                                     "name": "frozen_duration",
                                     "id": 2
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "TronResourceCode",
+                                    "name": "resource",
+                                    "id": 3
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "receiver_address",
+                                    "id": 4
                                 }
                             ],
                             "enums": [],
@@ -7939,7 +9163,22 @@
                         },
                         {
                             "name": "TronUnfreezeBalanceContract",
-                            "fields": [],
+                            "fields": [
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "TronResourceCode",
+                                    "name": "resource",
+                                    "id": 1
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "receiver_address",
+                                    "id": 2
+                                }
+                            ],
                             "enums": [],
                             "messages": [],
                             "options": {},
@@ -7947,7 +9186,22 @@
                         },
                         {
                             "name": "TronUnfreezeAssetContract",
-                            "fields": [],
+                            "fields": [
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "TronResourceCode",
+                                    "name": "resource",
+                                    "id": 1
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "receiver_address",
+                                    "id": 2
+                                }
+                            ],
                             "enums": [],
                             "messages": [],
                             "options": {},
@@ -8056,6 +9310,410 @@
                                     "type": "uint64",
                                     "name": "proposal_id",
                                     "id": 1
+                                }
+                            ],
+                            "enums": [],
+                            "messages": [],
+                            "options": {},
+                            "oneofs": {}
+                        },
+                        {
+                            "name": "TronSetAccountIdContract",
+                            "fields": [
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "account_id",
+                                    "id": 1
+                                }
+                            ],
+                            "enums": [],
+                            "messages": [],
+                            "options": {},
+                            "oneofs": {}
+                        },
+                        {
+                            "name": "TronTriggerSmartContract",
+                            "fields": [
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "contract_address",
+                                    "id": 1
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint64",
+                                    "name": "call_value",
+                                    "id": 3
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "bytes",
+                                    "name": "data",
+                                    "id": 4
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint64",
+                                    "name": "call_token_value",
+                                    "id": 5
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "asset_id",
+                                    "id": 6
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "asset_name",
+                                    "id": 7
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint32",
+                                    "name": "asset_decimals",
+                                    "id": 8
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "asset_signature",
+                                    "id": 9
+                                }
+                            ],
+                            "enums": [],
+                            "messages": [],
+                            "options": {},
+                            "oneofs": {}
+                        },
+                        {
+                            "name": "TronExchangeCreateContract",
+                            "fields": [
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "first_asset_id",
+                                    "id": 1
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "first_asset_name",
+                                    "id": 2
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint32",
+                                    "name": "first_asset_decimals",
+                                    "id": 3
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "first_asset_signature",
+                                    "id": 4
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint64",
+                                    "name": "first_asset_balance",
+                                    "id": 5
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "second_asset_id",
+                                    "id": 6
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "second_asset_name",
+                                    "id": 7
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint32",
+                                    "name": "second_asset_decimals",
+                                    "id": 8
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "second_asset_signature",
+                                    "id": 9
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint64",
+                                    "name": "second_asset_balance",
+                                    "id": 10
+                                }
+                            ],
+                            "enums": [],
+                            "messages": [],
+                            "options": {},
+                            "oneofs": {}
+                        },
+                        {
+                            "name": "TronExchangeInjectContract",
+                            "fields": [
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint64",
+                                    "name": "exchange_id",
+                                    "id": 1
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "token_id",
+                                    "id": 2
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint64",
+                                    "name": "quant",
+                                    "id": 3
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "first_asset_id",
+                                    "id": 4
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "first_asset_name",
+                                    "id": 5
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint32",
+                                    "name": "first_asset_decimals",
+                                    "id": 6
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "second_asset_id",
+                                    "id": 7
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "second_asset_name",
+                                    "id": 8
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint32",
+                                    "name": "second_asset_decimals",
+                                    "id": 9
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "exachange_signature",
+                                    "id": 10
+                                }
+                            ],
+                            "enums": [],
+                            "messages": [],
+                            "options": {},
+                            "oneofs": {}
+                        },
+                        {
+                            "name": "TronExchangeWithdrawContract",
+                            "fields": [
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint64",
+                                    "name": "exchange_id",
+                                    "id": 1
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "token_id",
+                                    "id": 2
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint64",
+                                    "name": "quant",
+                                    "id": 3
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "first_asset_id",
+                                    "id": 4
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "first_asset_name",
+                                    "id": 5
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint32",
+                                    "name": "first_asset_decimals",
+                                    "id": 6
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "second_asset_id",
+                                    "id": 7
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "second_asset_name",
+                                    "id": 8
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint32",
+                                    "name": "second_asset_decimals",
+                                    "id": 9
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "exachange_signature",
+                                    "id": 10
+                                }
+                            ],
+                            "enums": [],
+                            "messages": [],
+                            "options": {},
+                            "oneofs": {}
+                        },
+                        {
+                            "name": "TronExchangeTransactionContract",
+                            "fields": [
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint64",
+                                    "name": "exchange_id",
+                                    "id": 1
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "token_id",
+                                    "id": 2
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint64",
+                                    "name": "quant",
+                                    "id": 3
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint64",
+                                    "name": "expected",
+                                    "id": 4
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "first_asset_id",
+                                    "id": 5
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "first_asset_name",
+                                    "id": 6
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint32",
+                                    "name": "first_asset_decimals",
+                                    "id": 7
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "second_asset_id",
+                                    "id": 8
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "second_asset_name",
+                                    "id": 9
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "uint32",
+                                    "name": "second_asset_decimals",
+                                    "id": 10
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "exachange_signature",
+                                    "id": 11
                                 }
                             ],
                             "enums": [],
@@ -8436,6 +10094,14 @@
                     "id": 113
                 },
                 {
+                    "name": "MessageType_EthereumGetPublicKey",
+                    "id": 450
+                },
+                {
+                    "name": "MessageType_EthereumPublicKey",
+                    "id": 451
+                },
+                {
                     "name": "MessageType_EthereumGetAddress",
                     "id": 56
                 },
@@ -8616,22 +10282,6 @@
                     "id": 230
                 },
                 {
-                    "name": "MessageType_TronGetAddress",
-                    "id": 250
-                },
-                {
-                    "name": "MessageType_TronAddress",
-                    "id": 251
-                },
-                {
-                    "name": "MessageType_TronSignTx",
-                    "id": 252
-                },
-                {
-                    "name": "MessageType_TronSignedTx",
-                    "id": 253
-                },
-                {
                     "name": "MessageType_CardanoSignTx",
                     "id": 303
                 },
@@ -8662,54 +10312,6 @@
                 {
                     "name": "MessageType_CardanoSignedTx",
                     "id": 310
-                },
-                {
-                    "name": "MessageType_OntologyGetAddress",
-                    "id": 350
-                },
-                {
-                    "name": "MessageType_OntologyAddress",
-                    "id": 351
-                },
-                {
-                    "name": "MessageType_OntologyGetPublicKey",
-                    "id": 352
-                },
-                {
-                    "name": "MessageType_OntologyPublicKey",
-                    "id": 353
-                },
-                {
-                    "name": "MessageType_OntologySignTransfer",
-                    "id": 354
-                },
-                {
-                    "name": "MessageType_OntologySignedTransfer",
-                    "id": 355
-                },
-                {
-                    "name": "MessageType_OntologySignWithdrawOng",
-                    "id": 356
-                },
-                {
-                    "name": "MessageType_OntologySignedWithdrawOng",
-                    "id": 357
-                },
-                {
-                    "name": "MessageType_OntologySignOntIdRegister",
-                    "id": 358
-                },
-                {
-                    "name": "MessageType_OntologySignedOntIdRegister",
-                    "id": 359
-                },
-                {
-                    "name": "MessageType_OntologySignOntIdAddAttributes",
-                    "id": 360
-                },
-                {
-                    "name": "MessageType_OntologySignedOntIdAddAttributes",
-                    "id": 361
                 },
                 {
                     "name": "MessageType_RippleGetAddress",
@@ -8784,28 +10386,20 @@
                     "id": 514
                 },
                 {
-                    "name": "MessageType_MoneroTransactionMlsagDoneRequest",
+                    "name": "MessageType_MoneroTransactionSignInputRequest",
                     "id": 515
                 },
                 {
-                    "name": "MessageType_MoneroTransactionMlsagDoneAck",
+                    "name": "MessageType_MoneroTransactionSignInputAck",
                     "id": 516
                 },
                 {
-                    "name": "MessageType_MoneroTransactionSignInputRequest",
+                    "name": "MessageType_MoneroTransactionFinalRequest",
                     "id": 517
                 },
                 {
-                    "name": "MessageType_MoneroTransactionSignInputAck",
-                    "id": 518
-                },
-                {
-                    "name": "MessageType_MoneroTransactionFinalRequest",
-                    "id": 519
-                },
-                {
                     "name": "MessageType_MoneroTransactionFinalAck",
-                    "id": 520
+                    "id": 518
                 },
                 {
                     "name": "MessageType_MoneroKeyImageExportInitRequest",
@@ -8854,6 +10448,118 @@
                 {
                     "name": "MessageType_DebugMoneroDiagAck",
                     "id": 547
+                },
+                {
+                    "name": "MessageType_MoneroGetTxKeyRequest",
+                    "id": 550
+                },
+                {
+                    "name": "MessageType_MoneroGetTxKeyAck",
+                    "id": 551
+                },
+                {
+                    "name": "MessageType_MoneroLiveRefreshStartRequest",
+                    "id": 552
+                },
+                {
+                    "name": "MessageType_MoneroLiveRefreshStartAck",
+                    "id": 553
+                },
+                {
+                    "name": "MessageType_MoneroLiveRefreshStepRequest",
+                    "id": 554
+                },
+                {
+                    "name": "MessageType_MoneroLiveRefreshStepAck",
+                    "id": 555
+                },
+                {
+                    "name": "MessageType_MoneroLiveRefreshFinalRequest",
+                    "id": 556
+                },
+                {
+                    "name": "MessageType_MoneroLiveRefreshFinalAck",
+                    "id": 557
+                },
+                {
+                    "name": "MessageType_EosGetPublicKey",
+                    "id": 600
+                },
+                {
+                    "name": "MessageType_EosPublicKey",
+                    "id": 601
+                },
+                {
+                    "name": "MessageType_EosSignTx",
+                    "id": 602
+                },
+                {
+                    "name": "MessageType_EosTxActionRequest",
+                    "id": 603
+                },
+                {
+                    "name": "MessageType_EosTxActionAck",
+                    "id": 604
+                },
+                {
+                    "name": "MessageType_EosSignedTx",
+                    "id": 605
+                },
+                {
+                    "name": "MessageType_BinanceGetAddress",
+                    "id": 700
+                },
+                {
+                    "name": "MessageType_BinanceAddress",
+                    "id": 701
+                },
+                {
+                    "name": "MessageType_BinanceGetPublicKey",
+                    "id": 702
+                },
+                {
+                    "name": "MessageType_BinancePublicKey",
+                    "id": 703
+                },
+                {
+                    "name": "MessageType_BinanceSignTx",
+                    "id": 704
+                },
+                {
+                    "name": "MessageType_BinanceTxRequest",
+                    "id": 705
+                },
+                {
+                    "name": "MessageType_BinanceTransferMsg",
+                    "id": 706
+                },
+                {
+                    "name": "MessageType_BinanceOrderMsg",
+                    "id": 707
+                },
+                {
+                    "name": "MessageType_BinanceCancelMsg",
+                    "id": 708
+                },
+                {
+                    "name": "MessageType_BinanceSignedTx",
+                    "id": 709
+                },
+                {
+                    "name": "MessageType_TronGetAddress",
+                    "id": 800
+                },
+                {
+                    "name": "MessageType_TronAddress",
+                    "id": 801
+                },
+                {
+                    "name": "MessageType_TronSignTx",
+                    "id": 802
+                },
+                {
+                    "name": "MessageType_TronSignedTx",
+                    "id": 803
                 }
             ],
             "options": {}
