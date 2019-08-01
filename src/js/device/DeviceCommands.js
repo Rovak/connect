@@ -433,7 +433,7 @@ export default class DeviceCommands {
 
     // TRON: begin
     async tronGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise {
-        const response: MessageResponse<trezor.EthereumAddress> = await this.typedCall('TronGetAddress', 'TronAddress', {
+        const response: MessageResponse<trezor.TronAddress> = await this.typedCall('TronGetAddress', 'TronAddress', {
             address_n: address_n,
             show_display: !!showOnTrezor,
         });
@@ -443,16 +443,21 @@ export default class DeviceCommands {
         };
     }
 
-    async tronSignTransaction(address_n: Array<number>, transaction): Promise {
+    async tronSignTransaction(address_n: Array<number>, transaction: trezor.TronTransaction): Promise {
 
-        const response = await this.typedCall('TronSignTx', 'TronSignedTx', {
-            transaction: transaction.transaction,
+        const { message } = await this.typedCall('TronSignTx', 'TronSignedTx', {
+            ref_block_bytes: transaction.ref_block_bytes,
+            ref_block_hash: transaction.ref_block_hash,
+            expiration: transaction.expiration,
+            contract: transaction.contract,
+            timestamp: transaction.timestamp,
             address_n: address_n,
         });
 
         return {
             path: address_n,
-            signature: response.message.signature,
+            serialized_tx: message.serialized_tx,
+            signature: message.signature,
         };
     }
 

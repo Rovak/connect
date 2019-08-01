@@ -677,6 +677,19 @@ export type RippleSignedTx = {
     serialized_tx: string,
 }
 
+export type TronAddress = {
+    address: string,
+};
+
+export type TronTransaction = {
+    address_n: Array<number>,
+    ref_block_bytes: string,
+    ref_block_hash: string,
+    expiration: number,
+    timestamp: number,
+    contract: any,
+};
+
 // GetAddress response
 export type Address = {
     address: string,
