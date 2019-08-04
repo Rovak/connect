@@ -444,7 +444,6 @@ export default class DeviceCommands {
     }
 
     async tronSignTransaction(address_n: Array<number>, transaction: trezor.TronTransaction): Promise {
-
         const { message } = await this.typedCall('TronSignTx', 'TronSignedTx', {
             ref_block_bytes: transaction.ref_block_bytes,
             ref_block_hash: transaction.ref_block_hash,
@@ -460,7 +459,6 @@ export default class DeviceCommands {
             signature: message.signature,
         };
     }
-
     // TRON: end
 
     async cipherKeyValue(

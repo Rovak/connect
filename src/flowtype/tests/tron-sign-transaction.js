@@ -9,11 +9,7 @@ declare module 'flowtype/tests/tron-sign-transaction' {
         transaction: TronTransaction,
     };
     declare export type ExpectedTronSignTransactionResponse = {
-        success?: boolean,
-        payload?: {
-            r: string,
-            s: string,
-            v?: number,
-        },
+        path: string,
+        serialized_tx: string,
     };
 }

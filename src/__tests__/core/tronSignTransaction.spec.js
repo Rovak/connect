@@ -10,474 +10,779 @@ import type {
     ExpectedTronSignTransactionResponse,
 } from 'flowtype/tests/tron-sign-transaction';
 
-const knownTrc20Token = (): SubtestTronSignTransaction => {
+const DEFAULT_PATH = "m/44'/195'/0'/0/0";
+
+const transferTrx = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/60'/0'",
+            path: DEFAULT_PATH,
             transaction: {
-                nonce: '0x0',
-                gasPrice: '0x14',
-                gasLimit: '0x14',
-                to: '0xd0d6d6c5fe4a677d343cc433536bb717bae167dd',
-                chainId: 1,
-                value: '0x0',
-                data: '0xa9059cbb000000000000000000000000574bbb36871ba6b78e27f4b4dcfb76ea0091880b000000000000000000000000000000000000000000000000000000000bebc200',
+                ref_block_bytes: 'C565',
+                ref_block_hash: '6CD623DBE83075D8',
+                expiration: 1528768890000,
+                timestamp: 1528768831987,
+                contract: {
+                    transfer_contract: {
+                        to_address: 'TLrpNTBuCpGMrB9TyVwgEhNVRhtWEQPHh4',
+                        amount: 1000000,
+                    },
+                },
             },
         },
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            payload: {
-                r: '0xaa0c28d61c7c9382a256ead609d5b713cfe17c3aa3a6facb6b60342883db448e',
-                s: '0x039d88ed4ce5416680117dbee92f86976b381241786f1ffaf058c8e80cb25c63',
-            },
+            path: DEFAULT_PATH,
+            serialized_tx: '037f02960276a50dc8327449105f59cbb3b2ca071240f7a678c4257f26df86287a58bfda988e83803ccbe8bc2d6cfeaca18f87b6c9e20ea1a77c570d5435493300',
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/knownTrc20Token',
+        specName: '/transferTrx',
     };
 };
 
-const unknownTrc20Token = (): SubtestTronSignTransaction => {
+const sendTrc10 = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/60'/0'",
+            path: DEFAULT_PATH,
             transaction: {
-                nonce: '0x0',
-                gasPrice: '0x14',
-                gasLimit: '0x14',
-                to: '0xfc6b5d6af8a13258f7cbd0d39e11b35e01a32f93',
-                chainId: 1,
-                value: '0x0',
-                data: '0xa9059cbb000000000000000000000000574bbb36871ba6b78e27f4b4dcfb76ea0091880b0000000000000000000000000000000000000000000000000000000000000123',
+                ref_block_bytes: 'E7C3',
+                ref_block_hash: '69E2ABB19969F1E7',
+                expiration: 1528997142000,
+                timestamp: 1528997083831,
+                contract: {
+                    transfer_asset_contract: {
+                        asset_id: '1002000',
+                        asset_name: 'BitTorrent',
+                        asset_decimals: 6,
+                        asset_signature: '304402202e2502f36b00e57be785fc79ec4043abcdd4fdd1b58d737ce123599dffad2cb602201702c307f009d014a553503b499591558b3634ceee4c054c61cedd8aca94c02b',
+                        to_address: 'TLrpNTBuCpGMrB9TyVwgEhNVRhtWEQPHh4',
+                        amount: 1,
+                    },
+                },
             },
         },
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            payload: {
-                r: '0xafd33dc30cf829e3fde2575f189b9f80a6e7cfe3bbad8554f1015b29c33fb13d',
-                s: '0x5a4efd7242bae4e460ae2e608470ee19237246f72601bf879d0444100d6ae9ab',
-            },
+            serialized_tx: 'c5deb6f053ca7f9dfd9a54677cdeaee6ea084983cea62f572e60db4bdd9fbcec13b9c262fe6302ce71b291c4976a533cbecf5194c4ef5cd0d46457c822c1bb8d01',
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/unknownTrc20Token',
+        specName: '/sendTrc10',
     };
 };
 
-const noData = (): SubtestTronSignTransaction => {
+const voteWitness = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/60'/0'",
+            path: DEFAULT_PATH,
             transaction: {
-                nonce: '0x0',
-                gasPrice: '0x14',
-                gasLimit: '0x14',
-                to: '0x1d1c328764a41bda0492b66baa30c4a339ff85ef',
-                value: '0xa',
-            },
-        },
-        {
-            method: 'tronSignTransaction',
-            path: "m/44'/60'/0'",
-            transaction: {
-                nonce: '0x1e240',
-                gasPrice: '0x4e20',
-                gasLimit: '0x4e20',
-                to: '0x1d1c328764a41bda0492b66baa30c4a339ff85ef',
-                value: '0xab54a98ceb1f0ad2',
+                ref_block_bytes: '906E',
+                ref_block_hash: '2597B4DAC069C352',
+                expiration: 1530986184000,
+                timestamp: 1530985887463,
+                contract: {
+                    vote_witness_contract: {
+                        votes: [
+                            {
+                                vote_address: 'TKSXDA8HfE9E1y39RczVQ1ZascUEtaSToF',
+                                vote_count: 1000000,
+                            },
+                            {
+                                vote_address: 'TTcYhypP8m4phDhN6oRexz2174zAerjEWP',
+                                vote_count: 100000,
+                            },
+                            {
+                                vote_address: 'TE7hnUtWRRBz3SkFrX8JESWUmEvxxAhoPt',
+                                vote_count: 100000,
+                            },
+                            {
+                                vote_address: 'TVMP5r12ymtNerq5KB4E8zAgLDmg2FqsEG',
+                                vote_count: 10000,
+                            },
+                            {
+                                vote_address: 'TRni6NxF8CQVcywcDm67sEpCYCo7BUGXCD',
+                                vote_count: 1000,
+                            },
+                        ],
+                    },
+                },
             },
         },
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            payload: {
-                r: '0xff2676c3d23f4ed59b41a284348b6e4cc56fa4b4c06ab2cd2cfa0fc85d3d5b72',
-                s: '0x180682139cb3ec01d8371bd42996c689e2f11a14c89b2c57494a6020bae09417',
-                v: '0x1b',
-            },
-        },
-        {
-            payload: {
-                r: '0x324f82ca8a681ea882f7abfcc396addd13b4a947d65d3cf972c2a44cfbc35c89',
-                s: '0x6fddb0aa918ab0ff5bd09368b4edec21e9a626c1acf8d839b821784db2b44fac',
-                v: '0x1c',
-            },
+            serialized_tx: 'a35e28f7e5d887a4e90dbee56ea630d1d0b4eab0f70edde80a233895edfbde2c4e35628d11157b8a8fabd711880aaca19468f41ac9751c93dc7ec17a305aa1d801',
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/noData',
+        specName: '/voteWitness',
     };
 };
 
-const data = (): SubtestTronSignTransaction => {
+const witnessCreate = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/60'/0'",
+            path: DEFAULT_PATH,
             transaction: {
-                nonce: '0x0',
-                gasPrice: '0x14',
-                gasLimit: '0x14',
-                to: '0x1d1c328764a41bda0492b66baa30c4a339ff85ef',
-                value: '0xa',
-                data: `0x${'6162636465666768696a6b6c6d6e6f70'.repeat(16)}`,
-            },
-
-        },
-        {
-            method: 'tronSignTransaction',
-            path: "m/44'/60'/0'",
-            transaction: {
-                nonce: '0x1e240',
-                gasPrice: '0x4e20',
-                gasLimit: '0x4e20',
-                to: '0x1d1c328764a41bda0492b66baa30c4a339ff85ef',
-                value: '0xab54a98ceb1f0ad2',
-                data: `0x${'4142434445464748494a4b4c4d4e4f50'.repeat(256)}212121`,
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    witness_create_contract: {
+                        url: 'http://cryptochain.network',
+                    },
+                },
             },
         },
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            payload: {
-                r: '0xc07ca9b87ebf87620396a16cd575ac68dbef0eb0b22481f8f62facfe40fc4c7a',
-                s: '0x3e2f26e2fb739cfeafee82f3f74ecd0b88dfba4d3cf850eb10f53569f424f3a0',
-                v: '0x1c',
-            },
-        },
-        {
-            payload: {
-                r: '0x2a27c485c02cdd4796eab5624cca2e5024b3567ff04ac144a0cb2a46c8bef98c',
-                s: '0x56e5ca6a6adb6ee90e4749f3b28f372ccc8b3ba9a51ec1e739ba1cba0cc7eba5',
-                v: '0x1c',
-            },
+            serialized_tx: '692859b8d668ae5146f04512ba97cf2e205b429bcf462a6fa48726be8894be81480e935a3f9d3684cf82e5378d425310066e1ea1b1d99eaebdfa58c32f0cdb8701',
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/data',
+        specName: '/witnessCreate',
     };
 };
 
-const message = (): SubtestTronSignTransaction => {
+const assetIssue = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/60'/0'",
+            path: DEFAULT_PATH,
             transaction: {
-                nonce: '0x0',
-                gasPrice: '0x4e20',
-                gasLimit: '0x4e20',
-                to: '0x1d1c328764a41bda0492b66baa30c4a339ff85ef',
-                value: '0x0',
-                data: `0x${'4142434445464748494a4b4c4d4e4f50'.repeat(256)}212121`,
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    asset_issue_contract: {
+                        name: 'CryptoChain',
+                        abbr: 'CCT',
+                        total_supply: 9999999999,
+                        frozen_supply: [
+                            { frozen_amount: 1000, frozen_days: 10 },
+                            { frozen_amount: 10000, frozen_days: 20 },
+                            { frozen_amount: 100000, frozen_days: 30 },
+                        ],
+                        trx_num: 1000,
+                        num: 1,
+                        precision: 0,
+                        start_time: 1514764800000,
+                        end_time: 1546300800000,
+                        description: 'CryptoChain Token Issue Test',
+                        url: 'http://cryptochain.network',
+                    },
+                },
             },
         },
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            payload: {
-                r: '0xce5c299678f8ba333c219a3f70f01f7281bf4716cf4c2d47518f689cf3344dc4',
-                s: '0x194495dedbcbfdc6bbccfd83f1b8b5a2802e5da1c86e61731ffbc59e5b1719b2',
-                v: '0x1c',
-            },
+            serialized_tx: '861a62e4d0ae920284a5d936220563b5536102b43044103011fc0b523592ef1c3a8a852075d3cce2525c048377b66005f04184d6ec7fe661c0634abc93ba414a00',
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/message',
+        specName: '/assetIssue',
     };
 };
 
-const newContract = (): SubtestTronSignTransaction => {
+const witnessUpdate = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/60'/0'",
+            path: DEFAULT_PATH,
             transaction: {
-                nonce: '0x1e240',
-                gasPrice: '0x4e20',
-                gasLimit: '0x4e20',
-                to: '',
-                value: '0xab54a98ceb1f0ad2',
-            },
-        },
-        {
-            method: 'tronSignTransaction',
-            path: "m/44'/60'/0'",
-            transaction: {
-                nonce: '0x0',
-                gasPrice: '0x4e20',
-                gasLimit: '0x4e20',
-                to: '',
-                value: '0xab54a98ceb1f0ad2',
-                data: `0x${'4142434445464748494a4b4c4d4e4f50'.repeat(256)}212121`,
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    witness_update_contract: {
+                        update_url: 'http://cryptochain.network',
+                    },
+                },
             },
         },
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            success: false,
-            payload: {
-                code: 'Failure_DataError',
-            },
-        },
-        {
-            payload: {
-                r: '0x05249f09ef32544c07aba09767f4dbe5248472b5c5250e77911a034e0978041a',
-                s: '0x0239c60830534b34db1c4c3d715253f2ed2786a322c6218c424188ccf0f0f464',
-                v: '0x1b',
-            },
+            serialized_tx: '6feca2a4558ded324f439c7cecf596f1378fbd6071569a99ea28f06c4cb1fb754720125f8721c0663e3768b7a888ee8c37fbbb9690e192b8908e225ba49a2aaa01',
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/newContract',
+        specName: '/witnessUpdate',
     };
 };
 
-const sanityChecks = (): SubtestTronSignTransaction => {
+const participateAsset = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             // Gas overflow
             method: 'tronSignTransaction',
-            path: "m/44'/60'/0'",
+            path: DEFAULT_PATH,
             transaction: {
-                nonce: '0x1e240',
-                gasPrice: '0xffffffffffffffffffffffffffffffff',
-                gasLimit: '0xffffffffffffffffffffffffffffffff',
-                to: '0x1d1c328764a41bda0492b66baa30c4a339ff85ef',
-                value: '0xab54a98ceb1f0ad2',
-            },
-        },
-        {
-            // No gas price
-            method: 'tronSignTransaction',
-            path: "m/44'/60'/0'",
-            transaction: {
-                nonce: '0x1e240',
-                gasLimit: '0x2710',
-                to: '0x1d1c328764a41bda0492b66baa30c4a339ff85ef',
-                value: '0xab54a98ceb1f0ad2',
-            },
-        },
-        {
-            // No gas limit
-            method: 'tronSignTransaction',
-            path: "m/44'/60'/0'",
-            transaction: {
-                nonce: '0x1e240',
-                gasPrice: '0x2710',
-                to: '0x1d1c328764a41bda0492b66baa30c4a339ff85ef',
-                value: '0xab54a98ceb1f0ad2',
-            },
-        },
-        {
-            // No nonce
-            method: 'tronSignTransaction',
-            path: "m/44'/60'/0'",
-            transaction: {
-                gasLimit: '0x2710',
-                to: '0x1d1c328764a41bda0492b66baa30c4a339ff85ef',
-                value: '0xab54a98ceb1f0ad2',
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    participate_asset_issue_contract: {
+                        to_address: 'THChUb7p2bwY6ReAiJXao6qc2ZGn88T46v',
+                        asset_id: '1000166',
+                        asset_name: 'CryptoChain',
+                        asset_decimals: 0,
+                        asset_signature: '30450221008417d04d1caeae31f591ae50f7d19e53e0dfb827bd51c18e66081941bf04639802203c73361a521c969e3fd7f62e62b46d61aad00e47d41e7da108546d954278a6b1',
+                        amount: 1,
+                    },
+                },
             },
         },
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            success: false,
-            payload: {
-                code: 'Failure_DataError',
-            },
+            serialized_tx: '0f752c52ee5daea6c740e0783398a03b1002a4a4e244ca0037981f18c0ad539b71b00bc1398297077373e303ddfe3fc48f7b8dc9afc4146bae5d7d448667d3c300',
         },
-        { success: false },
-        { success: false },
-        { success: false },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/sanityChecks',
+        specName: '/participateAsset',
     };
 };
 
-const noDataEip155 = (): SubtestTronSignTransaction => {
+const accountUpdate = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
             path: "m/44'/1'/0'/0/0",
             transaction: {
-                nonce: '0x0',
-                gasPrice: '0x4a817c800',
-                gasLimit: '0x5208',
-                to: '0x8ea7a3fccc211ed48b763b4164884ddbcf3b0a98',
-                value: '0x16345785d8a0000',
-                chainId: 3,
-            },
-        },
-        {
-            method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
-            transaction: {
-                nonce: '0x1',
-                gasPrice: '0x4a817c800',
-                gasLimit: '0x5208',
-                to: '0x8ea7a3fccc211ed48b763b4164884ddbcf3b0a98',
-                value: '0x16345785d8a0000',
-                chainId: 3,
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    account_update_contract: {
+                        account_name: 'CryptoChainTest',
+                    },
+                },
             },
         },
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            payload: {
-                r: '0x39aa7798b8debf2db32945d929d25bd9c514e7f7e6a1f1c72bcbf0600f9f2db3',
-                s: '0x66e3a42fde7e7eb1096bc1f90342914612019688d97fe6b0571f420b5ddcb64c',
-                v: '0x29',
-            },
-        },
-        {
-            payload: {
-                r: '0x0283d00760697f456534ad547cb1aa0542527929bbe13d82877be23505a5b012',
-                s: '0x2db7e0ea93dedf0226675b1b0498c1568c76e0c2d69dbfabb65bfa1412fb773b',
-                v: '0x29',
-            },
+            serialized_tx: 'c4c1381d3a3e23010f19f8055df6d78990fdac619ae8be030425e0de0726f4fb665618a2c663c891cb5f8b26d009d79d3650008bda429e274bf4eee3330c806a00',
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/noDataEip155',
+        specName: '/accountUpdate',
     };
 };
 
-const dataEip155 = (): SubtestTronSignTransaction => {
+const freezeBalanceBandwidth = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
             path: "m/44'/1'/0'/0/0",
             transaction: {
-                nonce: '0x2',
-                gasPrice: '0x4a817c800',
-                gasLimit: '0x520c',
-                to: '0x8ea7a3fccc211ed48b763b4164884ddbcf3b0a98',
-                value: '0x16345785d8a0000',
-                data: '0x0',
-                chainId: 3,
-            },
-        },
-        {
-            method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
-            transaction: {
-                nonce: '0x3',
-                gasPrice: '0x4a817c800',
-                gasLimit: '0x492d4',
-                to: '0x8ea7a3fccc211ed48b763b4164884ddbcf3b0a98',
-                value: '0x16345785d8a0000',
-                data: `0x${'4142434445464748494a4b4c4d4e4f50'.repeat(256)}212121`,
-                chainId: 3,
-            },
-        },
-        {
-            method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
-            transaction: {
-                nonce: '0x4',
-                gasPrice: '0x4a817c800',
-                gasLimit: '0x520c',
-                to: '0x8ea7a3fccc211ed48b763b4164884ddbcf3b0a98',
-                value: '0x0',
-                data: '0x0',
-                chainId: 3,
-            },
-        },
-        {
-            method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
-            transaction: {
-                nonce: '0x5',
-                gasPrice: '0x0',
-                gasLimit: '0x520c',
-                to: '0x8ea7a3fccc211ed48b763b4164884ddbcf3b0a98',
-                value: '0x0',
-                data: '0x0',
-                chainId: 3,
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    freeze_balance_contract: {
+                        frozen_balance: 10000000,
+                        frozen_duration: 3,
+                        resource: 0,
+                    },
+                },
             },
         },
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            payload: {
-                r: '0xdbae2f01331e274f24831afadaa86f1da08c9cf9e28b120acc17ec4a748c533a',
-                s: '0x2e2a390c4afd7617d654b9affdee21b9b593964f19ac618039007b2c6677563f',
-                v: '0x29',
-            },
-        },
-        {
-            payload: {
-                r: '0x8ceec1dc6f52a6ff4d17584ebbae00e9d6210a960fba29095f077d57e0dbc28d',
-                s: '0x3dd7d1b01c399d70a81fae0c0e5a306d1456b6f9a8d38514763d747af1e74c38',
-                v: '0x29',
-            },
-        },
-        {
-            payload: {
-                r: '0x0672d6eb1b238b225be64dcbe39f52a9fb376c3cc47ec3d3dd28c94fcaac98fe',
-                s: '0x677959c411ef54889448de94661dfddef91292da7dd9a5855b9ee71bcd2bba6f',
-                v: '0x29',
-            },
-        },
-        {
-            payload: {
-                r: '0x23e1a4e27fd9926621bd75ecd7519e324a18a6ca156cafd522a9445096217360',
-                s: '0x4cdc7f2d028449acd0c2b72aeaab20d571e0cf6439a2e4b3cb5f45ff7a92d2d9',
-                v: '0x2a',
-            },
+            serialized_tx: '6c10c4f0149135749507607f890dc529083fe41504b22052dd68d946b4caed704a116f2d6a767934ed43ae6d4c6ccf0002317e00dfdd5415ed8c72f8c6b5f74a01',
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/dataEip155',
+        specName: '/freezeBalanceBandwidth',
+    };
+};
+
+const freezeBalanceEnergy = (): SubtestTronSignTransaction => {
+    const testPayloads: Array<TestTronSignTransactionPayload> = [
+        {
+            method: 'tronSignTransaction',
+            path: "m/44'/1'/0'/0/0",
+            transaction: {
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    freeze_balance_contract: {
+                        frozen_balance: 10000000,
+                        frozen_duration: 3,
+                        resource: 1,
+                    },
+                },
+            },
+        },
+    ];
+    const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
+        {
+            serialized_tx: '14fe46619fed9d9acf863c464854bfedd257e4072e31116f9e144b846cb112725343e0aa13cd0b856b53f2265ef2c19d9610eafee0b6c120ba501d06a4e2c49901',
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/freezeBalanceBandwidth',
+    };
+};
+
+const freezeBandwidthRental = (): SubtestTronSignTransaction => {
+    const testPayloads: Array<TestTronSignTransactionPayload> = [
+        {
+            method: 'tronSignTransaction',
+            path: "m/44'/1'/0'/0/0",
+            transaction: {
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    freeze_balance_contract: {
+                        frozen_balance: 10000000,
+                        frozen_duration: 3,
+                        resource: 0,
+                        receiver_address: 'TLrpNTBuCpGMrB9TyVwgEhNVRhtWEQPHh4',
+                    },
+                },
+            },
+        },
+    ];
+    const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
+        {
+            serialized_tx: '9885b510e3aff53b9e85511acf6b6a803a79472d5cdd27774bdc8363877e99685a9b71c2eec44de392b77bf00f6fdbab8b0a58fbee6d2401c1b2ea798a87b9a901',
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/freezeBalanceBandwidth',
+    };
+};
+
+const freezeBalanceEnergyRental = (): SubtestTronSignTransaction => {
+    const testPayloads: Array<TestTronSignTransactionPayload> = [
+        {
+            method: 'tronSignTransaction',
+            path: "m/44'/1'/0'/0/0",
+            transaction: {
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    freeze_balance_contract: {
+                        frozen_balance: 10000000,
+                        frozen_duration: 3,
+                        resource: 1,
+                        receiver_address: 'TLrpNTBuCpGMrB9TyVwgEhNVRhtWEQPHh4',
+                    },
+                },
+            },
+        },
+    ];
+    const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
+        {
+            serialized_tx: '34b73c06cfb238c2ef8071e17bf1c8618cc2f14db9faef494cb9f4151631c9da33d06e2c66d78d1d3bcf4e955e8e82d7e343cc065c96d5e435d9251074433fe600',
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/freezeBalanceBandwidth',
+    };
+};
+
+const unfreezeBalanceBandwidth = (): SubtestTronSignTransaction => {
+    const testPayloads: Array<TestTronSignTransactionPayload> = [
+        {
+            method: 'tronSignTransaction',
+            path: "m/44'/1'/0'/0/0",
+            transaction: {
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    unfreeze_balance_contract: {
+                        resource: 0,
+                    },
+                },
+            },
+        },
+    ];
+    const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
+        {
+            serialized_tx: '64613fa2d2b2ea18f9d37a7b97cc6c76f56c59f05b1d28806617c7b89ecc16994b275145f43a5289d49ef227f74a5cc3ac039534048416c9b3e51d82029a60e301',
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/freezeBalanceBandwidth',
+    };
+};
+
+const unfreezeBalanceEnergy = (): SubtestTronSignTransaction => {
+    const testPayloads: Array<TestTronSignTransactionPayload> = [
+        {
+            method: 'tronSignTransaction',
+            path: "m/44'/1'/0'/0/0",
+            transaction: {
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    freeze_balance_contract: {
+                        frozen_balance: 10000000,
+                        frozen_duration: 3,
+                        resource: 0,
+                    },
+                },
+            },
+        },
+    ];
+    const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
+        {
+            serialized_tx: '7f3f7d2f03da17c8f950bb3a606248c0a37092522b0e9ca824f44d00c6278be96e78b87c202727b9d32599118cf3f132d82b75cfdd30a02075c9c1fe0096167101',
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/freezeBalanceBandwidth',
+    };
+};
+
+const unfreezeBalanceBandwidthRental = (): SubtestTronSignTransaction => {
+    const testPayloads: Array<TestTronSignTransactionPayload> = [
+        {
+            method: 'tronSignTransaction',
+            path: "m/44'/1'/0'/0/0",
+            transaction: {
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    unfreeze_balance_contract: {
+                        resource: 0,
+                        receiver_address: 'TLrpNTBuCpGMrB9TyVwgEhNVRhtWEQPHh4',
+                    },
+                },
+            },
+        },
+    ];
+    const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
+        {
+            serialized_tx: '90b0b27b0820ca46e6a2c42e6c80a1a7a304ec4a1859db863bad19b5db49eac3412b7015f5f637894d4ffecd88b44de8e4b2ec789b77090997b5353b17a22bfe00',
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/freezeBalanceBandwidth',
+    };
+};
+
+const unfreezeBalanceEnergyRental = (): SubtestTronSignTransaction => {
+    const testPayloads: Array<TestTronSignTransactionPayload> = [
+        {
+            method: 'tronSignTransaction',
+            path: "m/44'/1'/0'/0/0",
+            transaction: {
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    unfreeze_balance_contract: {
+                        resource: 1,
+                        receiver_address: 'TLrpNTBuCpGMrB9TyVwgEhNVRhtWEQPHh4',
+                    },
+                },
+            },
+        },
+    ];
+    const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
+        {
+            serialized_tx: 'e8176724732452c7b21654922df0efc796b4ed56b2f408b0dd6ac90eb593fa9f6a67145af27e44bcfd5e515cfb6014d747ce43aec9a819eb2a4a321425dad92100',
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/freezeBalanceBandwidth',
+    };
+};
+
+const withdrawBalance = (): SubtestTronSignTransaction => {
+    const testPayloads: Array<TestTronSignTransactionPayload> = [
+        {
+            method: 'tronSignTransaction',
+            path: "m/44'/1'/0'/0/0",
+            transaction: {
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    withdraw_balance_contract: {},
+                },
+            },
+        },
+    ];
+    const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
+        {
+            serialized_tx: '1b59288fa1086c2022eca7d34a63a9cb2adc8c3e72fd49602c6e048c5ab0a44d774f42b589021b0c9d582c6c861706b877336f5d6a114cbf5dbda0ff66cdf02900',
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/freezeBalanceBandwidth',
+    };
+};
+
+const unfreezeAsset = (): SubtestTronSignTransaction => {
+    const testPayloads: Array<TestTronSignTransactionPayload> = [
+        {
+            method: 'tronSignTransaction',
+            path: "m/44'/1'/0'/0/0",
+            transaction: {
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    unfreeze_asset_contract: {},
+                },
+            },
+        },
+    ];
+    const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
+        {
+            serialized_tx: '2a5857885bb81ddb210f7a5fa1ae60e0acf9280b2bfb3a5c1463dee02e68ebce7486e11bf519c2cd6b42063ea6db919708ef9d2c8c0917636da4e7ea4518eda100',
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/freezeBalanceBandwidth',
+    };
+};
+
+const updateAsset = (): SubtestTronSignTransaction => {
+    const testPayloads: Array<TestTronSignTransactionPayload> = [
+        {
+            method: 'tronSignTransaction',
+            path: "m/44'/1'/0'/0/0",
+            transaction: {
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    update_asset_contract: {
+                        description: 'CryptoChain Token New Description',
+                        url: 'http://cryptochain.network/token',
+                    },
+                },
+            },
+        },
+    ];
+    const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
+        {
+            serialized_tx: 'd6b39a251c5dbc0684672d4850c08eec9e5d1df2a9848e01d2b195e00962258651765bc314a5bd56b98aa91da70dfbbdc71526eef3cbf7c62878e541793bddba00',
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/freezeBalanceBandwidth',
+    };
+};
+
+const proposalCreate = (): SubtestTronSignTransaction => {
+    const testPayloads: Array<TestTronSignTransactionPayload> = [
+        {
+            method: 'tronSignTransaction',
+            path: "m/44'/1'/0'/0/0",
+            transaction: {
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    proposal_create_contract: {
+                        parameters: [
+                            { key: 0, value: 36000000 },
+                            { key: 6, value: 300000000000 },
+                            { key: 4, value: 5000000000 },
+                        ],
+                    },
+                },
+            },
+        },
+    ];
+    const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
+        {
+            serialized_tx: '648d96f3a33ba90c5b3333c54d56fff2b81a70c80567aafe4eab092c1c1c09ff0b7724039a6f16a937f6bf1fa2dbb0c9843e1cbec63aeb8805141128b36d001301',
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/freezeBalanceBandwidth',
+    };
+};
+
+const proposalApprove = (): SubtestTronSignTransaction => {
+    const testPayloads: Array<TestTronSignTransactionPayload> = [
+        {
+            method: 'tronSignTransaction',
+            path: "m/44'/1'/0'/0/0",
+            transaction: {
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    proposal_approve_contract: {
+                        proposal_id: 10000,
+                        is_add_approval: false,
+                    },
+                },
+            },
+        },
+    ];
+    const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
+        {
+            serialized_tx: 'a6cdfed4863d3f4d6adfba1444e47b277026d35d52988f223d2bed5eaa979c266ab74e7212df24f0f058661522bec05419ccfb28321c646632a8c502f06dda9e00',
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/freezeBalanceBandwidth',
+    };
+};
+
+const proposalDelete = (): SubtestTronSignTransaction => {
+    const testPayloads: Array<TestTronSignTransactionPayload> = [
+        {
+            method: 'tronSignTransaction',
+            path: "m/44'/1'/0'/0/0",
+            transaction: {
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    proposal_delete_contract: {
+                        proposal_id: 10000,
+                    },
+                },
+            },
+        },
+    ];
+    const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
+        {
+            serialized_tx: '636577a6800c6ab4e7c11a72d5f0b3d865e190b51714cf5c4bd1d71bc37f54643582382314c236b489376bc4ab5d0612e3c6f9434e97db6dd41c517757cc8d7101',
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/freezeBalanceBandwidth',
     };
 };
 
 export const tronSignTransaction = (): TestFunction => {
     const testName = 'TronSignTransaction';
     const availableSubtests = {
-        knownTrc20Token,
-        unknownTrc20Token,
-        noData,
-        data,
-        message,
-        newContract,
-        sanityChecks,
-        noDataEip155,
-        dataEip155,
+        knownTrc20Token: transferTrx,
+        unknownTrc20Token: sendTrc10,
+        voteWitness,
+        witnessCreate,
+        assetIssue,
+        witnessUpdate,
+        participateAsset,
+        accountUpdate,
+        freezeBalanceBandwidth,
+        proposalDelete,
+        proposalCreate,
+        proposalApprove,
+        freezeBalanceEnergy,
+        freezeBalanceEnergyRental,
+        freezeBandwidthRental,
+        unfreezeBalanceBandwidth,
+        unfreezeBalanceEnergy,
+        unfreezeBalanceBandwidthRental,
+        unfreezeBalanceEnergyRental,
+        withdrawBalance,
+        unfreezeAsset,
+        updateAsset,
     };
 
     return {
