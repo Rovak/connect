@@ -1,3 +1,82 @@
+# 8.0.6
+#### Removed
+- removed standalone `firmwareErase` and `firmwareUpload` methods.
+#### Added
+- `firmwareUpdate` method now emits `ButtonRequest_FirmwareUpdate` event and `ui-firmware-progress` event;
+
+# 8.0.5 (server side only)
+#### Fixed
+- fix `disconnect`-`method response` race condition
+- `getAccountInfo` runtime error when using descriptor without path
+- Firmware releases channel (beta-wallet)
+
+# 8.0.4 (server side only)
+#### Added
+- Added `Unobtanium` support
+#### Fixed
+- `pendingTransport` race condition using lazyLoading and multiple devices connected
+- simplified `Core` error rejection
+- `BNB` firmware range
+#### Updated 
+- coins.json
+
+# 8.0.3
+#### Added
+- Added `Binance Chain (BNB)` support
+#### Fixed
+- `TrezorConnect.cancel` race condition between device release and returned response
+#### Updated 
+- protobuf messages
+- firmware releases
+
+# 8.0.2
+#### Added
+- Added `Device.Features.features` field
+#### Changed
+- `CoinInfo.blockchainLink` field generated from `coins.json:blockbook` for BTC-like and ETH-like
+#### Updated 
+- supported coins
+- protobuf messages
+
+# 8.0.1
+#### Added
+- Added `TrezorConnect.disableWebUSB` method
+#### Fixed
+- renamed EOS actions parameters 'buyram': quantity > quant, 'voteproducer': data.account > data.voter
+
+# 8.0.0
+#### Breaking changes
+- Changed communication process between host, iframe and popup. BroadcastChannel is used as default, postMessage as fallback
+- Completely rewritten backend layer. Old way using hd-wallet and bitcore/blockbook-api-v1 is dropped in favour of `@trezor/blockchain-link`
+- `BigInteger` support for Bitcoin transactions using `@trezor/utxo-lib` and `hd-wallet@bigint`
+- `TrezorConnect.rippleGetAccountInfo` and `TrezorConnect.ethereumGetAccountInfo` merged to `TrezorConnect.getAccountInfo`
+- `TrezorConnect.getAccountInfo` parameters
+
+#### Added
+- Added nodejs support
+- Added `lazyLoad` parameter to `TrezorConnect.init`
+- Added bech32 accounts support
+- Webextension usb permissions iframe dynamically included into html
+- Added correct `script_type` to `TransactionInput` and `TransactionOutput` of Bitcoin-like TxRequest protobuf message
+- Added signed transaction validation for Bitcoin `signTransaction` and `composeTransaction` methods
+- Added shamir recovery
+
+# 7.0.5
+__added__
+- Added cloudfront cache invalidation
+__fixed__
+- Url encoding in `TrezorConnect.manifest`
+
+# 7.0.4
+__added__
+- Added EOS methods `TrezorConnect.eosGetPublicKey` and `TrezorConnect.eosSignTransaction`
+- Added `TrezorConnect.firmwareUpdate` (management method)
+- Added new firmware releases
+- Added new bridge releases
+__fixed__
+- Dependencies security vulnerabilities
+- Minor fixes in flowtype and tests
+
 # 7.0.3
 __added__
 - Added management methods `applyFlags`, `applySettings`, `backupDevice`, `changePin`, `firmwareErase`, `firmwareUpload`, `recoveryDevice`

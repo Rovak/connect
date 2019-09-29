@@ -23,9 +23,7 @@ import { create as createDeferred } from '../utils/deferred';
 import { resolveAfter } from '../utils/promiseUtils';
 import { state as browserState } from '../utils/browser';
 
-import Log, { init as initLog, enable as enableLog } from '../utils/debug';
-
-import { parse as parseSettings } from '../data/ConnectSettings';
+import Log, { init as initLog } from '../utils/debug';
 
 import type { ConnectSettings } from '../data/ConnectSettings';
 import type { Device as DeviceTyped, Deferred, CoreMessage, UiPromiseResponse } from '../types';
@@ -113,14 +111,14 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
     const safeMessages: Array<string> = [
         IFRAME.CALL,
         POPUP.CLOSED,
-        UI.CHANGE_SETTINGS,
+        // UI.CHANGE_SETTINGS,
         UI.CUSTOM_MESSAGE_RESPONSE,
         UI.LOGIN_CHALLENGE_RESPONSE,
         TRANSPORT.RECONNECT,
+        TRANSPORT.DISABLE_WEBUSB,
     ];
 
     if (!isTrustedOrigin && safeMessages.indexOf(message.type) === -1) {
-        console.warn('Message not trusted', message);
         return;
     }
 
@@ -130,16 +128,21 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
             break;
         case POPUP.CLOSED :
             // eslint-disable-next-line no-use-before-define
-            onPopupClosed();
+            onPopupClosed(message.payload ? message.payload.error : null);
             break;
 
-        case UI.CHANGE_SETTINGS :
-            enableLog(parseSettings(message.payload).debug);
-            break;
+            // case UI.CHANGE_SETTINGS :
+            //     enableLog(parseSettings(message.payload).debug);
+            //     break;
 
         case TRANSPORT.RECONNECT :
             // eslint-disable-next-line no-use-before-define
             reconnectTransport();
+            break;
+
+        case TRANSPORT.DISABLE_WEBUSB :
+            // eslint-disable-next-line no-use-before-define
+            disableWebUSBTransport();
             break;
 
         // messages from UI (popup/modal...)
@@ -428,8 +431,25 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         const MAX_PIN_TRIES: number = 3;
         // This function will run inside Device.run() after device will be acquired and initialized
         const inner = async (): Promise<void> => {
+            const firmwareException = await method.checkFirmwareRange(isUsingPopup);
+            if (firmwareException) {
+                if (isUsingPopup) {
+                    await getPopupPromise().promise;
+                    // show unexpected state information
+                    postMessage(new UiMessage(firmwareException, device.toMessageObject()));
+
+                    // wait for device disconnect
+                    await createUiPromise(DEVICE.DISCONNECT, device).promise;
+                    // interrupt process and go to "final" block
+                    return Promise.reject({ error: 'Cancelled' });
+                } else {
+                    // return error if not using popup
+                    return Promise.reject(firmwareException);
+                }
+            }
+
             // check if device is in unexpected mode [bootloader, not-initialized, required firmware]
-            const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) = device.hasUnexpectedMode(method.allowDeviceMode);
+            const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.NOT_IN_BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) = device.hasUnexpectedMode(method.allowDeviceMode, method.requireDeviceMode);
             if (unexpectedMode) {
                 device.keepSession = false;
                 if (isUsingPopup) {
@@ -441,11 +461,10 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                     // wait for device disconnect
                     await createUiPromise(DEVICE.DISCONNECT, device).promise;
                     // interrupt process and go to "final" block
-                    return Promise.resolve();
+                    return Promise.reject(unexpectedMode);
                 } else {
-                    // return error if not using popup
-                    postMessage(new ResponseMessage(method.responseID, false, { error: unexpectedMode }));
-                    return Promise.resolve();
+                    // throw error if not using popup
+                    return Promise.reject(unexpectedMode);
                 }
             }
 
@@ -453,13 +472,10 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             method.checkPermissions();
             if (!trustedHost && method.requiredPermissions.length > 0) {
                 // show permissions in UI
-                const permitted: boolean = await method.requestPermissions();
+                const permitted = await method.requestPermissions();
                 if (!permitted) {
-                    postMessage(new ResponseMessage(method.responseID, false, { error: ERROR.PERMISSIONS_NOT_GRANTED.message }));
-                    // eslint-disable-next-line no-use-before-define
-                    closePopup();
                     // interrupt process and go to "final" block
-                    return Promise.resolve();
+                    return Promise.reject(ERROR.PERMISSIONS_NOT_GRANTED.message);
                 }
             }
 
@@ -467,11 +483,8 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             if (deviceNeedsBackup && typeof method.noBackupConfirmation === 'function') {
                 const permitted = await method.noBackupConfirmation();
                 if (!permitted) {
-                    postMessage(new ResponseMessage(method.responseID, false, { error: ERROR.PERMISSIONS_NOT_GRANTED.message, code: ERROR.PERMISSIONS_NOT_GRANTED.code }));
-                    // eslint-disable-next-line no-use-before-define
-                    closePopup();
                     // interrupt process and go to "final" block
-                    return Promise.resolve();
+                    return Promise.reject({ error: ERROR.PERMISSIONS_NOT_GRANTED.message, code: ERROR.PERMISSIONS_NOT_GRANTED.code });
                 }
             }
 
@@ -480,23 +493,6 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 await getPopupPromise().promise;
                 // show notification
                 postMessage(new UiMessage(UI.DEVICE_NEEDS_BACKUP, device.toMessageObject()));
-            }
-
-            const firmwareException = await method.checkFirmwareRange(isUsingPopup);
-            if (firmwareException) {
-                if (isUsingPopup) {
-                    // show unexpected state information
-                    postMessage(new UiMessage(firmwareException, device.toMessageObject()));
-
-                    // wait for device disconnect
-                    await createUiPromise(DEVICE.DISCONNECT, device).promise;
-                    // interrupt process and go to "final" block
-                    return Promise.resolve();
-                } else {
-                    // return error if not using popup
-                    postMessage(new ResponseMessage(method.responseID, false, { error: firmwareException }));
-                    return Promise.resolve();
-                }
             }
 
             // notify if firmware is outdated but not required
@@ -510,13 +506,10 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             // ask for confirmation [export xpub, export info, sign message]
             if (!trustedHost && typeof method.confirmation === 'function') {
                 // show confirmation in UI
-                const confirmed: boolean = await method.confirmation();
+                const confirmed = await method.confirmation();
                 if (!confirmed) {
-                    postMessage(new ResponseMessage(method.responseID, false, { error: 'Cancelled' }));
-                    // eslint-disable-next-line no-use-before-define
-                    closePopup();
                     // interrupt process and go to "final" block
-                    return Promise.resolve();
+                    return Promise.reject({ error: 'Cancelled' });
                 }
             }
 
@@ -559,14 +552,14 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                     return inner();
                 } else {
                     // other error
-                    postMessage(new ResponseMessage(method.responseID, false, { error: error.message }));
+                    // postMessage(new ResponseMessage(method.responseID, false, { error: error.message }));
                     // eslint-disable-next-line no-use-before-define
-                    closePopup();
+                    // closePopup();
                     // clear cached passphrase. it's not valid
                     device.clearPassphrase();
                     device.setState(null);
                     // interrupt process and go to "final" block
-                    return Promise.resolve();
+                    return Promise.reject(error.message);
                 }
             }
 
@@ -588,30 +581,8 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 const response: Object = await method.run();
                 messageResponse = new ResponseMessage(method.responseID, true, response);
             } catch (error) {
-                // device.clearPassphrase();
-
-                if (!method) {
-                    return Promise.resolve();
-                }
-
-                if (error.custom) {
-                    delete error.custom;
-                    postMessage(new ResponseMessage(method.responseID, false, error));
-                } else {
-                    postMessage(new ResponseMessage(method.responseID, false, { error: error.message, code: error.code }));
-                }
-
-                // device.release();
-                device.removeAllListeners();
-                // eslint-disable-next-line no-use-before-define
-                closePopup();
-                // eslint-disable-next-line no-use-before-define
-                cleanup();
-
-                return Promise.resolve();
+                return Promise.reject({ error: error.message, code: error.code });
             }
-            // eslint-disable-next-line no-use-before-define
-            closePopup();
         };
 
         // run inner function
@@ -629,28 +600,26 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             if (_deviceList && error.message === ERROR.WRONG_PREVIOUS_SESSION_ERROR_MESSAGE) {
                 _deviceList.enumerate();
             }
-            // cancel popup request
-            postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST)); // TODO: should it be here?
-            postMessage(new ResponseMessage(method.responseID, false, { error: error.message || error, code: error.code }));
-
-            // eslint-disable-next-line no-use-before-define
-            closePopup();
+            messageResponse = new ResponseMessage(method.responseID, false, { error: error.message || error, code: error.code });
         }
     } finally {
         // Work done
         _log.log('onCall::finally', messageResponse);
+        const response = messageResponse;
+        if (response) {
+            await device.cleanup();
+            // eslint-disable-next-line no-use-before-define
+            closePopup();
+            // eslint-disable-next-line no-use-before-define
+            cleanup();
 
-        device.cleanup();
-        // eslint-disable-next-line no-use-before-define
-        cleanup();
+            if (method) {
+                method.dispose();
+            }
 
-        if (method) { method.dispose(); }
-
-        // restore default messages
-        if (_deviceList) { await _deviceList.restoreMessages(); }
-
-        if (messageResponse) {
-            postMessage(messageResponse);
+            // restore default messages
+            if (_deviceList) { await _deviceList.restoreMessages(); }
+            postMessage(response);
         }
     }
 };
@@ -673,6 +642,9 @@ const cleanup = (): void => {
  * @memberof Core
  */
 const closePopup = (): void => {
+    if (_popupPromise) {
+        postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
+    }
     postMessage(new UiMessage(UI.CLOSE_UI_WINDOW));
 };
 
@@ -772,21 +744,21 @@ const onEmptyPassphraseHandler = async (device: Device, callback: (error: any, s
  * @returns {void}
  * @memberof Core
  */
-const onPopupClosed = (): void => {
-    if (!_popupPromise) return;
-
+const onPopupClosed = (customErrorMessage: ?string): void => {
+    const error = customErrorMessage ? new Error(customErrorMessage) : ERROR.POPUP_CLOSED;
     // Device was already acquired. Try to interrupt running action which will throw error from onCall try/catch block
     if (_deviceList && _deviceList.asArray().length > 0) {
         _deviceList.allDevices().forEach(d => {
+            d.keepSession = false; // clear session on release
             if (d.isUsedHere()) {
-                d.interruptionFromUser(ERROR.POPUP_CLOSED);
+                d.interruptionFromUser(error);
             } else {
                 const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, DEVICE.DISCONNECT);
                 if (uiPromise) {
-                    uiPromise.resolve({ event: ERROR.POPUP_CLOSED.message, payload: null });
+                    uiPromise.resolve({ event: error.message, payload: null });
                 } else {
                     _callMethods.forEach(m => {
-                        postMessage(new ResponseMessage(m.responseID, false, { error: ERROR.POPUP_CLOSED.message }));
+                        postMessage(new ResponseMessage(m.responseID, false, { error: error.message }));
                     });
                     _callMethods.splice(0, _callMethods.length);
                 }
@@ -798,12 +770,14 @@ const onPopupClosed = (): void => {
     } else {
         if (_uiPromises.length > 0) {
             _uiPromises.forEach(p => {
-                p.reject(ERROR.POPUP_CLOSED);
+                p.reject(error);
             });
             _uiPromises = [];
         }
-        _popupPromise.reject(ERROR.POPUP_CLOSED);
-        _popupPromise = null;
+        if (_popupPromise) {
+            _popupPromise.reject(error);
+            _popupPromise = null;
+        }
         cleanup();
     }
 };
@@ -1034,6 +1008,26 @@ const reconnectTransport = async (): Promise<void> => {
 
     try {
         await initDeviceList(DataManager.getSettings());
+    } catch (error) {
+        postMessage(new TransportMessage(TRANSPORT.ERROR, {
+            error: error.message || error,
+            bridge: DataManager.getLatestBridgeVersion(),
+        }));
+    }
+};
+
+const disableWebUSBTransport = async (): Promise<void> => {
+    if (!_deviceList) return;
+    if (_deviceList.transportType() !== 'webusb') return;
+    // override settings
+    const settings = DataManager.getSettings();
+    settings.webusb = false;
+
+    try {
+        // disconnect previous device list
+        _deviceList.onBeforeUnload();
+        // and init with new settings, without webusb
+        await initDeviceList(settings);
     } catch (error) {
         postMessage(new TransportMessage(TRANSPORT.ERROR, {
             error: error.message || error,

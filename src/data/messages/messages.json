@@ -389,13 +389,6 @@
                     "type": "bytes",
                     "name": "public_key",
                     "id": 2
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "string",
-                    "name": "json",
-                    "id": 3
                 }
             ],
             "enums": [],
@@ -1790,6 +1783,18 @@
                         {
                             "name": "ButtonRequest_UnknownDerivationPath",
                             "id": 15
+                        },
+                        {
+                            "name": "ButtonRequest_RecoveryHomepage",
+                            "id": 16
+                        },
+                        {
+                            "name": "ButtonRequest_Success",
+                            "id": 17
+                        },
+                        {
+                            "name": "ButtonRequest_Warning",
+                            "id": 18
                         }
                     ],
                     "options": {}
@@ -2343,7 +2348,22 @@
         },
         {
             "name": "DebugLinkGetState",
-            "fields": [],
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "wait_word_list",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "wait_word_pos",
+                    "id": 2
+                }
+            ],
             "enums": [],
             "messages": [],
             "options": {},
@@ -4416,9 +4436,94 @@
                     "type": "bool",
                     "name": "no_backup",
                     "id": 28
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "recovery_mode",
+                    "id": 29
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "Capability",
+                    "name": "capabilities",
+                    "id": 30
                 }
             ],
-            "enums": [],
+            "enums": [
+                {
+                    "name": "Capability",
+                    "values": [
+                        {
+                            "name": "Capability_Bitcoin",
+                            "id": 1
+                        },
+                        {
+                            "name": "Capability_Bitcoin_like",
+                            "id": 2
+                        },
+                        {
+                            "name": "Capability_Binance",
+                            "id": 3
+                        },
+                        {
+                            "name": "Capability_Cardano",
+                            "id": 4
+                        },
+                        {
+                            "name": "Capability_Crypto",
+                            "id": 5
+                        },
+                        {
+                            "name": "Capability_EOS",
+                            "id": 6
+                        },
+                        {
+                            "name": "Capability_Ethereum",
+                            "id": 7
+                        },
+                        {
+                            "name": "Capability_Lisk",
+                            "id": 8
+                        },
+                        {
+                            "name": "Capability_Monero",
+                            "id": 9
+                        },
+                        {
+                            "name": "Capability_NEM",
+                            "id": 10
+                        },
+                        {
+                            "name": "Capability_Ripple",
+                            "id": 11
+                        },
+                        {
+                            "name": "Capability_Stellar",
+                            "id": 12
+                        },
+                        {
+                            "name": "Capability_Tezos",
+                            "id": 13
+                        },
+                        {
+                            "name": "Capability_U2F",
+                            "id": 14
+                        },
+                        {
+                            "name": "Capability_Shamir",
+                            "id": 15
+                        },
+                        {
+                            "name": "Capability_ShamirGroups",
+                            "id": 16
+                        }
+                    ],
+                    "options": {}
+                }
+            ],
             "messages": [],
             "options": {},
             "oneofs": {}
@@ -4629,10 +4734,10 @@
             "name": "LoadDevice",
             "fields": [
                 {
-                    "rule": "optional",
+                    "rule": "repeated",
                     "options": {},
                     "type": "string",
-                    "name": "mnemonic",
+                    "name": "mnemonics",
                     "id": 1
                 },
                 {
@@ -4764,13 +4869,34 @@
                 },
                 {
                     "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "slip39",
+                    "options": {
+                        "default": "ResetDeviceBackupType_Bip39"
+                    },
+                    "type": "ResetDeviceBackupType",
+                    "name": "backup_type",
                     "id": 10
                 }
             ],
-            "enums": [],
+            "enums": [
+                {
+                    "name": "ResetDeviceBackupType",
+                    "values": [
+                        {
+                            "name": "ResetDeviceBackupType_Bip39",
+                            "id": 0
+                        },
+                        {
+                            "name": "ResetDeviceBackupType_Slip39_Single_Group",
+                            "id": 1
+                        },
+                        {
+                            "name": "ResetDeviceBackupType_Slip39_Multiple_Groups",
+                            "id": 2
+                        }
+                    ],
+                    "options": {}
+                }
+            ],
             "messages": [],
             "options": {},
             "oneofs": {}
@@ -8533,1226 +8659,6 @@
             "oneofs": {}
         },
         {
-            "name": "TronGetAddress",
-            "fields": [
-                {
-                    "rule": "repeated",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "address_n",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "show_display",
-                    "id": 2
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "TronAddress",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "string",
-                    "name": "address",
-                    "id": 1
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "TronSignTx",
-            "fields": [
-                {
-                    "rule": "repeated",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "address_n",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "ref_block_bytes",
-                    "id": 2
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "ref_block_hash",
-                    "id": 3
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint64",
-                    "name": "expiration",
-                    "id": 4
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "string",
-                    "name": "data",
-                    "id": 5
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "TronContract",
-                    "name": "contract",
-                    "id": 6
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint64",
-                    "name": "timestamp",
-                    "id": 7
-                }
-            ],
-            "enums": [],
-            "messages": [
-                {
-                    "name": "TronContract",
-                    "fields": [
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronTransferContract",
-                            "name": "transfer_contract",
-                            "id": 1
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronTransferAssetContract",
-                            "name": "transfer_asset_contract",
-                            "id": 2
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronVoteWitnessContract",
-                            "name": "vote_witness_contract",
-                            "id": 4
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronWitnessCreateContract",
-                            "name": "witness_create_contract",
-                            "id": 5
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronAssetIssueContract",
-                            "name": "asset_issue_contract",
-                            "id": 6
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronWitnessUpdateContract",
-                            "name": "witness_update_contract",
-                            "id": 8
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronParticipateAssetIssueContract",
-                            "name": "participate_asset_issue_contract",
-                            "id": 9
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronAccountUpdateContract",
-                            "name": "account_update_contract",
-                            "id": 10
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronFreezeBalanceContract",
-                            "name": "freeze_balance_contract",
-                            "id": 11
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronUnfreezeBalanceContract",
-                            "name": "unfreeze_balance_contract",
-                            "id": 12
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronWithdrawBalanceContract",
-                            "name": "withdraw_balance_contract",
-                            "id": 13
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronUnfreezeAssetContract",
-                            "name": "unfreeze_asset_contract",
-                            "id": 14
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronUpdateAssetContract",
-                            "name": "update_asset_contract",
-                            "id": 15
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronProposalCreateContract",
-                            "name": "proposal_create_contract",
-                            "id": 16
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronProposalApproveContract",
-                            "name": "proposal_approve_contract",
-                            "id": 17
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronProposalDeleteContract",
-                            "name": "proposal_delete_contract",
-                            "id": 18
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronSetAccountIdContract",
-                            "name": "set_account_id",
-                            "id": 19
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronTriggerSmartContract",
-                            "name": "trigger_smart_contract",
-                            "id": 31
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronExchangeCreateContract",
-                            "name": "exchange_create_contract",
-                            "id": 41
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronExchangeInjectContract",
-                            "name": "exchange_inject_contract",
-                            "id": 42
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronExchangeWithdrawContract",
-                            "name": "exchange_withdraw_contract",
-                            "id": 43
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TronExchangeTransactionContract",
-                            "name": "exchange_transaction_contract",
-                            "id": 44
-                        }
-                    ],
-                    "enums": [
-                        {
-                            "name": "TronResourceCode",
-                            "values": [
-                                {
-                                    "name": "BANDWIDTH",
-                                    "id": 0
-                                },
-                                {
-                                    "name": "ENERGY",
-                                    "id": 1
-                                }
-                            ],
-                            "options": {}
-                        }
-                    ],
-                    "messages": [
-                        {
-                            "name": "TronAccountUpdateContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "account_name",
-                                    "id": 1
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronTransferContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "to_address",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "amount",
-                                    "id": 2
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronTransferAssetContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "to_address",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "amount",
-                                    "id": 2
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "asset_id",
-                                    "id": 3
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "asset_name",
-                                    "id": 4
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "asset_decimals",
-                                    "id": 5
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "asset_signature",
-                                    "id": 6
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronVoteWitnessContract",
-                            "fields": [
-                                {
-                                    "rule": "repeated",
-                                    "options": {},
-                                    "type": "TronVote",
-                                    "name": "votes",
-                                    "id": 1
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [
-                                {
-                                    "name": "TronVote",
-                                    "fields": [
-                                        {
-                                            "rule": "optional",
-                                            "options": {},
-                                            "type": "string",
-                                            "name": "vote_address",
-                                            "id": 1
-                                        },
-                                        {
-                                            "rule": "optional",
-                                            "options": {},
-                                            "type": "uint64",
-                                            "name": "vote_count",
-                                            "id": 2
-                                        }
-                                    ],
-                                    "enums": [],
-                                    "messages": [],
-                                    "options": {},
-                                    "oneofs": {}
-                                }
-                            ],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronWitnessCreateContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "url",
-                                    "id": 1
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronWitnessUpdateContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "update_url",
-                                    "id": 2
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronAssetIssueContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "name",
-                                    "id": 2
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "abbr",
-                                    "id": 3
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "total_supply",
-                                    "id": 4
-                                },
-                                {
-                                    "rule": "repeated",
-                                    "options": {},
-                                    "type": "TronFrozenSupply",
-                                    "name": "frozen_supply",
-                                    "id": 5
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "trx_num",
-                                    "id": 6
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "precision",
-                                    "id": 7
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "num",
-                                    "id": 8
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "start_time",
-                                    "id": 9
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "end_time",
-                                    "id": 10
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "description",
-                                    "id": 11
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "url",
-                                    "id": 12
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [
-                                {
-                                    "name": "TronFrozenSupply",
-                                    "fields": [
-                                        {
-                                            "rule": "optional",
-                                            "options": {},
-                                            "type": "uint64",
-                                            "name": "frozen_amount",
-                                            "id": 1
-                                        },
-                                        {
-                                            "rule": "optional",
-                                            "options": {},
-                                            "type": "uint64",
-                                            "name": "frozen_days",
-                                            "id": 2
-                                        }
-                                    ],
-                                    "enums": [],
-                                    "messages": [],
-                                    "options": {},
-                                    "oneofs": {}
-                                }
-                            ],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronParticipateAssetIssueContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "to_address",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "amount",
-                                    "id": 2
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "asset_id",
-                                    "id": 3
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "asset_name",
-                                    "id": 4
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "asset_decimals",
-                                    "id": 5
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "asset_signature",
-                                    "id": 6
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronFreezeBalanceContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "frozen_balance",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "frozen_duration",
-                                    "id": 2
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "TronResourceCode",
-                                    "name": "resource",
-                                    "id": 3
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "receiver_address",
-                                    "id": 4
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronUnfreezeBalanceContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "TronResourceCode",
-                                    "name": "resource",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "receiver_address",
-                                    "id": 2
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronUnfreezeAssetContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "TronResourceCode",
-                                    "name": "resource",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "receiver_address",
-                                    "id": 2
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronWithdrawBalanceContract",
-                            "fields": [],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronUpdateAssetContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "description",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "url",
-                                    "id": 2
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronProposalCreateContract",
-                            "fields": [
-                                {
-                                    "rule": "repeated",
-                                    "options": {},
-                                    "type": "TronProposalParameters",
-                                    "name": "parameters",
-                                    "id": 1
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [
-                                {
-                                    "name": "TronProposalParameters",
-                                    "fields": [
-                                        {
-                                            "rule": "optional",
-                                            "options": {},
-                                            "type": "uint64",
-                                            "name": "key",
-                                            "id": 1
-                                        },
-                                        {
-                                            "rule": "optional",
-                                            "options": {},
-                                            "type": "uint64",
-                                            "name": "value",
-                                            "id": 2
-                                        }
-                                    ],
-                                    "enums": [],
-                                    "messages": [],
-                                    "options": {},
-                                    "oneofs": {}
-                                }
-                            ],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronProposalApproveContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "proposal_id",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "bool",
-                                    "name": "is_add_approval",
-                                    "id": 2
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronProposalDeleteContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "proposal_id",
-                                    "id": 1
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronSetAccountIdContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "account_id",
-                                    "id": 1
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronTriggerSmartContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "contract_address",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "call_value",
-                                    "id": 3
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "bytes",
-                                    "name": "data",
-                                    "id": 4
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "call_token_value",
-                                    "id": 5
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "asset_id",
-                                    "id": 6
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "asset_name",
-                                    "id": 7
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "asset_decimals",
-                                    "id": 8
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "asset_signature",
-                                    "id": 9
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronExchangeCreateContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "first_asset_id",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "first_asset_name",
-                                    "id": 2
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "first_asset_decimals",
-                                    "id": 3
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "first_asset_signature",
-                                    "id": 4
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "first_asset_balance",
-                                    "id": 5
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "second_asset_id",
-                                    "id": 6
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "second_asset_name",
-                                    "id": 7
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "second_asset_decimals",
-                                    "id": 8
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "second_asset_signature",
-                                    "id": 9
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "second_asset_balance",
-                                    "id": 10
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronExchangeInjectContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "exchange_id",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "token_id",
-                                    "id": 2
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "quant",
-                                    "id": 3
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "first_asset_id",
-                                    "id": 4
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "first_asset_name",
-                                    "id": 5
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "first_asset_decimals",
-                                    "id": 6
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "second_asset_id",
-                                    "id": 7
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "second_asset_name",
-                                    "id": 8
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "second_asset_decimals",
-                                    "id": 9
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "exachange_signature",
-                                    "id": 10
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronExchangeWithdrawContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "exchange_id",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "token_id",
-                                    "id": 2
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "quant",
-                                    "id": 3
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "first_asset_id",
-                                    "id": 4
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "first_asset_name",
-                                    "id": 5
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "first_asset_decimals",
-                                    "id": 6
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "second_asset_id",
-                                    "id": 7
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "second_asset_name",
-                                    "id": 8
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "second_asset_decimals",
-                                    "id": 9
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "exachange_signature",
-                                    "id": 10
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TronExchangeTransactionContract",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "exchange_id",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "token_id",
-                                    "id": 2
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "quant",
-                                    "id": 3
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "expected",
-                                    "id": 4
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "first_asset_id",
-                                    "id": 5
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "first_asset_name",
-                                    "id": 6
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "first_asset_decimals",
-                                    "id": 7
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "second_asset_id",
-                                    "id": 8
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "second_asset_name",
-                                    "id": 9
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "second_asset_decimals",
-                                    "id": 10
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "string",
-                                    "name": "exachange_signature",
-                                    "id": 11
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        }
-                    ],
-                    "options": {},
-                    "oneofs": {}
-                }
-            ],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "TronSignedTx",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "signature",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "serialized_tx",
-                    "id": 2
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
             "ref": "google.protobuf.EnumValueOptions",
             "fields": [
                 {
@@ -10544,22 +9450,6 @@
                 {
                     "name": "MessageType_BinanceSignedTx",
                     "id": 709
-                },
-                {
-                    "name": "MessageType_TronGetAddress",
-                    "id": 800
-                },
-                {
-                    "name": "MessageType_TronAddress",
-                    "id": 801
-                },
-                {
-                    "name": "MessageType_TronSignTx",
-                    "id": 802
-                },
-                {
-                    "name": "MessageType_TronSignedTx",
-                    "id": 803
                 }
             ],
             "options": {}

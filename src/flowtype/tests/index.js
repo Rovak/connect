@@ -120,6 +120,16 @@ import type {
     ExpectedTezosSignTransactionResponse,
 } from 'flowtype/tests/tezos-sign-transaction';
 
+import type {
+    TestEosSignTransactionPayload,
+    ExpectedEosSignTransactionResponse,
+} from 'flowtype/tests/eos-sign-transaction';
+
+import type {
+    TestEosGetPublicKeyPayload,
+    ExpectedEosGetPublicKeyResponse,
+} from 'flowtype/tests/eos-get-public-key';
+
 declare module 'flowtype/tests' {
     // declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
     // declare export type GetAddressSegwitAvailableSubtests = 'showSegwit';
@@ -170,6 +180,7 @@ declare module 'flowtype/tests' {
     declare export type SubtestPassphrase = Subtest<TestPassphrasePayload, ExpectedPassphraseResponse>;
     declare export type SubtestLiskSignTransaction = Subtest<TestLiskSignTransactionPayload, ExpectedLiskSignTransactionResponse>;
     declare export type SubtestTezosSignTransaction = Subtest<TestTezosSignTransactionPayload, ExpectedTezosSignTransactionResponse>;
+    declare export type SubtestEosSignTransaction = Subtest<TestEosSignTransactionPayload, ExpectedEosSignTransactionResponse>;
 
     declare export type TestPayload =
         TestCardanoGetAddressPayload
@@ -195,7 +206,9 @@ declare module 'flowtype/tests' {
         | TestTezosGetPublicKeyPayload
         | TestTezosSignTransactionPayload
         | TestRippleGetAddressPayload
-        | TestRippleSignTransactionPayload;
+        | TestRippleSignTransactionPayload
+        | TestEosSignTransactionPayload
+        | TestEosGetPublicKeyPayload;
 
     declare export type ExpectedResponse =
         ExpectedCardanoGetAddressResponse
@@ -212,7 +225,6 @@ declare module 'flowtype/tests' {
         | ExpectedVerifyMessageResponse
         | ExpectedGetAccountInfoResponse
         | ExpectedNemSignTransactionResponse
-        | ExpectedPassphraseResponse
         | ExpectedLiskGetAddressResponse
         | ExpectedLiskSignMessageResponse
         | ExpectedLiskVerifyMessageResponse
@@ -221,7 +233,9 @@ declare module 'flowtype/tests' {
         | ExpectedTezosGetPublicKeyResponse
         | ExpectedTezosSignTransactionResponse
         | ExpectedRippleGetAddressResponse
-        | ExpectedRippleSignTransactionResponse;
+        | ExpectedRippleSignTransactionResponse
+        | ExpectedEosSignTransactionResponse
+        | ExpectedEosGetPublicKeyResponse;
 
     declare export type SubtestFunction = SubtestGetAddress
     | SubtestSignMessage
@@ -230,13 +244,15 @@ declare module 'flowtype/tests' {
     | SubtestVerifyMessage
     | SubtestGetAccountInfo
     | SubtestNemSignTransaction
-    | SubtestPassphrase
     | SubtestTezosSignTransaction
-    | SubtestLiskSignTransaction;
+    | SubtestLiskSignTransaction
+    | SubtestLiskSignTransaction
+    | SubtestEosSignTransaction;
 
     declare export type TestFunction = {
         testName: string,
-        mnemonic: string,
+        mnemonic: string | Array<string>,
+        mnemonic_secret?: string,
         testPayloads?: Array<TestPayload>,
         expectedResponses?: Array<ExpectedResponse>,
         subtests?: { [k: string]: () => SubtestFunction },
@@ -267,7 +283,6 @@ declare module 'flowtype/tests' {
         nemSignTransactionMultisig(): TestFunction,
         nemSignTransactionOthers(): TestFunction,
         nemSignTransactionTransfers(): TestFunction,
-        passphrase(): TestFunction,
         liskGetAddress(): TestFunction,
         liskSignMessage(): TestFunction,
         liskVerifyMessage(): TestFunction,
@@ -277,5 +292,7 @@ declare module 'flowtype/tests' {
         tezosGetAddress(): TestFunction,
         tezosGetPublicKey(): TestFunction,
         tezosSignTransaction(): TestFunction,
+        eosSignTransaction(): TestFunction,
+        eosGetPublicKey(): TestFunction,
     };
 }

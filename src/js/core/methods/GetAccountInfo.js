@@ -1,116 +1,158 @@
 /* @flow */
-'use strict';
-
 import AbstractMethod from './AbstractMethod';
-import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
 import Discovery from './helpers/Discovery';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
+import { validatePath, getSerializedPath } from '../../utils/pathUtils';
+import { getAccountLabel } from '../../utils/accountUtils';
+import { resolveAfter } from '../../utils/promiseUtils';
+import { getCoinInfo } from '../../data/CoinInfo';
+import { NO_COIN_INFO, backendNotSupported, TrezorError } from '../../constants/errors';
+
 import * as UI from '../../constants/ui';
-import { NO_COIN_INFO } from '../../constants/errors';
-
-import {
-    validatePath,
-    getAccountLabel,
-    getSerializedPath,
-} from '../../utils/pathUtils';
-import { create as createDeferred } from '../../utils/deferred';
-
-import Account, { create as createAccount } from '../../account';
-import BlockBook, { create as createBackend } from '../../backend';
-import { getBitcoinNetwork, fixCoinInfoNetwork } from '../../data/CoinInfo';
 import { UiMessage } from '../../message/builder';
-import type { HDNodeResponse } from '../../types/trezor';
-import type { Deferred, CoreMessage, UiPromiseResponse, BitcoinNetworkInfo } from '../../types';
-import type { AccountInfoPayload } from '../../types/response';
 
-type Params = {
-    path: ?Array<number>,
-    xpub: ?string,
-    coinInfo: BitcoinNetworkInfo,
-}
+import { initBlockchain } from '../../backend/BlockchainLink';
 
-type Response = AccountInfoPayload;
+import type { CoreMessage, CoinInfo } from '../../types';
+import type { $GetAccountInfo } from '../../types/params';
+import type { AccountInfo } from '../../types/account';
+import type { FirmwareException } from '../../types/uiRequest';
+
+type Request = $GetAccountInfo & { address_n: number[], coinInfo: CoinInfo };
+type Params = Request[];
 
 export default class GetAccountInfo extends AbstractMethod {
     params: Params;
-    confirmed: boolean = false;
-    backend: BlockBook;
-    discovery: ?Discovery;
+    disposed: boolean = false;
+    hasBundle: boolean;
+    discovery: Discovery | typeof undefined = undefined;
 
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read'];
         this.info = 'Export account info';
+        this.useDevice = true;
+        this.useUi = true;
 
-        const payload: Object = message.payload;
+        // assume that device will not be used
+        let willUseDevice = false;
 
-        // validate incoming parameters
+        // create a bundle with only one batch if bundle doesn't exists
+        this.hasBundle = message.payload.hasOwnProperty('bundle');
+        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
+
+        // validate bundle type
         validateParams(payload, [
-            { name: 'coin', type: 'string' },
-            { name: 'xpub', type: 'string' },
-            { name: 'crossChain', type: 'boolean' },
+            { name: 'bundle', type: 'array' },
         ]);
 
-        let path: Array<number>;
-        let coinInfo: ?BitcoinNetworkInfo;
-        if (payload.coin) {
-            coinInfo = getBitcoinNetwork(payload.coin);
-        }
+        payload.bundle.forEach(batch => {
+            // validate incoming parameters
+            validateParams(batch, [
+                { name: 'coin', type: 'string', obligatory: true },
+                { name: 'descriptor', type: 'string' },
+                { name: 'path', type: 'string' },
 
-        if (payload.path) {
-            path = validatePath(payload.path, 3, true);
+                { name: 'details', type: 'string' },
+                { name: 'tokens', type: 'string' },
+                { name: 'page', type: 'number' },
+                { name: 'pageSize', type: 'number' },
+                { name: 'from', type: 'number' },
+                { name: 'to', type: 'number' },
+                { name: 'contractFilter', type: 'string' },
+                { name: 'gap', type: 'number' },
+                { name: 'marker', type: 'object' },
+            ]);
+
+            // validate coin info
+            const coinInfo: ?CoinInfo = getCoinInfo(batch.coin);
             if (!coinInfo) {
-                coinInfo = getBitcoinNetwork(path);
-            } else if (!payload.crossChain) {
-                validateCoinPath(coinInfo, path);
+                throw NO_COIN_INFO;
             }
-        }
+            if (!coinInfo.blockchainLink) {
+                throw backendNotSupported(coinInfo.name);
+            }
+            // validate path if exists
+            if (batch.path) {
+                batch.address_n = validatePath(batch.path, 3);
+                // since there is no descriptor device will be used
+                willUseDevice = typeof batch.descriptor !== 'string';
+            }
+            if (!batch.path && !batch.descriptor) {
+                if (payload.bundle.length > 1) {
+                    throw Error('Discovery for multiple coins in not supported');
+                }
+                // device will be used in Discovery
+                willUseDevice = true;
+            }
+            batch.coinInfo = coinInfo;
 
-        // if there is no coinInfo at this point return error
-        if (!coinInfo) {
-            throw NO_COIN_INFO;
-        } else {
-            // check required firmware with coinInfo support
+            // set firmware range
             this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
-        }
+        });
 
-        // delete payload.path;
-        // payload.xpub = 'ypub6XKbB5DSkq8Royg8isNtGktj6bmEfGJXDs83Ad5CZ5tpDV8QofwSWQFTWP2Pv24vNdrPhquehL7vRMvSTj2GpKv6UaTQCBKZALm6RJAmxG6'
-        // payload.xpub = 'xpub6BiVtCpG9fQQNBuKZoKzhzmENDKdCeXQsNVPF2Ynt8rhyYznmPURQNDmnNnX9SYahZ1DVTaNtsh3pJ4b2jKvsZhpv2oVj76YETCGztKJ3LM'
+        this.params = payload.bundle;
 
-        this.params = {
-            path: path,
-            xpub: payload.xpub,
-            coinInfo,
-        };
+        this.useDevice = willUseDevice;
+        this.useUi = willUseDevice;
     }
 
     async confirmation(): Promise<boolean> {
-        if (this.confirmed) return true;
         // wait for popup window
         await this.getPopupPromise().promise;
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
-        let label: string;
-        if (this.params.path) {
-            label = getAccountLabel(this.params.path, this.params.coinInfo);
-        } else if (this.params.xpub) {
-            label = `Export ${ this.params.coinInfo.label } account for public key <span>${ this.params.xpub }</span>`;
+        if (this.params.length === 1 && !this.params[0].path && !this.params[0].descriptor) {
+            // request confirmation view
+            this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+                view: 'export-account-info',
+                label: `Export info for ${ this.params[0].coinInfo.label } account of your selection`,
+                customConfirmButton: {
+                    label: 'Proceed to account selection',
+                    className: 'not-empty-css',
+                },
+            }));
         } else {
-            return true;
+            const keys: { [coin: string]: { coinInfo: CoinInfo, values: Array<string | number[]>} } = {};
+            this.params.forEach(b => {
+                if (!keys[b.coinInfo.label]) {
+                    keys[b.coinInfo.label] = {
+                        coinInfo: b.coinInfo,
+                        values: [],
+                    };
+                }
+                keys[b.coinInfo.label].values.push(b.descriptor || b.address_n);
+            });
+
+            // prepare html for popup
+            const str: string[] = [];
+            Object.keys(keys).forEach((k, i, a) => {
+                const details = keys[k];
+                details.values.forEach((acc, i) => {
+                    // if (i === 0) str += this.params.length > 1 ? ': ' : ' ';
+                    // if (i > 0) str += ', ';
+                    str.push('<span>');
+                    str.push(k);
+                    str.push(' ');
+                    if (typeof acc === 'string') {
+                        str.push(acc);
+                    } else {
+                        str.push(getAccountLabel(acc, details.coinInfo));
+                    }
+                    str.push('</span>');
+                });
+            });
+
+            this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+                view: 'export-account-info',
+                label: `Export info for: ${str.join('')}`,
+            }));
         }
 
-        // request confirmation view
-        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'export-account-info',
-            label,
-        }));
-
         // wait for user action
-        const uiResp: UiPromiseResponse = await uiPromise.promise;
-
-        this.confirmed = uiResp.payload;
-        return this.confirmed;
+        const uiResp = await uiPromise.promise;
+        return uiResp.payload;
     }
 
     async noBackupConfirmation(): Promise<boolean> {
@@ -125,143 +167,227 @@ export default class GetAccountInfo extends AbstractMethod {
         }));
 
         // wait for user action
-        const uiResp: UiPromiseResponse = await uiPromise.promise;
+        const uiResp = await uiPromise.promise;
         return uiResp.payload;
     }
 
-    async run(): Promise<Response> {
-        // initialize backend
-        this.backend = await createBackend(this.params.coinInfo);
-
-        if (this.params.path) {
-            return await this._getAccountFromPath(this.params.path);
-        } else if (this.params.xpub) {
-            return await this._getAccountFromPublicKey();
-        } else {
-            return await this._getAccountFromDiscovery();
+    // override AbstractMethod function
+    // this is a special case where we want to check firmwareRange in bundle
+    // and return error with bundle indexes
+    async checkFirmwareRange(isUsingPopup: boolean): Promise<?$PropertyType<FirmwareException, 'type'>> {
+        // for popup mode use it like it was before
+        if (isUsingPopup || this.params.length === 1) {
+            return super.checkFirmwareRange(isUsingPopup);
         }
-    }
-
-    async _getAccountFromPath(path: Array<number>): Promise<Response> {
-        const coinInfo: BitcoinNetworkInfo = fixCoinInfoNetwork(this.params.coinInfo, path);
-        const node: HDNodeResponse = await this.device.getCommands().getHDNode(path, coinInfo);
-        const account = createAccount(path, node.xpub, coinInfo);
-
-        const discovery: Discovery = this.discovery = new Discovery({
-            getHDNode: this.device.getCommands().getHDNode.bind(this.device.getCommands()),
-            coinInfo: this.params.coinInfo,
-            backend: this.backend,
-            loadInfo: false,
-        });
-
-        await discovery.getAccountInfo(account);
-        return this._response(account);
-    }
-
-    async _getAccountFromPublicKey(): Promise<Response> {
-        const discovery: Discovery = this.discovery = new Discovery({
-            getHDNode: this.device.getCommands().getHDNode.bind(this.device.getCommands()),
-            coinInfo: this.params.coinInfo,
-            backend: this.backend,
-            loadInfo: false,
-        });
-
-        const deferred: Deferred<Response> = createDeferred('account_discovery');
-        discovery.on('update', async (accounts: Array<Account>) => {
-            const account = accounts.find(a => a.xpub === this.params.xpub);
-            if (account) {
-                discovery.removeAllListeners();
-                discovery.completed = true;
-
-                await discovery.getAccountInfo(account);
-                discovery.stop();
-                deferred.resolve(this._response(account));
+        // for trusted mode check each batch and return error with invalid bundle indexes
+        const defaultRange = {
+            '1': { min: '1.0.0', max: '0' },
+            '2': { min: '2.0.0', max: '0' },
+        };
+        // find invalid ranges
+        const invalid = [];
+        for (let i = 0; i < this.params.length; i++) {
+            // set FW range for current batch
+            this.firmwareRange = getFirmwareRange(this.name, this.params[i].coinInfo, defaultRange);
+            const exception = await super.checkFirmwareRange(false);
+            if (exception) {
+                invalid.push({
+                    index: i,
+                    exception,
+                    coin: this.params[i].coin,
+                });
             }
+        }
+        // return invalid ranges in custom error
+        if (invalid.length > 0) {
+            throw new TrezorError('bundle_fw_exception', JSON.stringify(invalid));
+        }
+        return null;
+    }
+
+    async run(): Promise<AccountInfo | Array<AccountInfo | null> | null> {
+        // address_n and descriptor are not set. use discovery
+        if (this.params.length === 1 && !this.params[0].address_n && !this.params[0].descriptor) {
+            return this.discover(this.params[0]);
+        }
+
+        const responses: Array<AccountInfo | null> = [];
+
+        const sendProgress = (progress: number, response: AccountInfo | null, error?: string) => {
+            if (!this.hasBundle || this.device.getCommands().disposed) return;
+            // send progress to UI
+            this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
+                progress,
+                response,
+                error,
+            }));
+        };
+
+        for (let i = 0; i < this.params.length; i++) {
+            const request = this.params[i];
+            const { address_n } = request;
+            let descriptor = request.descriptor;
+
+            if (this.disposed) break;
+
+            // get descriptor from device
+            if (address_n && typeof descriptor !== 'string') {
+                try {
+                    const accountDescriptor = await this.device.getCommands().getAccountDescriptor(
+                        request.coinInfo,
+                        address_n,
+                    );
+                    if (accountDescriptor) {
+                        descriptor = accountDescriptor.descriptor;
+                    }
+                } catch (error) {
+                    if (this.hasBundle) {
+                        responses.push(null);
+                        sendProgress(i, null, error.message);
+                        continue;
+                    } else {
+                        throw error;
+                    }
+                }
+            }
+
+            if (this.disposed) break;
+
+            try {
+                if (typeof descriptor !== 'string') {
+                    throw new Error('GetAccountInfo: descriptor not found');
+                }
+
+                // initialize backend
+                const blockchain = await initBlockchain(request.coinInfo, this.postMessage);
+
+                if (this.disposed) break;
+
+                // get account info from backend
+                const info = await blockchain.getAccountInfo({
+                    descriptor,
+                    details: request.details,
+                    tokens: request.tokens,
+                    page: request.page,
+                    pageSize: request.pageSize,
+                    from: request.from,
+                    to: request.to,
+                    contractFilter: request.contractFilter,
+                    gap: request.gap,
+                    marker: request.marker,
+                });
+
+                if (this.disposed) break;
+
+                let utxo: $ElementType<AccountInfo, 'utxo'>;
+                if (request.coinInfo.type === 'bitcoin' && typeof request.details === 'string' && request.details !== 'basic') {
+                    utxo = await blockchain.getAccountUtxo(descriptor);
+                }
+
+                if (this.disposed) break;
+
+                // add account to responses
+                const account: AccountInfo = {
+                    path: request.path,
+                    ...info,
+                    descriptor, // override descriptor (otherwise eth checksum is lost)
+                    utxo,
+                };
+                responses.push(account);
+
+                sendProgress(i, account);
+            } catch (error) {
+                if (this.hasBundle) {
+                    responses.push(null);
+                    sendProgress(i, null, error.message);
+                    continue;
+                } else {
+                    throw error;
+                }
+            }
+        }
+        if (this.disposed) return new Promise(() => {});
+        return this.hasBundle ? responses : responses[0];
+    }
+
+    async discover(request: Request) {
+        const { coinInfo } = request;
+        const blockchain = await initBlockchain(coinInfo, this.postMessage);
+        const dfd = this.createUiPromise(UI.RECEIVE_ACCOUNT, this.device);
+
+        const discovery = new Discovery({
+            blockchain,
+            commands: this.device.getCommands(),
+        });
+        discovery.on('progress', (accounts: Array<any>) => {
+            this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
+                type: 'progress',
+                coinInfo,
+                accounts,
+            }));
         });
         discovery.on('complete', () => {
-            deferred.resolve(this._response(null));
-        });
-
-        discovery.start();
-
-        return await deferred.promise;
-    }
-
-    async _getAccountFromDiscovery(): Promise<Response> {
-        const discovery: Discovery = this.discovery = new Discovery({
-            getHDNode: this.device.getCommands().getHDNode.bind(this.device.getCommands()),
-            coinInfo: this.params.coinInfo,
-            backend: this.backend,
-        });
-
-        discovery.on('update', (accounts: Array<Account>) => {
             this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
-                coinInfo: this.params.coinInfo,
-                accounts: accounts.map(a => a.toMessage()),
+                type: 'end',
+                coinInfo,
             }));
         });
-
-        discovery.on('complete', (accounts: Array<Account>) => {
-            this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
-                coinInfo: this.params.coinInfo,
-                accounts: accounts.map(a => a.toMessage()),
-                complete: true,
-            }));
+        // catch error from discovery process
+        discovery.start().catch(error => {
+            dfd.reject(error);
         });
-
-        try {
-            discovery.start();
-        } catch (error) {
-            throw error;
-        }
 
         // set select account view
         // this view will be updated from discovery events
         this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
-            coinInfo: this.params.coinInfo,
-            accounts: [],
-            start: true,
+            type: 'start',
+            accountTypes: discovery.types.map(t => t.type),
+            coinInfo,
         }));
 
         // wait for user action
-        const uiResp: UiPromiseResponse = await this.createUiPromise(UI.RECEIVE_ACCOUNT, this.device).promise;
+        const uiResp = await dfd.promise;
         discovery.stop();
 
-        const resp: number = parseInt(uiResp.payload);
+        const resp: number = uiResp.payload;
         const account = discovery.accounts[resp];
 
-        return this._response(account);
-    }
-
-    _response(account: ?Account): Response {
-        if (!account) {
-            throw new Error('Account not found');
+        if (!discovery.completed) {
+            await resolveAfter(501); // temporary solution, TODO: immediately resolve will cause "device call in progress"
         }
 
-        const nextAddress: string = account.getNextAddress();
+        // get account info from backend
+        const info = await blockchain.getAccountInfo({
+            descriptor: account.descriptor,
+            details: request.details,
+            tokens: request.tokens,
+            page: request.page,
+            pageSize: request.pageSize,
+            from: request.from,
+            to: request.to,
+            contractFilter: request.contractFilter,
+            gap: request.gap,
+            marker: request.marker,
+        });
+
+        let utxo: $ElementType<AccountInfo, 'utxo'>;
+        if (request.coinInfo.type === 'bitcoin' && typeof request.details === 'string' && request.details !== 'basic') {
+            utxo = await blockchain.getAccountUtxo(account.descriptor);
+        }
+
         return {
-            id: account.id,
-            path: account.path,
-            serializedPath: getSerializedPath(account.path),
-            address: nextAddress,
-            addressIndex: account.getNextAddressId(),
-            addressPath: account.getAddressPath(nextAddress),
-            addressSerializedPath: getSerializedPath(account.getAddressPath(nextAddress)),
-            xpub: account.xpub,
-            balance: account.getBalance(),
-            confirmed: account.getConfirmedBalance(),
-            transactions: account.getTransactionsCount(),
-            utxo: account.getUtxos(),
-            usedAddresses: account.getUsedAddresses(),
-            unusedAddresses: account.getUnusedAddresses(),
+            path: getSerializedPath(account.address_n),
+            ...info,
+            utxo,
         };
     }
 
     dispose() {
-        if (this.discovery) {
-            const d = this.discovery;
-            d.stop();
-            d.removeAllListeners();
+        this.disposed = true;
+        const { discovery } = this;
+        if (discovery) {
+            discovery.removeAllListeners();
+            discovery.stop();
         }
     }
 }

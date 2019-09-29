@@ -3,33 +3,35 @@
 import AbstractMethod from './AbstractMethod';
 import * as UI from '../../constants/ui';
 import { validateParams } from './helpers/paramsValidator';
+import { uploadFirmware } from './helpers/uploadFirmware';
 import { UiMessage } from '../../message/builder';
+import type { FirmwareUpload } from '../../types/trezor'; // flowtype only
 
 import type { CoreMessage } from '../../types';
 
-type Params = {
-    length?: number,
-}
-
-export default class FirmwareErase extends AbstractMethod {
-    params: Params;
+export default class FirmwareUpdate extends AbstractMethod {
+    params: FirmwareUpload;
     run: () => Promise<any>;
 
     constructor(message: CoreMessage) {
         super(message);
         this.useEmptyPassphrase = true;
         this.requiredPermissions = ['management'];
-        this.allowDeviceMode = [...this.allowDeviceMode, UI.BOOTLOADER, UI.INITIALIZE];
+        this.allowDeviceMode = [UI.BOOTLOADER, UI.INITIALIZE];
+        this.requireDeviceMode = [UI.BOOTLOADER];
         this.useDeviceState = false;
+        this.skipFirmwareCheck = true;
 
         const payload: Object = message.payload;
 
         validateParams(payload, [
-            { name: 'length', type: 'number' },
+            { name: 'payload', type: 'buffer', obligatory: true },
+            // { name: 'hash', type: 'string' },
         ]);
 
         this.params = {
-            length: payload.length,
+            payload: payload.payload,
+            length: payload.payload.byteLength,
         };
     }
 
@@ -46,7 +48,7 @@ export default class FirmwareErase extends AbstractMethod {
                 className: 'wipe',
                 label: 'Proceed',
             },
-            label: 'Do you want to erase firmware?',
+            label: 'Do you want to update firmware? Never do this without your recovery card.',
         }));
 
         // wait for user action
@@ -55,6 +57,14 @@ export default class FirmwareErase extends AbstractMethod {
     }
 
     async run(): Promise<Object> {
-        return await this.device.getCommands().firmwareErase(this.params);
+        const { device, params } = this;
+        const response = await uploadFirmware(
+            this.device.getCommands().typedCall.bind(this.device.getCommands()),
+            this.postMessage,
+            device,
+            params,
+        );
+
+        return response;
     }
 }

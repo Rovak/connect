@@ -7,6 +7,7 @@
 import { UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, BLOCKCHAIN_EVENT } from '../constants';
 import * as TRANSPORT from '../constants/transport';
 import * as POPUP from '../constants/popup';
+import * as IFRAME from '../constants/iframe';
 import * as UI from '../constants/ui';
 import * as DEVICE from '../constants/device';
 
@@ -81,6 +82,7 @@ export type Features = {
     fw_vendor_keys: string,
     unfinished_backup: boolean,
     no_backup: boolean,
+    features: Array<string>,
 };
 
 export type FirmwareRelease = {
@@ -139,7 +141,7 @@ export type DeviceMessage = {
 
 export type T_UI_EVENT = typeof UI_EVENT;
 export type T_UI = typeof UI;
-export type UiMessageType = $Values<typeof UI>;
+export type UiMessageType = $Values<typeof UI> | typeof IFRAME.LOADED | typeof IFRAME.ERROR;
 export type UiMessage = {
     event: typeof UI_EVENT,
     type: UiMessageType,
@@ -179,6 +181,8 @@ import * as NEM from './nem';
 import * as STELLAR from './stellar';
 import * as LISK from './lisk';
 import * as TEZOS from './tezos';
+import * as EOS from './eos';
+import * as BINANCE from './binance';
 
 // export type UiResponseFn = (settings: UiResponse) => void;
 export type ChangeSettings = (settings: Settings) => void;
@@ -216,10 +220,6 @@ export type ComposeTransaction = (P.$ComposeTransaction) => Promise<R.ComposeTra
 export type DebugLinkDecision = (P.$DebugLinkDecision) => Promise<R.DebugLinkDecision$>;
 export type DebugLinkGetState = (P.$DebugLinkGetState) => Promise<R.DebugLinkGetState$>;
 
-declare function F_EthereumGetAccountInfo(params: (ETHEREUM.$EthereumGetAccountInfo)): Promise<ETHEREUM.EthereumGetAccountInfo$>;
-declare function F_EthereumGetAccountInfo(params: (ETHEREUM.$$EthereumGetAccountInfo)): Promise<ETHEREUM.EthereumGetAccountInfo$$>;
-export type EthereumGetAccountInfo = typeof F_EthereumGetAccountInfo;
-
 declare function F_EthereumGetAddress(params: (P.$Common & ETHEREUM.$EthereumGetAddress)): Promise<ETHEREUM.EthereumGetAddress$>;
 declare function F_EthereumGetAddress(params: (P.$Common & { bundle: Array<ETHEREUM.$EthereumGetAddress> })): Promise<ETHEREUM.EthereumGetAddress$$>;
 export type EthereumGetAddress = typeof F_EthereumGetAddress;
@@ -231,7 +231,11 @@ export type EthereumGetPublicKey = typeof F_EthereumGetPublicKey;
 export type EthereumSignMessage = (ETHEREUM.$EthereumSignMessage) => Promise<ETHEREUM.EthereumSignMessage$>;
 export type EthereumSignTransaction = (ETHEREUM.$EthereumSignTransaction) => Promise<ETHEREUM.EthereumSignTransaction$>;
 export type EthereumVerifyMessage = (ETHEREUM.$EthereumVerifyMessage) => Promise<ETHEREUM.EthereumVerifyMessage$>;
-export type GetAccountInfo = (P.$GetAccountInfo) => Promise<R.GetAccountInfo$>;
+
+declare function F_GetAccountInfo(params: (P.$Common & P.$GetAccountInfo)): Promise<R.GetAccountInfo$>;
+declare function F_GetAccountInfo(params: (P.$Common & { bundle: Array<P.$GetAccountInfo> })): Promise<R.GetAccountInfo$$>;
+export type GetAccountInfo = typeof F_GetAccountInfo;
+// export type GetAccountInfo = (P.$GetAccountInfo) => Promise<R.GetAccountInfo$>;
 
 declare function F_GetAddress(params: (P.$Common & P.$GetAddress)): Promise<R.GetAddress$>;
 declare function F_GetAddress(params: (P.$Common & { bundle: Array<P.$GetAddress> })): Promise<R.GetAddress$$>;
@@ -261,15 +265,12 @@ declare function F_NEMGetAddress(params: (P.$Common & { bundle: Array<NEM.$NEMGe
 export type NEMGetAddress = typeof F_NEMGetAddress;
 
 export type NEMSignTransaction = (NEM.$NEMSignTransaction) => Promise<NEM.NEMSignTransaction$>;
+
 export type PushTransaction = (P.$PushTransaction) => Promise<R.PushTransaction$>;
 
 declare function F_RippleGetAddress(params: (P.$Common & RIPPLE.$RippleGetAddress)): Promise<RIPPLE.RippleGetAddress$>;
 declare function F_RippleGetAddress(params: (P.$Common & { bundle: Array<RIPPLE.$RippleGetAddress> })): Promise<RIPPLE.RippleGetAddress$$>;
 export type RippleGetAddress = typeof F_RippleGetAddress;
-
-declare function F_RippleGetAccountInfo(params: (P.$Common & RIPPLE.$RippleGetAccountInfo)): Promise<RIPPLE.RippleGetAccountInfo$>;
-declare function F_RippleGetAccountInfo(params: (P.$Common & { bundle: Array<RIPPLE.$RippleGetAddress> })): Promise<RIPPLE.RippleGetAccountInfo$$>;
-export type RippleGetAccountInfo = typeof F_RippleGetAccountInfo;
 
 export type RippleSignTransaction = (RIPPLE.$RippleSignTransaction) => Promise<RIPPLE.RippleSignTransaction$>;
 
@@ -288,9 +289,25 @@ export type ApplyFlags = (P.$ApplyFlags) => Promise<R.ApplyFlags$>;
 export type ApplySettings = (P.$ApplySettings) => Promise<R.ApplySettings$>;
 export type BackupDevice = (P.$BackupDevice) => Promise<R.BackupDevice$>;
 export type ChangePin = (P.$ChangePin) => Promise<R.ChangePin$>;
-export type FirmwareErase = (P.$FirmwareErase) => Promise<R.FirmwareErase$>;
 export type FirmwareUpload = (P.$FirmwareUpload) => Promise<R.FirmwareUpload$>;
 export type RecoveryDevice = (P.$RecoveryDevice) => Promise<R.RecoveryDevice$>;
+
+declare function F_EosGetPublicKey(params: (P.$Common & EOS.$EosGetPublicKey)): Promise<EOS.EosGetPublicKey$>;
+declare function F_EosGetPublicKey(params: (P.$Common & { bundle: Array<EOS.$EosGetPublicKey> })): Promise<EOS.EosGetPublicKey$$>;
+
+export type EosGetPublicKey = typeof F_EosGetPublicKey;
+export type EosSignTx = (EOS.$EosSignTx) => Promise<EOS.EosSignTx$>;
+
+declare function F_BinanceGetAddress(params: (P.$Common & BINANCE.$BinanceGetAddress)): Promise<BINANCE.BinanceGetAddress$>;
+declare function F_BinanceGetAddress(params: (P.$Common & { bundle: Array<BINANCE.$BinanceGetAddress> })): Promise<BINANCE.BinanceGetAddress$$>;
+export type BinanceGetAddress = typeof F_BinanceGetAddress;
+
+declare function F_BinanceGetPublicKey(params: (P.$Common & BINANCE.$BinanceGetPublicKey)): Promise<BINANCE.BinanceGetPublicKey$>;
+declare function F_BinanceGetPublicKey(params: (P.$Common & { bundle: Array<BINANCE.$BinanceGetPublicKey> })): Promise<BINANCE.BinanceGetPublicKey$$>;
+export type BinanceGetPublicKey = typeof F_BinanceGetPublicKey;
+export type BinanceSignTransaction = (BINANCE.$BinanceSignTransaction) => Promise<BINANCE.BinanceSignTransaction$>;
+
+/* eslint-enable no-redeclare */
 
 export * from './response';
 export * from './coinInfo';

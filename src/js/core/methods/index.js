@@ -17,7 +17,6 @@ import ComposeTransaction from './ComposeTransaction';
 import CustomMessage from './CustomMessage';
 import DebugLinkDecision from './debuglink/DebugLinkDecision';
 import DebugLinkGetState from './debuglink/DebugLinkGetState';
-import EthereumGetAccountInfo from './EthereumGetAccountInfo';
 import EthereumGetAddress from './EthereumGetAddress';
 import EthereumGetPublicKey from './EthereumGetPublicKey';
 import EthereumSignMessage from './EthereumSignMessage';
@@ -38,7 +37,6 @@ import LoadDevice from './LoadDevice';
 import PushTransaction from './PushTransaction';
 import RequestLogin from './RequestLogin';
 import ResetDevice from './ResetDevice';
-import RippleGetAccountInfo from './RippleGetAccountInfo';
 import RippleGetAddress from './RippleGetAddress';
 import RippleSignTransaction from './RippleSignTransaction';
 import NEMGetAddress from './NEMGetAddress';
@@ -50,6 +48,11 @@ import StellarSignTransaction from './StellarSignTransaction';
 import TezosGetAddress from './TezosGetAddress';
 import TezosGetPublicKey from './TezosGetPublicKey';
 import TezosSignTransaction from './TezosSignTransaction';
+import EosGetPublicKey from './EosGetPublicKey';
+import EosSignTransaction from './EosSignTransaction';
+import BinanceGetPublicKey from './BinanceGetPublicKey';
+import BinanceGetAddress from './BinanceGetAddress';
+import BinanceSignTransaction from './BinanceSignTransaction';
 import TronGetAddress from './TronGetAddress';
 import TronSignTransaction from './TronSignTransaction';
 import VerifyMessage from './VerifyMessage';
@@ -58,8 +61,7 @@ import ApplyFlags from './ApplyFlags';
 import ApplySettings from './ApplySettings';
 import BackupDevice from './BackupDevice';
 import ChangePin from './ChangePin';
-import FirmwareErase from './FirmwareErase';
-import FirmwareUpload from './FirmwareUpload';
+import FirmwareUpdate from './FirmwareUpdate';
 import RecoveryDevice from './RecoveryDevice';
 
 const classes: {[k: string]: any} = {
@@ -75,7 +77,6 @@ const classes: {[k: string]: any} = {
     'customMessage': CustomMessage,
     'debugLinkDecision': DebugLinkDecision,
     'debugLinkGetState': DebugLinkGetState,
-    'ethereumGetAccountInfo': EthereumGetAccountInfo,
     'ethereumGetAddress': EthereumGetAddress,
     'ethereumGetPublicKey': EthereumGetPublicKey,
     'ethereumSignMessage': EthereumSignMessage,
@@ -96,7 +97,6 @@ const classes: {[k: string]: any} = {
     'pushTransaction': PushTransaction,
     'requestLogin': RequestLogin,
     'resetDevice': ResetDevice,
-    'rippleGetAccountInfo': RippleGetAccountInfo,
     'rippleGetAddress': RippleGetAddress,
     'rippleSignTransaction': RippleSignTransaction,
     'nemGetAddress': NEMGetAddress,
@@ -108,6 +108,11 @@ const classes: {[k: string]: any} = {
     'tezosGetAddress': TezosGetAddress,
     'tezosGetPublicKey': TezosGetPublicKey,
     'tezosSignTransaction': TezosSignTransaction,
+    'eosGetPublicKey': EosGetPublicKey,
+    'eosSignTransaction': EosSignTransaction,
+    'binanceGetPublicKey': BinanceGetPublicKey,
+    'binanceGetAddress': BinanceGetAddress,
+    'binanceSignTransaction': BinanceSignTransaction,
     'tronGetAddress': TronGetAddress,
     'tronSignTransaction': TronSignTransaction,
     'verifyMessage': VerifyMessage,
@@ -116,8 +121,7 @@ const classes: {[k: string]: any} = {
     'applySettings': ApplySettings,
     'backupDevice': BackupDevice,
     'changePin': ChangePin,
-    'firmwareErase': FirmwareErase,
-    'firmwareUpload': FirmwareUpload,
+    'firmwareUpdate': FirmwareUpdate,
     'recoveryDevice': RecoveryDevice,
 };
 

@@ -43,6 +43,28 @@ const parseRunOptions = (options?: RunOptions): RunOptions => {
     return options;
 };
 
+const parseFeatures = (features: Features): Features => {
+    if (!features.features || features.features.length === 0) {
+        features.features = [
+            'Feature_Bitcoin',
+            'Feature_Bitcoin_like',
+            'Feature_Binance',
+            'Feature_Cardano',
+            'Feature_Crypto',
+            'Feature_EOS',
+            'Feature_Ethereum',
+            'Feature_Lisk',
+            'Feature_Monero',
+            'Feature_NEM',
+            'Feature_Ripple',
+            'Feature_Stellar',
+            'Feature_Tezos',
+            'Feature_U2F',
+        ];
+    }
+    return features;
+};
+
 /**
  *
  *
@@ -156,20 +178,28 @@ export default class Device extends EventEmitter {
         if (this.isUsedHere() && !this.keepSession && this.activitySessionID) {
             if (this.commands) {
                 this.commands.dispose();
+                if (this.commands.callPromise) {
+                    try {
+                        await this.commands.callPromise;
+                    } catch (error) {
+                        this.commands.callPromise = undefined;
+                    }
+                }
             }
             try {
                 await this.transport.release(this.activitySessionID, false, false);
+                if (this.deferredActions[ DEVICE.RELEASE ]) await this.deferredActions[ DEVICE.RELEASE ].promise;
             } catch (err) {
                 // empty
             }
         }
     }
 
-    cleanup(): void {
-        this.release();
+    async cleanup(): Promise<void> {
         this.removeAllListeners();
         // make sure that DEVICE_CALL_IN_PROGRESS will not be thrown
         this.runPromise = null;
+        await this.release();
     }
 
     async run(
@@ -207,11 +237,6 @@ export default class Device extends EventEmitter {
             // reject inner defer
             this.runPromise.reject(error);
             this.runPromise = null;
-
-            // release device
-            if (this.deferredActions[ DEVICE.RELEASE ]) {
-                this.release();
-            }
         }
     }
 
@@ -230,7 +255,7 @@ export default class Device extends EventEmitter {
         fn?: () => Promise<X>,
         options: RunOptions
     ): Promise<any> {
-        if (!this.isUsedHere()) {
+        if (!this.isUsedHere() || this.commands.disposed) {
             // acquire session
             await this.acquire();
 
@@ -269,8 +294,6 @@ export default class Device extends EventEmitter {
         if ((!this.keepSession && typeof options.keepSession !== 'boolean') || options.keepSession === false) {
             this.keepSession = false;
             await this.release();
-            // wait for release event
-            if (this.deferredActions[ DEVICE.RELEASE ]) await this.deferredActions[ DEVICE.RELEASE ].promise;
         }
 
         if (this.runPromise) { this.runPromise.resolve(); }
@@ -343,7 +366,7 @@ export default class Device extends EventEmitter {
 
     async initialize(useEmptyPassphrase: boolean): Promise<void> {
         const { message }: { message: Features } = await this.commands.initialize(useEmptyPassphrase);
-        this.features = message;
+        this.features = parseFeatures(message);
         this.featuresNeedsReload = false;
         this.featuresTimestamp = new Date().getTime();
 
@@ -354,7 +377,7 @@ export default class Device extends EventEmitter {
 
     async getFeatures(): Promise<void> {
         const { message }: { message: Features } = await this.commands.typedCall('GetFeatures', 'Features', {});
-        this.features = message;
+        this.features = parseFeatures(message);
         this.firmwareStatus = checkFirmware(
             [ this.features.major_version, this.features.minor_version, this.features.patch_version ],
             this.features,
@@ -443,7 +466,10 @@ export default class Device extends EventEmitter {
         // TODO: cleanup everything
         _log.debug('DISCONNECT CLEANUP!');
         // don't try to release
-        delete this.deferredActions[ DEVICE.RELEASE ];
+        if (this.deferredActions[DEVICE.RELEASE]) {
+            this.deferredActions[DEVICE.RELEASE].resolve();
+            delete this.deferredActions[ DEVICE.RELEASE ];
+        }
 
         this.interruptionFromUser(new Error('Device disconnected'));
 
@@ -451,7 +477,7 @@ export default class Device extends EventEmitter {
     }
 
     isBootloader(): boolean {
-        return this.features.bootloader_mode && (typeof this.features.firmware_present === 'boolean' && this.features.firmware_present);
+        return this.features.bootloader_mode;
     }
 
     isInitialized(): boolean {
@@ -519,8 +545,10 @@ export default class Device extends EventEmitter {
         return this.features ? this.features.major_version === 1 : false;
     }
 
-    hasUnexpectedMode(allow: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) {
+    hasUnexpectedMode(allow: Array<string>, require: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.NOT_IN_BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) {
+        // both allow and require cases might generate single unexpected mode
         if (this.features) {
+            // allow cases
             if (this.isBootloader() && !allow.includes(UI.BOOTLOADER)) {
                 return UI.BOOTLOADER;
             }
@@ -529,6 +557,11 @@ export default class Device extends EventEmitter {
             }
             if (this.isSeedless() && !allow.includes(UI.SEEDLESS)) {
                 return UI.SEEDLESS;
+            }
+
+            // require cases
+            if (!this.isBootloader() && require.includes(UI.BOOTLOADER)) {
+                return UI.NOT_IN_BOOTLOADER;
             }
         }
         return null;

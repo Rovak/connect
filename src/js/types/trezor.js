@@ -73,7 +73,7 @@ export type LoadDeviceSettings = {
     language?: string,
     label?: string,
     skip_checksum?: boolean,
-
+    mnemonics?: Array<string>,
     mnemonic?: string,
     node?: HDNode,
     payload?: string, // will be converted
@@ -110,45 +110,53 @@ export type MultisigRedeemScriptType = {
     m?: number,
 }
 
-export type TransactionInput = {
-    address_n?: Array<number>,
+export type InputScriptType = 'SPENDADDRESS' | 'SPENDMULTISIG' | 'SPENDWITNESS' | 'SPENDP2SHWITNESS';
+// transaction input, parameter of SignTx message, declared by user
+export type TransactionInput = {|
+    address_n: Array<number>,
     prev_hash: string,
     prev_index: number,
-    script_sig?: string,
+    script_type: InputScriptType,
     sequence?: number,
-    script_type?: 'SPENDADDRESS' | 'SPENDMULTISIG' | 'SPENDWITNESS' | 'SPENDP2SHWITNESS',
+    amount?: string, // (segwit, bip143: true, zcash overwinter)
     multisig?: MultisigRedeemScriptType,
-    amount?: number, // only with segwit
-    decred_tree?: number,
-    decred_script_version?: number,
-};
+|};
 
-export type TransactionOutput = {
+// transaction input, parameter of TxAck message, declared by user or downloaded from backend
+export type RefTransactionInput = {|
+    prev_hash: string,
+    prev_index: number,
+    script_sig: string,
+    sequence: number,
+|};
+
+export type OutputScriptType = 'PAYTOADDRESS' | 'PAYTOMULTISIG' | 'PAYTOWITNESS' | 'PAYTOP2SHWITNESS';
+// transaction output, parameter of SignTx message, declared by user
+export type TransactionOutput = {|
     address: string,
-    amount: number, // in satoshis
     script_type: 'PAYTOADDRESS',
-} | {
+    amount: string,
+    multisig?: MultisigRedeemScriptType,
+|} | {|
     address_n: Array<number>,
-    amount: number, // in satoshis
-    script_type: 'PAYTOADDRESS' | 'PAYTOMULTISIG' | 'PAYTOWITNESS' | 'PAYTOP2SHWITNESS',
-} | {
+    script_type: OutputScriptType,
+    amount: string,
+    multisig?: MultisigRedeemScriptType,
+|} | {|
+    amount: '0',
     op_return_data: string,
-    amount: 0, // fixed
     script_type: 'PAYTOOPRETURN',
-}
-// TODO:
-// "multisig": MultisigRedeemScriptType field, where?
-// "decred_script_version": number field, where?
+|};
 
-export type TransactionBinOutput = {
-    amount: number,
+type TransactionBinOutput = {
+    amount: string,
     script_pubkey: string,
 };
 
 export type RefTransaction = {
     hash: string,
     version?: ?number,
-    inputs: Array<TransactionInput>,
+    inputs: Array<RefTransactionInput>,
     bin_outputs: Array<TransactionBinOutput>,
     lock_time?: ?number,
     extra_data?: ?string,
@@ -244,7 +252,7 @@ export type HDNodeResponse = {
 
 // this is what Trezor asks for
 export type SignTxInfoToTrezor = {
-    inputs: Array<TransactionInput>,
+    inputs: Array<TransactionInput | RefTransactionInput>,
 } | {
     bin_outputs: Array<TransactionBinOutput>,
 } | {
@@ -677,6 +685,236 @@ export type RippleSignedTx = {
     serialized_tx: string,
 }
 
+// EOS types
+export type EosPublicKey = {
+    wif_public_key: string,
+    raw_public_key: string,
+}
+
+export type EosTxActionRequest = {
+    data_size: ?number,
+}
+
+export type EosTxHeader = {
+    expiration: number,
+    ref_block_num: number,
+    ref_block_prefix: number,
+    max_net_usage_words: number,
+    max_cpu_usage_ms: number,
+    delay_sec: number,
+}
+
+export type EosSignTx = {
+    address_n: Array<number>,
+    chain_id: string,
+    header: ?EosTxHeader,
+    num_actions: number,
+}
+
+export type EosAsset = {
+    amount: string, // uint64 as string
+    symbol: string, // uint64 as string
+}
+
+export type EosPermissionLevel = {
+    actor: string, // uint64 as string
+    permission: string, // uint64 as string
+}
+
+export type EosAuthorizationKey = {
+    type: number,
+    key: string,
+    // address_n?: Array<number>, // this field is not implemented in FW
+    weight: number,
+}
+
+export type EosAuthorization = {
+    threshold: number,
+    keys: Array<EosAuthorizationKey>,
+    accounts: Array<{
+        account: EosPermissionLevel,
+        weight: number,
+    }>,
+    waits: Array<{
+        wait_sec: number,
+        weight: number,
+    }>,
+}
+
+export type EosActionCommon = {
+    account: string, // uint64 as string
+    name: string, // uint64 as string
+    authorization: Array<EosPermissionLevel>,
+}
+
+export type EosActionTransfer = {
+    sender: string, // uint64 as string
+    receiver: string, // uint64 as string
+    quantity: EosAsset,
+    memo?: string,
+}
+
+export type EosActionDelegate = {
+    sender: string, // uint64 as string
+    receiver: string, // uint64 as string
+    net_quantity: EosAsset,
+    cpu_quantity: EosAsset,
+    transfer?: boolean,
+}
+
+export type EosActionUndelegate = {
+    sender: string, // uint64 as string
+    receiver: string, // uint64 as string
+    net_quantity: EosAsset,
+    cpu_quantity: EosAsset,
+}
+
+export type EosActionBuyRam = {
+    payer: string, // uint64 as string
+    receiver: string, // uint64 as string
+    quantity: EosAsset,
+}
+
+export type EosActionBuyRamBytes = {
+    payer: string, // uint64 as string
+    receiver: string, // uint64 as string
+    bytes: number,
+}
+
+export type EosActionSellRam = {
+    account: string, // uint64 as string
+    bytes: number,
+}
+
+export type EosActionVoteProducer = {
+    voter: string, // uint64 as string
+    proxy: string, // uint64 as string
+    producers: Array<string>, // uint64[] as string
+}
+
+export type EosActionRefund = {
+    owner: string, // uint64 as string
+}
+
+export type EosActionUpdateAuth = {
+    account: string, // uint64 as string
+    permission: string, // uint64 as string
+    parent: string, // uint64 as string
+    auth: EosAuthorization,
+}
+
+export type EosActionDeleteAuth = {
+    account: string, // uint64 as string
+    permission: string, // uint64 as string
+}
+
+export type EosActionLinkAuth = {
+    account: string, // uint64 as string
+    code: string, // uint64 as string
+    type: string, // uint64 as string
+    requirement: string, // uint64 as string
+}
+
+export type EosActionUnlinkAuth = {
+    account: string, // uint64 as string
+    code: string, // uint64 as string
+    type: string, // uint64 as string
+}
+
+export type EosActionNewAccount = {
+    creator: string, // uint64 as string
+    name: string, // uint64 as string
+    owner: EosAuthorization,
+    active: EosAuthorization,
+}
+
+export type EosActionUnknown = {
+    data_size: number,
+    data_chunk: string,
+}
+
+export type EosTxActionAck = {
+    common?: EosActionCommon,
+    transfer?: EosActionTransfer,
+    delegate?: EosActionDelegate,
+    undelegate?: EosActionUndelegate,
+    refund?: EosActionRefund,
+    buy_ram?: EosActionBuyRam,
+    buy_ram_bytes?: EosActionBuyRamBytes,
+    sell_ram?: EosActionSellRam,
+    vote_producer?: EosActionVoteProducer,
+    update_auth?: EosActionUpdateAuth,
+    delete_auth?: EosActionDeleteAuth,
+    link_auth?: EosActionLinkAuth,
+    unlink_auth?: EosActionUnlinkAuth,
+    new_account?: EosActionNewAccount,
+    unknown?: EosActionUnknown,
+}
+
+export type EosSignedTx = {
+    signature: string,
+}
+
+// Binance types
+export type BinanceAddress = {
+    address: string,
+}
+
+export type BinancePublicKey = {
+    public_key: string,
+}
+
+export type BinanceSignTx = {
+    address_n: Array<number>,
+    msg_count: number,
+    chain_id: string,
+    account_number: number,
+    memo?: string,
+    sequence: number,
+    source: number,
+}
+
+export type BinanceTxRequest = {
+
+}
+
+export type BinanceInputOutput = {
+    address: string,
+    coins: {
+        amount: number,
+        denom: string,
+    },
+}
+
+export type BinanceTransferMsg = {
+    inputs: BinanceInputOutput[],
+    outputs: BinanceInputOutput[],
+}
+
+export type BinanceOrderMsg = {
+    id: string,
+    ordertype: number, // 'OT_UNKNOWN' | 'MARKET' | 'LIMIT' | 'OT_RESERVED',
+    price: number,
+    quantity: number,
+    sender: string,
+    side: number, // 'SIDE_UNKNOWN' | 'BUY' | 'SELL',
+    symbol: string,
+    timeinforce: number, // 'TIF_UNKNOWN' | 'GTE' | 'TIF_RESERVED' | 'IOC',
+}
+
+export type BinanceCancelMsg = {
+    refid: string,
+    sender: string,
+    symbol: string,
+}
+
+export type BinanceMessage = BinanceTransferMsg | BinanceOrderMsg | BinanceCancelMsg;
+
+export type BinanceSignedTx = {
+    signature: string,
+    public_key: string,
+}
+
 export type TronAddress = {
     address: string,
 };
@@ -716,7 +954,8 @@ export type FirmwareErase = {
 
 export type FirmwareUpload = {
     payload: Buffer,
-    hash?: string,
+    length: number,
+    // hash?: string,
 }
 
 export type ChangePin = {
@@ -748,6 +987,7 @@ export type DebugLinkState = {
 }
 
 export type LoadDeviceFlags = {
+    mnemonics?: Array<string>,
     mnemonic?: string,
     node?: HDNode,
     pin?: string,

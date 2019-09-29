@@ -7,9 +7,15 @@ const bitcoinNetworks: Array<BitcoinNetworkInfo> = [];
 const ethereumNetworks: Array<EthereumNetworkInfo> = [];
 const miscNetworks: Array<MiscNetworkInfo> = [];
 
-export const cloneCoinInfo: <T>(info: T) => T = (ci) => {
-    return JSON.parse(JSON.stringify(ci));
-};
+export function cloneCoinInfo<T>(info: T): T {
+    const jsonString = JSON.stringify(info);
+    if (jsonString === undefined) {
+        // jsonString === undefined IF and only IF obj === undefined
+        // therefore no need to clone
+        return info;
+    }
+    return JSON.parse(jsonString);
+}
 
 export const getBitcoinNetwork = (pathOrName: Array<number> | string): ?BitcoinNetworkInfo => {
     const networks: Array<BitcoinNetworkInfo> = cloneCoinInfo(bitcoinNetworks);
@@ -77,7 +83,12 @@ export const getBech32Network = (coin: BitcoinNetworkInfo): ?$ElementType<Bitcoi
 // fix coinInfo network values from path (segwit/legacy)
 export const fixCoinInfoNetwork = (ci: BitcoinNetworkInfo, path: Array<number>): BitcoinNetworkInfo => {
     const coinInfo = cloneCoinInfo(ci);
-    if (path[0] === toHardened(49)) {
+    if (path[0] === toHardened(84)) {
+        const bech32Network = getBech32Network(coinInfo);
+        if (bech32Network) {
+            coinInfo.network = bech32Network;
+        }
+    } else if (path[0] === toHardened(49)) {
         const segwitNetwork = getSegwitNetwork(coinInfo);
         if (segwitNetwork) {
             coinInfo.network = segwitNetwork;
@@ -166,25 +177,32 @@ const parseBitcoinNetworksJson = (json: JSON): void => {
             wif: 0x80, // doesn't matter, for type correctness
             dustThreshold: 0, // doesn't matter, for type correctness,
             coin: shortcut.toLowerCase(),
+            consensusBranchId: coin.consensus_branch_id, // zcash, komodo
         };
+
+        const blockchainLink = Array.isArray(coin.blockbook) && coin.blockbook.length > 0 ? {
+            type: 'blockbook',
+            url: coin.blockbook,
+        } : undefined;
 
         bitcoinNetworks.push({
             type: 'bitcoin',
             // address_type in Network
             // address_type_p2sh in Network
             // bech32_prefix in Network
+            // consensus_branch_id in Network
             // bip115: not used
-            bitcore: coin.bitcore,
-            blockbook: coin.blockbook,
-            blockchainLink: null,
+            // bitcore: not used,
+            // blockbook: not used,
+            blockchainLink,
             blocktime: Math.round(coin.blocktime_seconds / 60),
             cashAddrPrefix: coin.cashaddr_prefix,
             label: coin.coin_label,
             name: coin.coin_name,
             shortcut,
-            // cooldown no used
+            // cooldown not used
             curveName: coin.curve_name,
-            decred: coin.decred,
+            // decred not used
             defaultFees: coin.default_fee_b,
             dustLimit: coin.dust_limit,
             forceBip143: coin.force_bip143,
@@ -219,6 +237,7 @@ const parseBitcoinNetworksJson = (json: JSON): void => {
 
             // used in backend ?
             blocks: Math.round(coin.blocktime_seconds / 60),
+            decimals: 8,
         });
     });
 };
@@ -227,14 +246,20 @@ const parseEthereumNetworksJson = (json: JSON): void => {
     const networksObject: Object = json;
     Object.keys(networksObject).forEach(key => {
         const network = networksObject[key];
+        const blockchainLink = Array.isArray(network.blockbook) && network.blockbook.length > 0 ? {
+            type: 'blockbook',
+            url: network.blockbook,
+        } : undefined;
         ethereumNetworks.push({
             type: 'ethereum',
-            blockbook: network.blockbook || [],
-            bitcore: [], // legacy compatibility with bitcoin coinInfo
-            blockchainLink: null,
+            blockchainLink,
+            blocktime: Math.round(network.blocktime_seconds / 60),
             chain: network.chain,
             chainId: network.chain_id,
             // key not used
+            defaultFees: {'Normal': 1},
+            minFee: 1,
+            maxFee: 1,
             label: network.name,
             name: network.name,
             shortcut: network.shortcut,
@@ -243,6 +268,7 @@ const parseEthereumNetworksJson = (json: JSON): void => {
             support: network.support,
             // url not used
             network: undefined,
+            decimals: 16,
         });
     });
 };
@@ -253,16 +279,19 @@ const parseMiscNetworksJSON = (json: JSON): void => {
         const network = networksObject[key];
         miscNetworks.push({
             type: 'misc',
-            blockbook: network.blockbook || [], // legacy compatibility with bitcoin coinInfo
-            bitcore: [], // legacy compatibility with bitcoin coinInfo
             blockchainLink: network.blockchain_link,
+            blocktime: Math.round(network.blocktime_seconds / 60),
             curve: network.curve,
+            defaultFees: {'Normal': 1},
+            minFee: 1,
+            maxFee: 1,
             label: network.name,
             name: network.name,
             shortcut: network.shortcut,
             slip44: network.slip44,
             support: network.support,
             network: undefined,
+            decimals: network.decimals,
         });
     });
 };

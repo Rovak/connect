@@ -1,16 +1,16 @@
 /* @flow */
-'use strict';
-
-export const IFRAME_HANDSHAKE: 'iframe-handshake' = 'iframe-handshake';
 
 export const TRANSPORT: 'ui-no_transport' = 'ui-no_transport';
 export const BOOTLOADER: 'ui-device_bootloader_mode' = 'ui-device_bootloader_mode';
+export const NOT_IN_BOOTLOADER: 'ui-device_not_in_bootloader_mode' = 'ui-device_not_in_bootloader_mode';
+export const REQUIRE_MODE: 'ui-device_require_mode' = 'ui-device_require_mode';
 export const INITIALIZE: 'ui-device_not_initialized' = 'ui-device_not_initialized';
 export const SEEDLESS: 'ui-device_seedless' = 'ui-device_seedless';
 export const FIRMWARE_OLD: 'ui-device_firmware_old' = 'ui-device_firmware_old';
 export const FIRMWARE_OUTDATED: 'ui-device_firmware_outdated' = 'ui-device_firmware_outdated';
 export const FIRMWARE_NOT_SUPPORTED: 'ui-device_firmware_unsupported' = 'ui-device_firmware_unsupported';
 export const FIRMWARE_NOT_COMPATIBLE: 'ui-device_firmware_not_compatible' = 'ui-device_firmware_not_compatible';
+export const FIRMWARE_NOT_INSTALLED: 'ui-device_firmware_not_installed' = 'ui-device_firmware_not_installed';
 export const DEVICE_NEEDS_BACKUP: 'ui-device_needs_backup' = 'ui-device_needs_backup';
 export const BROWSER_NOT_SUPPORTED: 'ui-browser_not_supported' = 'ui-browser_not_supported';
 export const BROWSER_OUTDATED: 'ui-browser_outdated' = 'ui-browser_outdated';
@@ -37,6 +37,7 @@ export const UPDATE_CUSTOM_FEE: 'ui-update_custom_fee' = 'ui-update_custom_fee';
 export const INSUFFICIENT_FUNDS: 'ui-insufficient_funds' = 'ui-insufficient_funds';
 export const REQUEST_BUTTON: 'ui-button' = 'ui-button';
 export const REQUEST_WORD: 'ui-request_word' = 'ui-request_word';
+export const FIRMWARE_PROGRESS: 'ui-firmware-progress' = 'ui-firmware-progress';
 
 export const RECEIVE_PERMISSION: 'ui-receive_permission' = 'ui-receive_permission';
 export const RECEIVE_CONFIRMATION: 'ui-receive_confirmation' = 'ui-receive_confirmation';

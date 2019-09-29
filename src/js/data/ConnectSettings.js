@@ -26,6 +26,9 @@ export type ConnectSettings = {
     supportedBrowser?: boolean,
     extension: ?string,
     manifest: ?ConnectManifest,
+    env: string,
+    timestamp: number,
+    lazyLoad: boolean,
 }
 
 /*
@@ -33,14 +36,14 @@ export type ConnectSettings = {
  * It could be changed by passing values into TrezorConnect.init(...) method
  */
 
-const VERSION: string = '7.0.3';
+const VERSION: string = '8.0.5';
 const versionN: Array<number> = VERSION.split('.').map(s => parseInt(s));
 const DIRECTORY: string = `${ versionN[0] }${ (versionN[1] > 0 ? `.${versionN[1]}` : '') }/`;
 const DEFAULT_DOMAIN: string = `https://connect.trezor.io/${ DIRECTORY }`;
 export const DEFAULT_PRIORITY: number = 2;
 
 const initialSettings: ConnectSettings = {
-    configSrc: 'data/config.json', // constant
+    configSrc: './data/config.json', // constant
     version: VERSION, // constant
     debug: false,
     origin: null,
@@ -57,6 +60,9 @@ const initialSettings: ConnectSettings = {
     supportedBrowser: typeof navigator !== 'undefined' ? !(/Trident|MSIE/.test(navigator.userAgent)) : true,
     extension: null,
     manifest: null,
+    env: 'web',
+    lazyLoad: false,
+    timestamp: new Date().getTime(),
 };
 
 let currentSettings: ConnectSettings = initialSettings;
@@ -72,6 +78,29 @@ const parseManifest = (manifest: Object): ?ConnectManifest => {
         email: manifest.email,
         appUrl: manifest.appUrl,
     };
+};
+
+export const getEnv = (): string => {
+    // $FlowIssue: chrome is not declared outside the project
+    if (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.onConnect !== 'undefined') {
+        return 'webextension';
+    }
+    if (typeof navigator !== 'undefined') {
+        if (typeof navigator.product === 'string' && navigator.product.toLowerCase() === 'reactnative') {
+            return 'react-native';
+        }
+        const userAgent = navigator.userAgent.toLowerCase();
+        if (userAgent.indexOf(' electron/') > -1) {
+            return 'electron';
+        }
+    }
+    // if (typeof navigator !== 'undefined' && typeof navigator.product === 'string' && navigator.product.toLowerCase() === 'reactnative') {
+    //     return 'react-native';
+    // }
+    // if (typeof process !== 'undefined' && process.versions.hasOwnProperty('electron')) {
+    //     return 'electron';
+    // }
+    return 'web';
 };
 
 export const parse = (input: ?Object): ConnectSettings => {
@@ -110,18 +139,33 @@ export const parse = (input: ?Object): ConnectSettings => {
         settings.popup = input.popup;
     }
 
+    if (typeof input.lazyLoad === 'boolean') {
+        settings.lazyLoad = input.lazyLoad;
+    }
+
     if (typeof input.pendingTransportEvent === 'boolean') {
         settings.pendingTransportEvent = input.pendingTransportEvent;
     }
 
     // local files
-    if (typeof window !== 'undefined' && window.location.protocol === 'file:') {
+    if (typeof window !== 'undefined' && window.location && window.location.protocol === 'file:') {
         settings.origin = `file://${window.location.pathname}`;
         settings.webusb = false;
     }
 
     if (typeof input.extension === 'string') {
         settings.extension = input.extension;
+    }
+
+    // $FlowIssue chrome is not declared outside
+    if (typeof input.env === 'string') {
+        settings.env = input.env;
+    } else {
+        settings.env = getEnv();
+    }
+
+    if (typeof input.timestamp === 'number') {
+        settings.timestamp = input.timestamp;
     }
 
     if (typeof input.manifest === 'object') {

@@ -21,6 +21,8 @@ import { signTransactionBgold } from './signTransactionBgold.spec.js';
 import { signTransactionBcash } from './signTransactionBcash.spec.js';
 import { signTransactionMultisig } from './signTransactionMultisig.spec.js';
 import { signTransactionMultisigChange } from './signTransactionMultisigChange.spec.js';
+import { signTransactionBech32 } from './signTransactionBech32.spec.js';
+import { signTransactionDoge } from './signTransactionDoge.spec.js';
 import { verifyMessage } from './verifyMessage.spec.js';
 import { verifyMessageSegwit } from './verifyMessageSegwit.spec.js';
 import { verifyMessageSegwitNative } from './verifyMessageSegwitNative.spec.js';
@@ -38,13 +40,17 @@ import { nemSignTransactionTransfers } from './nemSignTransactionTransfers.spec.
 import { tezosGetAddress } from './tezosGetAddress.spec.js';
 import { tezosGetPublicKey } from './tezosGetPublicKey.spec.js';
 import { tezosSignTransaction } from './tezosSignTransaction.spec.js';
-import { passphrase } from './passphrase.spec.js';
 import { liskGetAddress } from './liskGetAddress.spec.js';
 import { liskSignMessage } from './liskSignMessage.spec.js';
 import { liskVerifyMessage } from './liskVerifyMessage.spec.js';
 import { liskSignTransaction } from './liskSignTransaction.spec.js';
 import { rippleGetAddress } from './rippleGetAddress.spec.js';
 import { rippleSignTransaction } from './rippleSignTransaction.spec.js';
+import { eosGetPublicKey } from './eosGetPublicKey.spec';
+import { eosSignTransaction } from './eosSignTransaction.spec';
+import { binanceSignTransaction } from './binanceSignTransaction.spec';
+import { applySettings } from './applySettings.spec';
+import { applyFlags } from './applyFlags.spec';
 import { tronSignTransaction } from './tronSignTransaction.spec';
 import { tronGetAddress } from './tronGetAddress.spec';
 
@@ -66,6 +72,8 @@ export const testFunctions: AvailableTestFunctions = {
     signTransactionBcash,
     signTransactionMultisig,
     signTransactionMultisigChange,
+    signTransactionBech32,
+    signTransactionDoge,
     verifyMessage,
     verifyMessageSegwit,
     verifyMessageSegwitNative,
@@ -83,13 +91,17 @@ export const testFunctions: AvailableTestFunctions = {
     tezosGetAddress,
     tezosGetPublicKey,
     tezosSignTransaction,
-    passphrase,
     liskGetAddress,
     liskSignMessage,
     liskVerifyMessage,
     liskSignTransaction,
     rippleGetAddress,
     rippleSignTransaction,
+    eosGetPublicKey,
+    eosSignTransaction,
+    binanceSignTransaction,
+    applySettings,
+    applyFlags,
     tronSignTransaction,
     tronGetAddress,
 };

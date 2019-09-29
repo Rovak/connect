@@ -1,18 +1,19 @@
 /* @flow */
-'use strict';
 
 import * as DEVICE from '../constants/device';
 import randombytes from 'randombytes';
 
-import * as bitcoin from 'bitcoinjs-lib-zcash';
+import * as bitcoin from '@trezor/utxo-lib';
 import * as hdnodeUtils from '../utils/hdnode';
 import { isMultisigPath, isSegwitPath, isBech32Path, getSerializedPath, getScriptType } from '../utils/pathUtils';
+import { getAccountAddressN } from '../utils/accountUtils';
+import { toChecksumAddress } from '../utils/ethereumUtils';
 import { resolveAfter } from '../utils/promiseUtils';
 import Device from './Device';
 
 import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
 
-import type { BitcoinNetworkInfo } from '../types';
+import type { CoinInfo, BitcoinNetworkInfo, EthereumNetworkInfo } from '../types';
 import type { Transport } from 'trezor-link';
 import * as trezor from '../types/trezor'; // flowtype only
 
@@ -72,6 +73,7 @@ export default class DeviceCommands {
     sessionId: string;
     debug: boolean;
     disposed: boolean;
+    callPromise: ?Promise<DefaultMessageResponse>;
 
     constructor(
         device: Device,
@@ -109,17 +111,16 @@ export default class DeviceCommands {
     // Validation of xpub
     async getHDNode(
         path: Array<number>,
-        coinInfo: ?BitcoinNetworkInfo
+        coinInfo: ?BitcoinNetworkInfo,
+        validation?: boolean = true,
     ): Promise<trezor.HDNodeResponse> {
         if (!this.device.atLeast(['1.7.2', '2.0.10'])) {
-            return await this.getBitcoinHDNode(path, coinInfo);
+            return await this.getBitcoinHDNode(path, coinInfo, validation);
         }
         if (!coinInfo) {
-            return await this.getBitcoinHDNode(path);
+            return await this.getBitcoinHDNode(path, null, validation);
         }
 
-        const suffix: number = 0;
-        const childPath: Array<number> = path.concat([suffix]);
         let network: ?bitcoin.Network;
         if (isMultisigPath(path)) {
             network = coinInfo.network;
@@ -129,7 +130,7 @@ export default class DeviceCommands {
             network = getBech32Network(coinInfo);
         }
 
-        let scriptType: ?string = getScriptType(path);
+        let scriptType: ?trezor.InputScriptType = getScriptType(path);
         if (!network) {
             network = coinInfo.network;
             if (scriptType !== 'SPENDADDRESS') {
@@ -137,9 +138,16 @@ export default class DeviceCommands {
             }
         }
 
-        const resKey: trezor.PublicKey = await this.getPublicKey(path, coinInfo.name, scriptType);
-        const childKey: trezor.PublicKey = await this.getPublicKey(childPath, coinInfo.name, scriptType);
-        const publicKey: trezor.PublicKey = hdnodeUtils.xpubDerive(resKey, childKey, suffix, network, coinInfo.network);
+        let publicKey: trezor.PublicKey;
+        if (!validation) {
+            publicKey = await this.getPublicKey(path, coinInfo.name, scriptType);
+        } else {
+            const suffix: number = 0;
+            const childPath: Array<number> = path.concat([suffix]);
+            const resKey: trezor.PublicKey = await this.getPublicKey(path, coinInfo.name, scriptType);
+            const childKey: trezor.PublicKey = await this.getPublicKey(childPath, coinInfo.name, scriptType);
+            publicKey = hdnodeUtils.xpubDerive(resKey, childKey, suffix, network, coinInfo.network);
+        }
 
         const response: trezor.HDNodeResponse = {
             path,
@@ -166,14 +174,20 @@ export default class DeviceCommands {
     // old firmware didn't return keys with proper prefix (ypub, Ltub.. and so on)
     async getBitcoinHDNode(
         path: Array<number>,
-        coinInfo?: ?BitcoinNetworkInfo
+        coinInfo?: ?BitcoinNetworkInfo,
+        validation?: boolean = true,
     ): Promise<trezor.HDNodeResponse> {
-        const suffix: number = 0;
-        const childPath: Array<number> = path.concat([suffix]);
+        let publicKey: trezor.PublicKey;
+        if (!validation) {
+            publicKey = await this.getPublicKey(path, 'Bitcoin');
+        } else {
+            const suffix: number = 0;
+            const childPath: Array<number> = path.concat([suffix]);
 
-        const resKey: trezor.PublicKey = await this.getPublicKey(path, 'Bitcoin');
-        const childKey: trezor.PublicKey = await this.getPublicKey(childPath, 'Bitcoin');
-        const publicKey: trezor.PublicKey = hdnodeUtils.xpubDerive(resKey, childKey, suffix);
+            const resKey: trezor.PublicKey = await this.getPublicKey(path, 'Bitcoin');
+            const childKey: trezor.PublicKey = await this.getPublicKey(childPath, 'Bitcoin');
+            publicKey = hdnodeUtils.xpubDerive(resKey, childKey, suffix);
+        }
 
         const response: trezor.HDNodeResponse = {
             path,
@@ -205,7 +219,7 @@ export default class DeviceCommands {
     }
 
     async getAddress(address_n: Array<number>, coinInfo: BitcoinNetworkInfo, showOnTrezor: boolean): Promise<trezor.Address> {
-        const scriptType: ?string = getScriptType(address_n);
+        const scriptType: trezor.InputScriptType = getScriptType(address_n);
         const response: Object = await this.typedCall('GetAddress', 'Address', {
             address_n,
             coin_name: coinInfo.name,
@@ -225,7 +239,7 @@ export default class DeviceCommands {
         message: string,
         coin: ?string
     ): Promise<trezor.MessageSignature> {
-        const scriptType: ?string = getScriptType(address_n);
+        const scriptType: trezor.InputScriptType = getScriptType(address_n);
         const response: MessageResponse<trezor.MessageSignature> = await this.typedCall('SignMessage', 'MessageSignature', {
             address_n,
             message,
@@ -250,11 +264,12 @@ export default class DeviceCommands {
         return response.message;
     }
 
-    async ethereumGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.EthereumAddress> {
+    async ethereumGetAddress(address_n: Array<number>, network: ?EthereumNetworkInfo, showOnTrezor?: boolean = true): Promise<trezor.EthereumAddress> {
         const response: MessageResponse<trezor.EthereumAddress> = await this.typedCall('EthereumGetAddress', 'EthereumAddress', {
             address_n: address_n,
             show_display: !!showOnTrezor,
         });
+        response.message.address = toChecksumAddress(response.message.address, network);
         return response.message;
     }
 
@@ -344,6 +359,18 @@ export default class DeviceCommands {
 
     // StellarSignTx message can be found inside ./core/methods/helpers/stellarSignTx
     // Stellar: end
+
+    // EOS: begin
+    async eosGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.EosPublicKey> {
+        const response: MessageResponse<trezor.EosPublicKey> = await this.typedCall('EosGetPublicKey', 'EosPublicKey', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    // EosSignTx message can be found inside ./core/methods/helpers/eosSignTx
+    // EOS: end
 
     // Cardano: begin
     async cardanoGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoPublicKey> {
@@ -460,6 +487,24 @@ export default class DeviceCommands {
         };
     }
     // TRON: end
+
+    // Binance: begin
+    async binanceGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.BinanceAddress> {
+        const response: MessageResponse<trezor.BinanceAddress> = await this.typedCall('BinanceGetAddress', 'BinanceAddress', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    async binanceGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.BinancePublicKey> {
+        const response: MessageResponse<trezor.BinancePublicKey> = await this.typedCall('BinanceGetPublicKey', 'BinancePublicKey', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+    // Binance: end
 
     async cipherKeyValue(
         address_n: Array<number>,
@@ -582,18 +627,22 @@ export default class DeviceCommands {
         const logMessage: Object = filterForLog(type, msg);
 
         if (this.debug) {
+            // eslint-disable-next-line no-console
             console.log('[DeviceCommands] [call] Sending', type, logMessage, this.transport);
         }
 
         try {
-            const res: DefaultMessageResponse = await this.transport.call(this.sessionId, type, msg, false);
+            this.callPromise = this.transport.call(this.sessionId, type, msg, false);
+            const res: DefaultMessageResponse = await this.callPromise;
             const logMessage = filterForLog(res.type, res.message);
             if (this.debug) {
+                // eslint-disable-next-line no-console
                 console.log('[DeviceCommands] [call] Received', res.type, logMessage);
             }
             return res;
         } catch (error) {
             if (this.debug) {
+                // eslint-disable-next-line no-console
                 console.warn('[DeviceCommands] [call] Received error', error);
             }
             // TODO: throw trezor error
@@ -701,9 +750,8 @@ export default class DeviceCommands {
                     }
                 });
             } else {
-                // if (this.session.debug) {
+                // eslint-disable-next-line no-console
                 console.warn('[DeviceCommands] [call] PIN callback not configured, cancelling request');
-                // }
                 reject(new Error('PIN callback not configured'));
             }
         });
@@ -720,9 +768,8 @@ export default class DeviceCommands {
                     }
                 });
             } else {
-                // if (this.session.debug) {
+                // eslint-disable-next-line no-console
                 console.warn('[DeviceCommands] [call] Passphrase callback not configured, cancelling request');
-                // }
                 reject(new Error('Passphrase callback not configured'));
             }
         });
@@ -766,5 +813,30 @@ export default class DeviceCommands {
         await this.transport.release(session, true, true);
         await resolveAfter(501, null); // wait for propagation from bridge
         return response.message;
+    }
+
+    async getAccountDescriptor(coinInfo: CoinInfo, indexOrPath: number | Array<number>): Promise<?{ descriptor: string, address_n: number[] }> {
+        const address_n = Array.isArray(indexOrPath) ? indexOrPath : getAccountAddressN(coinInfo, indexOrPath);
+        if (coinInfo.type === 'bitcoin') {
+            const resp = await this.getHDNode(address_n, coinInfo, false);
+            return {
+                descriptor: resp.xpubSegwit || resp.xpub,
+                address_n,
+            };
+        } else if (coinInfo.type === 'ethereum') {
+            const resp = await this.ethereumGetAddress(address_n, coinInfo, false);
+            return {
+                descriptor: resp.address,
+                address_n,
+            };
+        } else if (coinInfo.shortcut === 'XRP' || coinInfo.shortcut === 'tXRP') {
+            const resp = await this.rippleGetAddress(address_n, false);
+            return {
+                descriptor: resp.address,
+                address_n,
+            };
+        }
+
+        return;
     }
 }

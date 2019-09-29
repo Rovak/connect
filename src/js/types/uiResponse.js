@@ -15,7 +15,7 @@ declare type ReceivePermission = {
 }
 
 declare type ReceiveConfirmation = {
-    +type: typeof UI.RECEIVE_CONFIRMATION | typeof UI.RECEIVE_PERMISSION,
+    +type: typeof UI.RECEIVE_CONFIRMATION,
     payload: boolean,
 }
 
@@ -52,7 +52,7 @@ declare type ReceivePassphraseAction = {
 
 declare type ReceiveAccount = {
     +type: typeof UI.RECEIVE_ACCOUNT,
-    payload: ?string,
+    payload: ?number,
 }
 
 declare type ReceiveFee = {
