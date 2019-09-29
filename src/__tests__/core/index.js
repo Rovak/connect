@@ -46,7 +46,7 @@ import { liskSignTransaction } from './liskSignTransaction.spec.js';
 import { rippleGetAddress } from './rippleGetAddress.spec.js';
 import { rippleSignTransaction } from './rippleSignTransaction.spec.js';
 import { tronSignTransaction } from './tronSignTransaction.spec';
-import { tronGetAddress } from './tronGetAddress';
+import { tronGetAddress } from './tronGetAddress.spec';
 
 export const testFunctions: AvailableTestFunctions = {
     cardanoGetAddress,

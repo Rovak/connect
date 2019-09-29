@@ -759,10 +759,9 @@ const proposalDelete = (): SubtestTronSignTransaction => {
 };
 
 export const tronSignTransaction = (): TestFunction => {
-    const testName = 'TronSignTransaction';
     const availableSubtests = {
-        knownTrc20Token: transferTrx,
-        unknownTrc20Token: sendTrc10,
+        transferTrx,
+        sendTrc10,
         voteWitness,
         witnessCreate,
         assetIssue,
@@ -786,7 +785,7 @@ export const tronSignTransaction = (): TestFunction => {
     };
 
     return {
-        testName,
+        testName: 'TronSignTransaction',
         mnemonic: 'mnemonic_12',
         subtests: {
             ...availableSubtests,
