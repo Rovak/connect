@@ -33,8 +33,10 @@ const transferTrx = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            path: DEFAULT_PATH,
-            serialized_tx: '037f02960276a50dc8327449105f59cbb3b2ca071240f7a678c4257f26df86287a58bfda988e83803ccbe8bc2d6cfeaca18f87b6c9e20ea1a77c570d5435493300',
+            // path: DEFAULT_PATH,
+            payload: {
+                signature: '2b33a98884401db2563c1006c55107315d543d2b4851047c8884cfee4b0e4a1c0c8faac87670cbf006daddb5c7c16f92ee9808e28f77e8ee56ca8f6ef940bf0301',
+            },
         },
     ];
 
@@ -70,7 +72,9 @@ const sendTrc10 = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: 'c5deb6f053ca7f9dfd9a54677cdeaee6ea084983cea62f572e60db4bdd9fbcec13b9c262fe6302ce71b291c4976a533cbecf5194c4ef5cd0d46457c822c1bb8d01',
+            payload: {
+                signature: 'df215d532492d060b27414abf38cbc638c8e2b85c5c159961675062b04b1d3433a37f5387f5fa40440f50ecf150dc2521438f9bc93ec2ef264114d1d09d6c60900',
+            },
         },
     ];
 
@@ -122,7 +126,9 @@ const voteWitness = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: 'a35e28f7e5d887a4e90dbee56ea630d1d0b4eab0f70edde80a233895edfbde2c4e35628d11157b8a8fabd711880aaca19468f41ac9751c93dc7ec17a305aa1d801',
+            payload: {
+                signature: '2c0e9582c4a256e17cea0e19dd1c81757eaa7d4c556a202920fd920b893477bf24d3c2651821438b32c84795d1c0af9f07285034674cebe1af9e3b434830f30301',
+            },
         },
     ];
 
@@ -153,7 +159,9 @@ const witnessCreate = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: '692859b8d668ae5146f04512ba97cf2e205b429bcf462a6fa48726be8894be81480e935a3f9d3684cf82e5378d425310066e1ea1b1d99eaebdfa58c32f0cdb8701',
+            payload: {
+                signature: 'dd0c627bfa653923ac005568842311927fb85cc52ae230ed5c5323b3415f0156402bf18216daa676c442bc4e4faab4ee8f6329b4cdff2c9ae024172036eacc6000',
+            },
         },
     ];
 
@@ -198,7 +206,9 @@ const assetIssue = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: '861a62e4d0ae920284a5d936220563b5536102b43044103011fc0b523592ef1c3a8a852075d3cce2525c048377b66005f04184d6ec7fe661c0634abc93ba414a00',
+            payload: {
+                signature: '56871037285dc1c5c94439f955a1e4f9382ab35b712f478ab2cfc86d0eea8676614e7a62e25ce06fa4bdd08c4805b08f3b822d518e3550dc11e0db50dafa36f601',
+            },
         },
     ];
 
@@ -229,7 +239,9 @@ const witnessUpdate = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: '6feca2a4558ded324f439c7cecf596f1378fbd6071569a99ea28f06c4cb1fb754720125f8721c0663e3768b7a888ee8c37fbbb9690e192b8908e225ba49a2aaa01',
+            payload: {
+                signature: '49866309f3bf616b47a56538b7ece41db84a4701484e6f05564f2eebe44da9ad3eccbd330680a48182365e943086a1d5913f79d9a680374abb0201a29b59eeee01',
+            },
         },
     ];
 
@@ -266,7 +278,9 @@ const participateAsset = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: '0f752c52ee5daea6c740e0783398a03b1002a4a4e244ca0037981f18c0ad539b71b00bc1398297077373e303ddfe3fc48f7b8dc9afc4146bae5d7d448667d3c300',
+            payload: {
+                signature: '21d52c10178ca45f3f2e319869abab7ff894cc7a9dce8768c2302f08575683c001b93e62281fe68d8abbbd720faf6da4146430a50ee47f2ac3d49112891a0e2701',
+            },
         },
     ];
 
@@ -281,7 +295,7 @@ const accountUpdate = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
+            path: DEFAULT_PATH,
             transaction: {
                 ref_block_bytes: 'D0EF',
                 ref_block_hash: '6CD6025AFD991D7D',
@@ -297,7 +311,9 @@ const accountUpdate = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: 'c4c1381d3a3e23010f19f8055df6d78990fdac619ae8be030425e0de0726f4fb665618a2c663c891cb5f8b26d009d79d3650008bda429e274bf4eee3330c806a00',
+            payload: {
+                signature: '669cf87812199d9ae3b2d55e97886255e0be969a4e5081e90d123a308162dada56c3fcbf7ee9c71946ac063fc599a4796717540d63da0e66af0c460420d5553600',
+            },
         },
     ];
 
@@ -312,7 +328,7 @@ const freezeBalanceBandwidth = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
+            path: DEFAULT_PATH,
             transaction: {
                 ref_block_bytes: 'D0EF',
                 ref_block_hash: '6CD6025AFD991D7D',
@@ -330,7 +346,9 @@ const freezeBalanceBandwidth = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: '6c10c4f0149135749507607f890dc529083fe41504b22052dd68d946b4caed704a116f2d6a767934ed43ae6d4c6ccf0002317e00dfdd5415ed8c72f8c6b5f74a01',
+            payload: {
+                signature: 'ffb7ded81f1f6cbd56fe7cfb9671bf35d324deaeecc8fd197c1e6ef230bbc3953025222805cb7d3404e13735ff2adf9298863ca9cc1b0a5cda8bd69faa6b676201',
+            },
         },
     ];
 
@@ -345,7 +363,7 @@ const freezeBalanceEnergy = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
+            path: DEFAULT_PATH,
             transaction: {
                 ref_block_bytes: 'D0EF',
                 ref_block_hash: '6CD6025AFD991D7D',
@@ -363,14 +381,16 @@ const freezeBalanceEnergy = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: '14fe46619fed9d9acf863c464854bfedd257e4072e31116f9e144b846cb112725343e0aa13cd0b856b53f2265ef2c19d9610eafee0b6c120ba501d06a4e2c49901',
+            payload: {
+                signature: '5bed7f27013b63f31617abd868584b5d786993b3ce9dfe9fe644b29cd4c056bf65b78f4fbffebd776ae46445fb61a19dc5e5774a41fd079c3daaa2eaba62209100',
+            },
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/freezeBalanceBandwidth',
+        specName: '/freezeBalanceEnergy',
     };
 };
 
@@ -378,7 +398,7 @@ const freezeBandwidthRental = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
+            path: DEFAULT_PATH,
             transaction: {
                 ref_block_bytes: 'D0EF',
                 ref_block_hash: '6CD6025AFD991D7D',
@@ -397,14 +417,16 @@ const freezeBandwidthRental = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: '9885b510e3aff53b9e85511acf6b6a803a79472d5cdd27774bdc8363877e99685a9b71c2eec44de392b77bf00f6fdbab8b0a58fbee6d2401c1b2ea798a87b9a901',
+            payload: {
+                signature: '9078775b89d6949a05ead448964313a6fcc766ccee8eaa3b3afbf7fa1ee113030ec57b8ff547140eacf9656aaf2b3e4bffebba242e005131a556759744dd9aaf00',
+            },
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/freezeBalanceBandwidth',
+        specName: '/freezeBandwidthRental',
     };
 };
 
@@ -412,7 +434,7 @@ const freezeBalanceEnergyRental = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
+            path: DEFAULT_PATH,
             transaction: {
                 ref_block_bytes: 'D0EF',
                 ref_block_hash: '6CD6025AFD991D7D',
@@ -431,14 +453,16 @@ const freezeBalanceEnergyRental = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: '34b73c06cfb238c2ef8071e17bf1c8618cc2f14db9faef494cb9f4151631c9da33d06e2c66d78d1d3bcf4e955e8e82d7e343cc065c96d5e435d9251074433fe600',
+            payload: {
+                signature: '026295679d06a671175a782af3e51e1277a4d0d7f9de8cc432bc4d2ead2a6ca8134004307743d838f92b942ae3b10dd3aa70afa03480fcce1ac14b540702d98101',
+            },
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/freezeBalanceBandwidth',
+        specName: '/freezeBalanceEnergyRental',
     };
 };
 
@@ -446,7 +470,7 @@ const unfreezeBalanceBandwidth = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
+            path: DEFAULT_PATH,
             transaction: {
                 ref_block_bytes: 'D0EF',
                 ref_block_hash: '6CD6025AFD991D7D',
@@ -462,14 +486,16 @@ const unfreezeBalanceBandwidth = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: '64613fa2d2b2ea18f9d37a7b97cc6c76f56c59f05b1d28806617c7b89ecc16994b275145f43a5289d49ef227f74a5cc3ac039534048416c9b3e51d82029a60e301',
+            payload: {
+                signature: '985c6bd1f70e0226317a33fa602a5a4a64912bc8e5d5fc13c3d84c49d05e5cd0491ac25f78edde5da1f04e32960190b1cc7052e0f27800ac79ead14e2b573a5401',
+            },
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/freezeBalanceBandwidth',
+        specName: '/unfreezeBalanceBandwidth',
     };
 };
 
@@ -477,7 +503,7 @@ const unfreezeBalanceEnergy = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
+            path: DEFAULT_PATH,
             transaction: {
                 ref_block_bytes: 'D0EF',
                 ref_block_hash: '6CD6025AFD991D7D',
@@ -495,14 +521,16 @@ const unfreezeBalanceEnergy = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: '7f3f7d2f03da17c8f950bb3a606248c0a37092522b0e9ca824f44d00c6278be96e78b87c202727b9d32599118cf3f132d82b75cfdd30a02075c9c1fe0096167101',
+            payload: {
+                signature: 'ffb7ded81f1f6cbd56fe7cfb9671bf35d324deaeecc8fd197c1e6ef230bbc3953025222805cb7d3404e13735ff2adf9298863ca9cc1b0a5cda8bd69faa6b676201',
+            },
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/freezeBalanceBandwidth',
+        specName: '/unfreezeBalanceEnergy',
     };
 };
 
@@ -510,7 +538,7 @@ const unfreezeBalanceBandwidthRental = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
+            path: DEFAULT_PATH,
             transaction: {
                 ref_block_bytes: 'D0EF',
                 ref_block_hash: '6CD6025AFD991D7D',
@@ -527,14 +555,16 @@ const unfreezeBalanceBandwidthRental = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: '90b0b27b0820ca46e6a2c42e6c80a1a7a304ec4a1859db863bad19b5db49eac3412b7015f5f637894d4ffecd88b44de8e4b2ec789b77090997b5353b17a22bfe00',
+            payload: {
+                signature: 'a26adba07d80cc4bc79a324126d5fb50200ef67b108639cade4d87cafaccad441f886b96f1305f2ec06c81307a733ea4ad478b2294c86bb97a772ae24b299f7e00',
+            },
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/freezeBalanceBandwidth',
+        specName: '/unfreezeBalanceBandwidthRental',
     };
 };
 
@@ -542,7 +572,7 @@ const unfreezeBalanceEnergyRental = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
+            path: DEFAULT_PATH,
             transaction: {
                 ref_block_bytes: 'D0EF',
                 ref_block_hash: '6CD6025AFD991D7D',
@@ -559,14 +589,16 @@ const unfreezeBalanceEnergyRental = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: 'e8176724732452c7b21654922df0efc796b4ed56b2f408b0dd6ac90eb593fa9f6a67145af27e44bcfd5e515cfb6014d747ce43aec9a819eb2a4a321425dad92100',
+            payload: {
+                signature: 'cb64cef911c826e47a0189ca1682653aa6dd5638b8cb45b525422292b6fbb270260263247c545aec4f0df0932a31c8be586f93abb1a118d7f27618a85a28a72601',
+            },
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/freezeBalanceBandwidth',
+        specName: '/unfreezeBalanceEnergyRental',
     };
 };
 
@@ -574,7 +606,7 @@ const withdrawBalance = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
+            path: DEFAULT_PATH,
             transaction: {
                 ref_block_bytes: 'D0EF',
                 ref_block_hash: '6CD6025AFD991D7D',
@@ -588,14 +620,16 @@ const withdrawBalance = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: '1b59288fa1086c2022eca7d34a63a9cb2adc8c3e72fd49602c6e048c5ab0a44d774f42b589021b0c9d582c6c861706b877336f5d6a114cbf5dbda0ff66cdf02900',
+            payload: {
+                signature: '2970f4e16aa16d80d4b55160f5fa32cd09ff879ce4a2ce6f4e7c20d9bb1da473356030d1ad233e8b480968dc4ba713f584a0784f12e9c86127d590cd05dcff1600',
+            },
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/freezeBalanceBandwidth',
+        specName: '/withdrawBalance',
     };
 };
 
@@ -603,7 +637,7 @@ const unfreezeAsset = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
+            path: DEFAULT_PATH,
             transaction: {
                 ref_block_bytes: 'D0EF',
                 ref_block_hash: '6CD6025AFD991D7D',
@@ -617,14 +651,16 @@ const unfreezeAsset = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: '2a5857885bb81ddb210f7a5fa1ae60e0acf9280b2bfb3a5c1463dee02e68ebce7486e11bf519c2cd6b42063ea6db919708ef9d2c8c0917636da4e7ea4518eda100',
+            payload: {
+                signature: 'aa365eecf332b816f524995171cb4c71bfabae50257c3f852a74b62916f77d2568bef33bc7778f2527aec29d26f7d270e7d93437639a5d37efa898e0c432f65a00',
+            },
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/freezeBalanceBandwidth',
+        specName: '/unfreezeAsset',
     };
 };
 
@@ -632,7 +668,7 @@ const updateAsset = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
+            path: DEFAULT_PATH,
             transaction: {
                 ref_block_bytes: 'D0EF',
                 ref_block_hash: '6CD6025AFD991D7D',
@@ -649,14 +685,16 @@ const updateAsset = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: 'd6b39a251c5dbc0684672d4850c08eec9e5d1df2a9848e01d2b195e00962258651765bc314a5bd56b98aa91da70dfbbdc71526eef3cbf7c62878e541793bddba00',
+            payload: {
+                signature: '4a55a7cf30e7daaa8f5630398d4067eeceb16f91bcb6c8b66dd77e718f9edc141ce06f22ef1635a4ce5e3f49dd3dff4e6e3658643d6799a2538fb070f63b0bae01',
+            },
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/freezeBalanceBandwidth',
+        specName: '/updateAsset',
     };
 };
 
@@ -664,7 +702,7 @@ const proposalCreate = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
+            path: DEFAULT_PATH,
             transaction: {
                 ref_block_bytes: 'D0EF',
                 ref_block_hash: '6CD6025AFD991D7D',
@@ -684,14 +722,16 @@ const proposalCreate = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: '648d96f3a33ba90c5b3333c54d56fff2b81a70c80567aafe4eab092c1c1c09ff0b7724039a6f16a937f6bf1fa2dbb0c9843e1cbec63aeb8805141128b36d001301',
+            payload: {
+                signature: '6a7779361bef18c4fb89f23af3c372be7b5101c660afb0866ec82110e095d86c22d65c84d92ede65ecf96decab03badaa08da7a8b2ec02262af5edea823a1c8800',
+            },
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/freezeBalanceBandwidth',
+        specName: '/proposalCreate',
     };
 };
 
@@ -699,7 +739,7 @@ const proposalApprove = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
+            path: DEFAULT_PATH,
             transaction: {
                 ref_block_bytes: 'D0EF',
                 ref_block_hash: '6CD6025AFD991D7D',
@@ -716,14 +756,16 @@ const proposalApprove = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: 'a6cdfed4863d3f4d6adfba1444e47b277026d35d52988f223d2bed5eaa979c266ab74e7212df24f0f058661522bec05419ccfb28321c646632a8c502f06dda9e00',
+            payload: {
+                signature: '2db949bd170de2274942f78e8781d0cf67569f70c6eb27a93e1587b7a0fc1f9719e1b5de8492721775e6ec1b94b1aa0dc679ed1b91414a3fb2e8ef2a7e471d0900',
+            },
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/freezeBalanceBandwidth',
+        specName: '/proposalApprove',
     };
 };
 
@@ -731,7 +773,7 @@ const proposalDelete = (): SubtestTronSignTransaction => {
     const testPayloads: Array<TestTronSignTransactionPayload> = [
         {
             method: 'tronSignTransaction',
-            path: "m/44'/1'/0'/0/0",
+            path: DEFAULT_PATH,
             transaction: {
                 ref_block_bytes: 'D0EF',
                 ref_block_hash: '6CD6025AFD991D7D',
@@ -747,14 +789,16 @@ const proposalDelete = (): SubtestTronSignTransaction => {
     ];
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
-            serialized_tx: '636577a6800c6ab4e7c11a72d5f0b3d865e190b51714cf5c4bd1d71bc37f54643582382314c236b489376bc4ab5d0612e3c6f9434e97db6dd41c517757cc8d7101',
+            payload: {
+                signature: '485ea1bb8a233e821f64e2b3a495272fc4491e889ae17b221b18b388d66a43be13986eee5f1c7b67d29ea6113a4fcf13d5684834e7513028250112639f3e153d00',
+            },
         },
     ];
 
     return {
         testPayloads,
         expectedResponses,
-        specName: '/freezeBalanceBandwidth',
+        specName: '/proposalDelete',
     };
 };
 

@@ -471,6 +471,10 @@ export default class DeviceCommands {
     }
 
     async tronSignTransaction(address_n: Array<number>, transaction: trezor.TronTransaction): Promise {
+
+        // FIXME
+        transaction = transaction.transaction || transaction;
+
         const { message } = await this.typedCall('TronSignTx', 'TronSignedTx', {
             ref_block_bytes: transaction.ref_block_bytes,
             ref_block_hash: transaction.ref_block_hash,
