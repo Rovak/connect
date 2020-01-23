@@ -802,6 +802,129 @@ const proposalDelete = (): SubtestTronSignTransaction => {
     };
 };
 
+const transferTrc20 = (): SubtestTronSignTransaction => {
+
+    const data = [
+        // method id signalizing `transfer(address _to, uint256 _value)` function
+        'a9059cbb',
+        // 1st function argument (to - the receiver)
+        '000000000000000000000000f1f43b97e403929a6ccce5150cbcc7baf9ee91a0',
+        // 2nd function argument (value - amount to be transferred)
+        '0000000000000000000000000000000000000000000000000000000002ebae40',
+    ].join('');
+
+    const testPayloads: Array<TestTronSignTransactionPayload> = [
+        {
+            method: 'tronSignTransaction',
+            path: DEFAULT_PATH,
+            transaction: {
+                ref_block_bytes: 'f89b',
+                ref_block_hash: '5f0ff66bec893fab',
+                expiration: 1574675991000,
+                timestamp: 1574675932727,
+                fee_limit: 10000000,
+                contract: {
+                    trigger_smart_contract: {
+                        contract_address: 'TBoTZcARzWVgnNuB9SyE3S5g1RwsXoQL16',
+                        data,
+                    },
+                },
+            },
+        },
+    ];
+    const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
+        {
+            payload: {
+                signature: '485ea1bb8a233e821f64e2b3a495272fc4491e889ae17b221b18b388d66a43be13986eee5f1c7b67d29ea6113a4fcf13d5684834e7513028250112639f3e153d00',
+            },
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/transferTrc20',
+    };
+};
+
+const approveTrc20 = (): SubtestTronSignTransaction => {
+
+    const data = [
+        // method id signalizing `transfer(address _to, uint256 _value)` function
+        'a9059cbb',
+        // 1st function argument (to - the receiver)
+        '000000000000000000000000f1f43b97e403929a6ccce5150cbcc7baf9ee91a0',
+        // 2nd function argument (value - amount to be transferred)
+        '0000000000000000000000000000000000000000000000000000000002ebae40',
+    ].join('');
+
+    const testPayloads: Array<TestTronSignTransactionPayload> = [
+        {
+            method: 'tronSignTransaction',
+            path: DEFAULT_PATH,
+            transaction: {
+                ref_block_bytes: 'f89b',
+                ref_block_hash: '5f0ff66bec893fab',
+                expiration: 1574675991000,
+                timestamp: 1574675932727,
+                fee_limit: 10000000,
+                contract: {
+                    trigger_smart_contract: {
+                        contract_address: 'TKYTRRRkyEHKLeDpGmT9TCeqxxnH2XoEBP',
+                        data,
+                    },
+                },
+            },
+        },
+    ];
+    const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
+        {
+            payload: {
+                signature: 'ffc2d8e8f6297194f30d3c4af37bb47e956ab28025d601e472cae3bbfba75ab834d2197f46c9c9a71df65b3388357ba72ee3a45af17a1f48eadc80b75f0d572000',
+            },
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/approveTrc20',
+    };
+};
+
+const transferTrc20NotInList = (): SubtestTronSignTransaction => {
+    const testPayloads: Array<TestTronSignTransactionPayload> = [
+        {
+            method: 'tronSignTransaction',
+            path: DEFAULT_PATH,
+            transaction: {
+                ref_block_bytes: 'D0EF',
+                ref_block_hash: '6CD6025AFD991D7D',
+                expiration: 1531429101000,
+                timestamp: 1531428803023,
+                contract: {
+                    proposal_delete_contract: {
+                        proposal_id: 10000,
+                    },
+                },
+            },
+        },
+    ];
+    const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
+        {
+            payload: {
+                signature: 'ffc2d8e8f6297194f30d3c4af37bb47e956ab28025d601e472cae3bbfba75ab834d2197f46c9c9a71df65b3388357ba72ee3a45af17a1f48eadc80b75f0d572000',
+            },
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/transferTrc20NotInList',
+    };
+};
+
 export const tronSignTransaction = (): TestFunction => {
     const availableSubtests = {
         transferTrx,
@@ -826,6 +949,9 @@ export const tronSignTransaction = (): TestFunction => {
         withdrawBalance,
         unfreezeAsset,
         updateAsset,
+        transferTrc20,
+        approveTrc20,
+        transferTrc20NotInList,
     };
 
     return {
