@@ -1,8 +1,60 @@
+# 8.0.13
+#### Fixed
+- `getAddress` for multisig addresses #509
+- `bundle` params spread #514
+- promise resolved multiple times #513
+- functions used as classes #512
+
+# 8.0.12
+#### Added
+- Peercoin support
+#### Updated
+- ZCash Blossom fork (updated branch_id)
+
+# 8.0.11
+#### Added
+- React native transport
+#### Updated
+- TRANSPORT_EVENT "bridge" field send only in browser env. Whole logic moved from Core/DataManager to iframe
+
+# 8.0.10
+#### Added
+- Jest unit tests
+#### Fixed
+- Browser validation logic moved from Core to popup, not restricted anymore
+- popupMessagePort assignment for browsers without BroadcastChannel support
+- multiple eslint/flow fixes
+#### Updated
+- Update outdated and remove unused node_modules dependencies
+
+# 8.0.9
+#### Fixed
+- `getAccountInfo` bump @trezor/blockchain-link version with fixed ripple auto reconnection and ripple-lib issue https://github.com/ripple/ripple-lib/issues/1066
+
+# 8.0.8
+#### Fixed
+- `tezosSignTransaction` Babylon fork update, exclude firmware lower than 2.1.8
+
+# 8.0.7
+#### Added
+- `stellarSignTransaction` plugin - a tool for transforming StellarSDK.Transaction object into TrezorConnect.StellarTransaction
+- `stellarSignTransaction` missing tests
+#### Fixed
+- `stellarSignTransaction` parameters types (number > string, add required and optional params)
+- `blockchainEstimateFee` method (smart fees)
+- `cardanoSingTransaction` amount type to string
+- `liskSingTransaction` amount type to string
+- `rippleSingTransaction` amount type to string
+
 # 8.0.6
+#### Added
+- `firmwareUpdate` method now emits `ButtonRequest_FirmwareUpdate` event and `ui-firmware-progress` event
+- `blockchainGetTransactions` and `blockchainEstimateFee` methods
+- `composeTransaction` returns precomposed transaction for account
+#### Fixed
+- Removed unnecessary error wrapper (core.js)
 #### Removed
 - removed standalone `firmwareErase` and `firmwareUpload` methods.
-#### Added
-- `firmwareUpdate` method now emits `ButtonRequest_FirmwareUpdate` event and `ui-firmware-progress` event;
 
 # 8.0.5 (server side only)
 #### Fixed

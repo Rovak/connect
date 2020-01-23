@@ -29,8 +29,8 @@ export default class EosGetPublicKey extends AbstractMethod {
         this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('EOS'), this.firmwareRange);
 
         // create a bundle with only one batch if bundle doesn't exists
-        this.hasBundle = message.payload.hasOwnProperty('bundle');
-        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
+        this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
+        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
@@ -47,7 +47,7 @@ export default class EosGetPublicKey extends AbstractMethod {
 
             const path: Array<number> = validatePath(batch.path, 3);
             let showOnTrezor: boolean = true;
-            if (batch.hasOwnProperty('showOnTrezor')) {
+            if (Object.prototype.hasOwnProperty.call(batch, 'showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
 
@@ -82,7 +82,7 @@ export default class EosGetPublicKey extends AbstractMethod {
         }
 
         // request confirmation view
-        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'export-address',
             label,
         }));
@@ -113,7 +113,7 @@ export default class EosGetPublicKey extends AbstractMethod {
 
             if (this.hasBundle) {
                 // send progress
-                this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
+                this.postMessage(UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
                     response,
                 }));

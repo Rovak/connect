@@ -13,7 +13,7 @@ import { create as createDeferred } from '../utils/deferred';
 // const POPUP_REQUEST_TIMEOUT: number = 602;
 const POPUP_REQUEST_TIMEOUT: number = 850;
 const POPUP_CLOSE_INTERVAL: number = 500;
-const POPUP_OPEN_TIMEOUT: number = 2000;
+const POPUP_OPEN_TIMEOUT: number = 3000;
 
 export default class PopupManager extends EventEmitter {
     _window: any; // Window
@@ -23,7 +23,7 @@ export default class PopupManager extends EventEmitter {
     requestTimeout: number = 0;
     openTimeout: number;
     closeInterval: number = 0;
-    iframeHandshake: Deferred<boolean>;
+    iframeHandshake: Deferred<void>;
     handleMessage: (event: MessageEvent) => void;
     handleExtensionConnect: () => void;
     handleExtensionMessage: () => void;
@@ -185,10 +185,10 @@ export default class PopupManager extends EventEmitter {
         if (data.type === POPUP.ERROR) {
             // handle popup error
             const errorMessage = (data.payload && typeof data.payload.error === 'string') ? data.payload.error : null;
-            this.emit(POPUP.CLOSED, errorMessage ? { error: `Popup error: ${errorMessage}` } : null);
+            this.emit(POPUP.CLOSED, errorMessage ? `Popup error: ${errorMessage}` : null);
             this.close();
         } else if (data.type === POPUP.LOADED) {
-            this.iframeHandshake.promise.then(resolve => {
+            this.iframeHandshake.promise.then(() => {
                 this.extensionPort.postMessage({
                     type: POPUP.INIT,
                     payload: {
@@ -222,17 +222,17 @@ export default class PopupManager extends EventEmitter {
         if (getOrigin(message.origin) !== this.origin || !data || typeof data !== 'object') return;
 
         if (data.type === IFRAME.LOADED) {
-            this.iframeHandshake.resolve(true);
+            this.iframeHandshake.resolve();
         } else if (data.type === POPUP.BOOTSTRAP) {
             // popup is opened properly, now wait for POPUP.LOADED message
             window.clearTimeout(this.openTimeout);
-        } else if (data.type === POPUP.ERROR) {
+        } else if (data.type === POPUP.ERROR && this._window) {
             const errorMessage = (data.payload && typeof data.payload.error === 'string') ? data.payload.error : null;
-            this.emit(POPUP.CLOSED, errorMessage ? { error: `Popup error: ${errorMessage}` } : null);
+            this.emit(POPUP.CLOSED, errorMessage ? `Popup error: ${errorMessage}` : null);
             this.close();
         } else if (data.type === POPUP.LOADED) {
             // popup is successfully loaded
-            this.iframeHandshake.promise.then(resolve => {
+            this.iframeHandshake.promise.then(() => {
                 this._window.postMessage({
                     type: POPUP.INIT,
                     payload: {

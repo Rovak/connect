@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';
@@ -125,7 +124,7 @@ export const initPinView = (payload: $PropertyType<DeviceMessage, 'payload'>): v
             window.removeEventListener('keydown', pinKeyboardHandler, false);
 
             showView('loader');
-            postMessage(new UiMessage(UI.RECEIVE_PIN, input.value));
+            postMessage(UiMessage(UI.RECEIVE_PIN, input.value));
         }
     });
 

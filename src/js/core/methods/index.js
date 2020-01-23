@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import type { CoreMessage } from '../../types';
 
@@ -7,6 +6,7 @@ import AbstractMethod from './AbstractMethod';
 
 import BlockchainDisconnect from './blockchain/BlockchainDisconnect';
 import BlockchainEstimateFee from './blockchain/BlockchainEstimateFee';
+import BlockchainGetTransactions from './blockchain/BlockchainGetTransactions';
 import BlockchainSubscribe from './blockchain/BlockchainSubscribe';
 import BlockchainUnsubscribe from './blockchain/BlockchainUnsubscribe';
 import CardanoGetAddress from './CardanoGetAddress';
@@ -67,6 +67,7 @@ import RecoveryDevice from './RecoveryDevice';
 const classes: {[k: string]: any} = {
     'blockchainDisconnect': BlockchainDisconnect,
     'blockchainEstimateFee': BlockchainEstimateFee,
+    'blockchainGetTransactions': BlockchainGetTransactions,
     'blockchainSubscribe': BlockchainSubscribe,
     'blockchainUnsubscribe': BlockchainUnsubscribe,
     'cardanoGetAddress': CardanoGetAddress,

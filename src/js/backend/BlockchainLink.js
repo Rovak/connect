@@ -6,6 +6,7 @@ import * as BLOCKCHAIN from '../constants/blockchain';
 import type { CoreMessage, CoinInfo } from '../types';
 import type { SubscriptionAccountInfo } from '../types/params';
 import type { BlockchainBlock, BlockchainLinkTransaction } from '../types/blockchainEvent';
+import type { GetTransactionResponse } from '../types/transactions';
 
 import {
     BlockbookWorker,
@@ -45,7 +46,7 @@ type Fee = {
     feeLimit?: string,
 }
 
-const getWorker = (type: string): ?string => {
+const getWorker = (type: string): ?(string | () => Worker) => {
     switch (type) {
         case 'blockbook':
             return BlockbookWorker;
@@ -86,7 +87,7 @@ export default class Blockchain {
 
     onError(error: string) {
         this.link.removeAllListeners();
-        this.postMessage(new BlockchainMessage(BLOCKCHAIN.ERROR, {
+        this.postMessage(BlockchainMessage(BLOCKCHAIN.ERROR, {
             coin: this.coinInfo,
             error,
         }));
@@ -96,11 +97,9 @@ export default class Blockchain {
     async init() {
         this.link.on('connected', async () => {
             const info = await this.link.getInfo();
-            this.postMessage(new BlockchainMessage(BLOCKCHAIN.CONNECT, {
+            this.postMessage(BlockchainMessage(BLOCKCHAIN.CONNECT, {
                 coin: this.coinInfo,
-                info: {
-                    block: info.block,
-                },
+                ...info,
             }));
         });
 
@@ -121,8 +120,14 @@ export default class Blockchain {
     }
 
     async loadTransaction(id: string): Promise<BitcoinJsTransaction> {
-        const tx = await this.link.getTransaction(id);
-        return BitcoinJsTransaction.fromHex(tx.hex, this.coinInfo.network);
+        const transaction = await this.link.getTransaction(id);
+        return BitcoinJsTransaction.fromHex(transaction.tx.hex, this.coinInfo.network);
+    }
+
+    async getTransactions(txs: string[]): Promise<GetTransactionResponse[]> {
+        return Promise.all(
+            txs.map(id => this.link.getTransaction(id))
+        );
     }
 
     async getReferencedTransactions(txs: string[]): Promise<BitcoinJsTransaction[]> {
@@ -168,7 +173,7 @@ export default class Blockchain {
         // set block listener if it wasn't set before
         if (this.link.listenerCount('block') === 0) {
             this.link.on('block', (block: $ElementType<BlockchainBlock, 'payload'>) => {
-                this.postMessage(new BlockchainMessage(BLOCKCHAIN.BLOCK, {
+                this.postMessage(BlockchainMessage(BLOCKCHAIN.BLOCK, {
                     coin: this.coinInfo,
                     ...block,
                 }));
@@ -178,7 +183,7 @@ export default class Blockchain {
         // set notification listener if it wasn't set before
         if (this.link.listenerCount('notification') === 0) {
             this.link.on('notification', (notification: BlockchainLinkTransaction) => {
-                this.postMessage(new BlockchainMessage(BLOCKCHAIN.NOTIFICATION, {
+                this.postMessage(BlockchainMessage(BLOCKCHAIN.NOTIFICATION, {
                     coin: this.coinInfo,
                     notification,
                 }));

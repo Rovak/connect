@@ -163,7 +163,7 @@ const parseBitcoinNetworksJson = (json: JSON): void => {
         const coin = coinsObject[key];
         const shortcut = coin.coin_shortcut;
         const isBitcoin = shortcut === 'BTC' || shortcut === 'TEST';
-        const hasTimestamp = shortcut === 'CPC';
+        const hasTimestamp = shortcut === 'CPC' || shortcut === 'PPC' || shortcut === 'tPPC';
 
         const network: $ElementType<BitcoinNetworkInfo, 'network'> = {
             messagePrefix: coin.signed_message_header,
@@ -237,7 +237,7 @@ const parseBitcoinNetworksJson = (json: JSON): void => {
 
             // used in backend ?
             blocks: Math.round(coin.blocktime_seconds / 60),
-            decimals: 8,
+            decimals: coin.decimals,
         });
     });
 };
@@ -257,9 +257,15 @@ const parseEthereumNetworksJson = (json: JSON): void => {
             chain: network.chain,
             chainId: network.chain_id,
             // key not used
-            defaultFees: {'Normal': 1},
+            defaultFees: [
+                {
+                    label: 'normal',
+                    feePerUnit: '5000000000',
+                    feeLimit: '21000',
+                },
+            ],
             minFee: 1,
-            maxFee: 1,
+            maxFee: 10000,
             label: network.name,
             name: network.name,
             shortcut: network.shortcut,
@@ -277,14 +283,21 @@ const parseMiscNetworksJSON = (json: JSON): void => {
     const networksObject: Object = json;
     Object.keys(networksObject).forEach(key => {
         const network = networksObject[key];
+        let minFee = 1;
+        let maxFee = 1;
+        const shortcut = network.shortcut.toLowerCase();
+        if (shortcut === 'xrp' || shortcut === 'txrp') {
+            minFee = 10;
+            maxFee = 10000;
+        }
         miscNetworks.push({
             type: 'misc',
             blockchainLink: network.blockchain_link,
-            blocktime: Math.round(network.blocktime_seconds / 60),
+            blocktime: 0,
             curve: network.curve,
             defaultFees: {'Normal': 1},
-            minFee: 1,
-            maxFee: 1,
+            minFee,
+            maxFee,
             label: network.name,
             name: network.name,
             shortcut: network.shortcut,
@@ -309,4 +322,11 @@ export const parseCoinsJson = (json: JSON): void => {
                 return parseMiscNetworksJSON(coinsObject[key]);
         }
     });
+};
+
+export const getUniqueNetworks = (networks: Array<?CoinInfo>): CoinInfo[] => {
+    return networks.reduce((result: CoinInfo[], info: ?CoinInfo) => {
+        if (!info || result.find(i => i.shortcut === info.shortcut)) return result;
+        return result.concat(info);
+    }, []);
 };

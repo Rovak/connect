@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
@@ -31,7 +30,7 @@ export default class CustomMessage extends AbstractMethod {
             { name: 'params', type: 'object', obligatory: true },
         ]);
 
-        if (payload.hasOwnProperty('messages')) {
+        if (Object.prototype.hasOwnProperty.call(payload, 'messages')) {
             try {
                 JSON.parse(JSON.stringify(payload.messages));
             } catch (error) {
@@ -58,7 +57,7 @@ export default class CustomMessage extends AbstractMethod {
         const response = await this.device.getCommands()._commonCall(this.params.message, this.params.params);
 
         // send result to developer
-        this.postMessage(new UiMessage(UI.CUSTOM_MESSAGE_REQUEST, response));
+        this.postMessage(UiMessage(UI.CUSTOM_MESSAGE_REQUEST, response));
 
         // wait for response from developer
         const uiResp: UiPromiseResponse = await this.createUiPromise(UI.CUSTOM_MESSAGE_RESPONSE, this.device).promise;

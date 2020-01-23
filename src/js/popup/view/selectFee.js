@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';
@@ -216,7 +215,7 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
             customFeeLabel.innerHTML = 'Composing...';
 
             const composeCustomFeeTimeoutHandler = () => {
-                postMessage(new UiMessage(UI.RECEIVE_FEE, {
+                postMessage(UiMessage(UI.RECEIVE_FEE, {
                     type: 'compose-custom',
                     value,
                 }));
@@ -228,7 +227,7 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
 
     const changeAccountButton: HTMLElement = container.getElementsByClassName('back-button')[0];
     changeAccountButton.onclick = () => {
-        postMessage(new UiMessage(UI.RECEIVE_FEE, {
+        postMessage(UiMessage(UI.RECEIVE_FEE, {
             type: 'change-account',
         }));
         showView('loader');
@@ -237,7 +236,7 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
     sendButton.onclick = () => {
         if (!selectedFee) return;
         const selectedName: ?string = selectedFee.getAttribute('data-fee');
-        postMessage(new UiMessage(UI.RECEIVE_FEE, {
+        postMessage(UiMessage(UI.RECEIVE_FEE, {
             type: 'send',
             value: selectedName || 'custom',
         }));

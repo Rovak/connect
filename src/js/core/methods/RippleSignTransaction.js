@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
@@ -64,7 +63,7 @@ export default class RippleSignTransaction extends AbstractMethod {
             sequence: tx.sequence,
             last_ledger_sequence: tx.maxLedgerVersion,
             payment: {
-                amount: parseInt(tx.payment.amount),
+                amount: tx.payment.amount,
                 destination: tx.payment.destination,
                 destination_tag: tx.payment.destinationTag,
             },

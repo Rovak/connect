@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import * as bs58check from 'bs58check';
 import type { TezosOperation } from '../../../types/tezos';
@@ -29,7 +28,7 @@ const concatArray = (first: Uint8Array, second: Uint8Array): Uint8Array => {
 };
 
 // convert publicKeyHash to buffer
-const publicKeyHash2buffer = (publicKeyHash: string): { originated: number, hash: Uint8Array} => {
+const publicKeyHash2buffer = (publicKeyHash: string): { originated: number, hash: Uint8Array } => {
     switch (publicKeyHash.substr(0, 3)) {
         case 'tz1':
             return {
@@ -71,7 +70,7 @@ const publicKey2buffer = (publicKey: string): Uint8Array => {
 };
 
 export const createTx = (address_n: Array<number>, branch: string, operation: TezosOperation): TezosTransaction => {
-    let message: TezosTransaction = {
+    let message = {
         address_n,
         branch: bs58checkDecode(prefix.B, branch),
     };
@@ -93,10 +92,7 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
         message = {
             ...message,
             reveal: {
-                source: {
-                    tag: publicKeyHash2buffer(reveal.source).originated,
-                    hash: publicKeyHash2buffer(reveal.source).hash,
-                },
+                source: publicKeyHash2buffer(reveal.source).hash,
                 public_key: publicKey2buffer(reveal.public_key),
                 fee: reveal.fee,
                 counter: reveal.counter,
@@ -124,10 +120,7 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
         message = {
             ...message,
             transaction: {
-                source: {
-                    tag: publicKeyHash2buffer(transaction.source).originated,
-                    hash: publicKeyHash2buffer(transaction.source).hash,
-                },
+                source: publicKeyHash2buffer(transaction.source).hash,
                 destination: {
                     tag: publicKeyHash2buffer(transaction.destination).originated,
                     hash: publicKeyHash2buffer(transaction.destination).hash,
@@ -141,7 +134,7 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
         };
 
         //  add parameters to transaction
-        if (transaction.hasOwnProperty('parameters')) {
+        if (Object.prototype.hasOwnProperty.call(transaction, 'parameters')) {
             message = {
                 ...message,
                 transaction: {
@@ -149,6 +142,65 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
                     parameters: transaction.parameters,
                 },
             };
+        }
+
+        if (transaction.parameters_manager) {
+            const parameters_manager = transaction.parameters_manager;
+
+            validateParams(parameters_manager, [
+                { name: 'set_delegate', type: 'string', obligatory: false },
+                { name: 'cancel_delegate', type: 'boolean', obligatory: false },
+                { name: 'transfer', type: 'object', obligatory: false },
+            ]);
+
+            if (parameters_manager.set_delegate) {
+                message = {
+                    ...message,
+                    transaction: {
+                        ...message.transaction,
+                        parameters_manager: {
+                            set_delegate: publicKeyHash2buffer(parameters_manager.set_delegate).hash,
+                        },
+                    },
+                };
+            }
+
+            if (Object.prototype.hasOwnProperty.call(parameters_manager, 'cancel_delegate')) {
+                message = {
+                    ...message,
+                    transaction: {
+                        ...message.transaction,
+                        parameters_manager: {
+                            cancel_delegate: true,
+                        },
+                    },
+                };
+            }
+
+            if (parameters_manager.transfer) {
+                const transfer = parameters_manager.transfer;
+
+                validateParams(transfer, [
+                    { name: 'amount', type: 'number', obligatory: true },
+                    { name: 'destination', type: 'string', obligatory: true },
+                ]);
+
+                message = {
+                    ...message,
+                    transaction: {
+                        ...message.transaction,
+                        parameters_manager: {
+                            transfer: {
+                                destination: {
+                                    tag: publicKeyHash2buffer(transfer.destination).originated,
+                                    hash: publicKeyHash2buffer(transfer.destination).hash,
+                                },
+                                amount: transfer.amount,
+                            },
+                        },
+                    },
+                };
+            }
         }
     }
 
@@ -159,43 +211,33 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
         // validate origination parameters
         validateParams(origination, [
             { name: 'source', type: 'string', obligatory: true },
-            { name: 'manager_pubkey', type: 'string', obligatory: true },
-            { name: 'delegate', type: 'string', obligatory: true },
             { name: 'balance', type: 'number', obligatory: true },
-            { name: 'spendable', type: 'boolean', obligatory: true },
-            { name: 'delegatable', type: 'boolean', obligatory: true },
             { name: 'fee', type: 'number', obligatory: true },
             { name: 'counter', type: 'number', obligatory: true },
             { name: 'gas_limit', type: 'number', obligatory: true },
             { name: 'storage_limit', type: 'number', obligatory: true },
+            { name: 'script', type: 'string', obligatory: true },
         ]);
 
         message = {
             ...message,
             origination: {
-                source: {
-                    tag: publicKeyHash2buffer(origination.source).originated,
-                    hash: publicKeyHash2buffer(origination.source).hash,
-                },
-                manager_pubkey: publicKeyHash2buffer(origination.manager_pubkey).hash,
-                delegate: publicKeyHash2buffer(origination.delegate).hash,
+                source: publicKeyHash2buffer(origination.source).hash,
                 balance: origination.balance,
-                spendable: origination.spendable,
-                delegatable: origination.delegatable,
                 fee: origination.fee,
                 counter: origination.counter,
                 gas_limit: origination.gas_limit,
                 storage_limit: origination.storage_limit,
+                script: origination.script,
             },
         };
 
-        //  add script to origination
-        if (origination.hasOwnProperty('script')) {
+        if (origination.delegate) {
             message = {
                 ...message,
                 origination: {
                     ...message.origination,
-                    script: origination.script,
+                    delegate: publicKeyHash2buffer(origination.delegate).hash,
                 },
             };
         }
@@ -218,10 +260,7 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
         message = {
             ...message,
             delegation: {
-                source: {
-                    tag: publicKeyHash2buffer(delegation.source).originated,
-                    hash: publicKeyHash2buffer(delegation.source).hash,
-                },
+                source: publicKeyHash2buffer(delegation.source).hash,
                 delegate: publicKeyHash2buffer(delegation.delegate).hash,
                 fee: delegation.fee,
                 counter: delegation.counter,

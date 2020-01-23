@@ -1,7 +1,5 @@
 /* @flow */
 
-'use strict';
-
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getMiscNetwork } from '../../data/CoinInfo';
@@ -42,7 +40,7 @@ export default class LiskSignTransaction extends AbstractMethod {
         validateParams(tx, [
             { name: 'type', type: 'number', obligatory: true },
             { name: 'fee', type: 'string', obligatory: true },
-            { name: 'amount', type: 'string', obligatory: true },
+            { name: 'amount', type: 'amount', obligatory: true },
             { name: 'timestamp', type: 'number', obligatory: true },
             { name: 'recipientId', type: 'string' },
             { name: 'signature', type: 'string' },

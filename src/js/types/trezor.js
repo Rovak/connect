@@ -105,7 +105,7 @@ export type MessageSignature = {
 }
 
 export type MultisigRedeemScriptType = {
-    pubkeys: Array<{ node: string, address_n: Array<number> }>,
+    pubkeys: Array<{ node: string | HDPubNode, address_n: Array<number> }>,
     signatures: Array<string>,
     m?: number,
 }
@@ -415,103 +415,103 @@ export type StellarPaymentOp = {
     message: {},
 }
 
-export type StellarSignTxMessage = {
+export type StellarSignTxMessage = {|
     address_n: Array<number>,
     source_account: string,
-    fee: ?number,
-    sequence_number: ?number,
+    fee: number,
+    sequence_number: string,
     network_passphrase: string,
     timebounds_start?: number,
     timebounds_end?: number,
     memo_type?: number,
-    memo_text?: ?string,
-    memo_id?: ?number,
-    memo_hash?: ?string,
+    memo_text?: string | typeof undefined,
+    memo_id?: string | typeof undefined,
+    memo_hash?: string | Buffer | typeof undefined,
     num_operations: number,
-}
+|}
 
-type StellarAsset = {
-    type: string,
-    code?: string,
+export type StellarAsset = {
+    type: 0 | 1 | 2,
+    code: string,
     issuer?: string,
 }
 
 export type StellarOperationMessage = {
     type: 'StellarCreateAccountOp',
-    new_account: ?string,
-    source_account: string,
-    starting_balance: ?number,
+    source_account?: string,
+    new_account: string,
+    starting_balance: string,
 } | {
     type: 'StellarPaymentOp',
-    source_account: ?string,
-    destination_account: ?string,
-    asset: ?StellarAsset,
-    amount: ?number,
+    source_account?: string,
+    destination_account: string,
+    asset: StellarAsset | typeof undefined,
+    amount: string,
 } | {
     type: 'StellarPathPaymentOp',
-    source_account: string,
-    send_asset: ?StellarAsset,
-    send_max: ?number,
-    destination_account: ?string,
-    destination_asset: ?StellarAsset,
-    destination_amount: ?number,
-    paths: ?Array<StellarAsset>,
+    source_account?: string,
+    send_asset: StellarAsset,
+    send_max: string,
+    destination_account: string,
+    destination_asset: StellarAsset,
+    destination_amount: string,
+    paths?: Array<StellarAsset> | typeof undefined,
 } | {
     type: 'StellarManageOfferOp',
-    source_account: string,
-    offer_id: number,
-    amount: number,
+    source_account?: string,
+    offer_id?: string,
+    amount: string,
     buying_asset: StellarAsset,
     selling_asset: StellarAsset,
     price_n: number,
     price_d: number,
 } | {
     type: 'StellarCreatePassiveOfferOp',
-    source_account: string,
-    offer_id: number,
-    amount: number,
+    source_account?: string,
+    offer_id?: string,
+    amount: string,
     buying_asset: StellarAsset,
     selling_asset: StellarAsset,
     price_n: number,
     price_d: number,
 } | {
     type: 'StellarSetOptionsOp',
-    source_account: string,
-    signer_type: ?number,
-    signer_key: ?string,
-    signer_weight: ?number,
+    source_account?: string,
+    signer_type?: number | typeof undefined,
+    signer_key?: string | Buffer | typeof undefined,
+    signer_weight?: number | typeof undefined,
     clear_flags: ?number,
     set_flags: ?number,
-    master_weight: ?number,
-    low_threshold: ?number,
-    medium_threshold: ?number,
-    high_threshold: ?number,
+    master_weight: ?(number | string),
+    low_threshold: ?(number | string),
+    medium_threshold: ?(number | string),
+    high_threshold: ?(number | string),
     home_domain: ?string,
     inflation_destination_account: ?string,
 } | {
     type: 'StellarChangeTrustOp',
-    source_account: string,
-    asset: ?StellarAsset,
-    limit: ?number,
+    source_account?: string,
+    asset: StellarAsset,
+    limit?: string,
 } | {
     type: 'StellarAllowTrustOp',
-    source_account: string,
+    source_account?: string,
     trusted_account: string,
-    asset_type: ?number,
-    asset_code: ?string,
+    asset_type: number,
+    asset_code: string,
     is_authorized: ?number,
 } | {
     type: 'StellarAccountMergeOp',
-    source_account: string,
+    source_account?: string,
     destination_account: string,
 } | {
     type: 'StellarManageDataOp',
-    source_account: string,
+    source_account?: string,
     key: string,
-    value: string,
+    value: string | Buffer | typeof undefined,
 } | {
     type: 'StellarBumpSequenceOp',
-    source_account: string,
+    source_account?: string,
     bump_to: number,
 }
 
@@ -530,7 +530,7 @@ type TezosContractID = {
 };
 
 export type TezosRevealOp = {
-    source: TezosContractID,
+    source: Uint8Array,
     fee: number,
     counter: number,
     gas_limit: number,
@@ -538,8 +538,19 @@ export type TezosRevealOp = {
     public_key: Uint8Array,
 };
 
+export type TezosManagerTransfer = {
+    amount: number,
+    destination: TezosContractID,
+};
+
+export type TezosParametersManager = {
+    set_delegate?: Uint8Array,
+    cancel_delegate?: boolean,
+    transfer?: TezosManagerTransfer,
+};
+
 export type TezosTransactionOp = {
-    source: TezosContractID,
+    source: Uint8Array,
     destination: TezosContractID,
     amount: number,
     counter: number,
@@ -547,24 +558,22 @@ export type TezosTransactionOp = {
     gas_limit: number,
     storage_limit: number,
     parameters?: Array<number>,
+    parameters_manager?: TezosParametersManager,
 };
 
 export type TezosOriginationOp = {
-    source: TezosContractID,
-    manager_pubkey: Uint8Array,
+    source: Uint8Array,
     balance: number,
-    spendable: boolean,
-    delegatable: boolean,
-    delegate: Uint8Array,
+    delegate?: Uint8Array,
     fee: number,
     counter: number,
     gas_limit: number,
     storage_limit: number,
-    script?: Array<number>,
+    script: Array<number>,
 };
 
 export type TezosDelegationOp = {
-    source: TezosContractID,
+    source: Uint8Array,
     delegate: Uint8Array,
     fee: number,
     counter: number,
@@ -611,7 +620,7 @@ export type CardanoTxInput = {
 export type CardanoTxOutput = {
     address?: string,
     address_n?: Array<number>,
-    amount: number,
+    amount: string,
 };
 
 export type CardanoTxRequest = {
@@ -649,8 +658,8 @@ export type LiskAsset =
 
 export type LiskTransaction = {
     type: number,
-    fee: number,
-    amount: number,
+    fee: string,
+    amount: string,
     timestamp: number,
     recipient_id?: string,
     sender_public_key?: string,
@@ -675,7 +684,7 @@ export type RippleTransaction = {
     sequence?: number,
     last_ledger_sequence?: number,
     payment: {
-        amount: number,
+        amount: string,
         destination: string,
     },
 }
@@ -966,11 +975,11 @@ export type Flags = {
     flags: number,
 }
 
-export type DebugLinkDecision = {
+export type DebugLinkDecision = {|
     yes_no?: boolean,
     up_down?: boolean,
     input?: string,
-}
+|}
 
 export type DebugLinkState = {
     layout: string,

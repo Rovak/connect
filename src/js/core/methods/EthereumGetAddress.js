@@ -4,8 +4,7 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getSerializedPath } from '../../utils/pathUtils';
 import { getNetworkLabel, stripHexPrefix } from '../../utils/ethereumUtils';
-import { getEthereumNetwork } from '../../data/CoinInfo';
-import { uniq } from 'lodash';
+import { getEthereumNetwork, getUniqueNetworks } from '../../data/CoinInfo';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
@@ -34,8 +33,8 @@ export default class EthereumGetAddress extends AbstractMethod {
         this.requiredPermissions = ['read'];
 
         // create a bundle with only one batch if bundle doesn't exists
-        this.hasBundle = message.payload.hasOwnProperty('bundle');
-        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
+        this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
+        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
@@ -52,12 +51,12 @@ export default class EthereumGetAddress extends AbstractMethod {
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
-            const path: Array<number> = validatePath(batch.path, 3);
-            const network: ?EthereumNetworkInfo = getEthereumNetwork(path);
+            const path = validatePath(batch.path, 3);
+            const network = getEthereumNetwork(path);
             this.firmwareRange = getFirmwareRange(this.name, network, this.firmwareRange);
 
-            let showOnTrezor: boolean = true;
-            if (batch.hasOwnProperty('showOnTrezor')) {
+            let showOnTrezor = true;
+            if (Object.prototype.hasOwnProperty.call(batch, 'showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
 
@@ -73,8 +72,8 @@ export default class EthereumGetAddress extends AbstractMethod {
         if (bundle.length === 1) {
             this.info = getNetworkLabel('Export #NETWORK address', bundle[0].network);
         } else {
-            const requestedNetworks: Array<?EthereumNetworkInfo> = bundle.map(b => b.network);
-            const uniqNetworks = uniq(requestedNetworks);
+            const requestedNetworks = bundle.map(b => b.network);
+            const uniqNetworks = getUniqueNetworks(requestedNetworks);
             if (uniqNetworks.length === 1 && uniqNetworks[0]) {
                 this.info = getNetworkLabel('Export multiple #NETWORK addresses', uniqNetworks[0]);
             } else {
@@ -110,7 +109,7 @@ export default class EthereumGetAddress extends AbstractMethod {
 
         const label: string = this.info;
         // request confirmation view
-        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'export-address',
             label,
         }));
@@ -129,7 +128,7 @@ export default class EthereumGetAddress extends AbstractMethod {
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // request confirmation view
-        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'no-backup',
         }));
 
@@ -175,7 +174,7 @@ export default class EthereumGetAddress extends AbstractMethod {
 
             if (this.hasBundle) {
                 // send progress
-                this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
+                this.postMessage(UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
                     response,
                 }));

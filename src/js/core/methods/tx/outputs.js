@@ -30,7 +30,7 @@ export const validateTrezorOutputs = (outputs: Array<TransactionOutput>, coinInf
             { name: 'multisig', type: 'object' },
         ]);
 
-        if (output.hasOwnProperty('address_n') && output.hasOwnProperty('address')) {
+        if (Object.prototype.hasOwnProperty.call(output, 'address_n') && Object.prototype.hasOwnProperty.call(output, 'address')) {
             throw new Error('Cannot use address and address_n in one output');
         }
 
@@ -73,8 +73,21 @@ export const validateHDOutput = (output: BuildTxOutputRequest, coinInfo: Bitcoin
                 address: output.address,
             };
 
+        case 'noaddress' :
+            validateParams(output, [
+                { name: 'amount', type: 'string', obligatory: true },
+            ]);
+            return {
+                type: 'noaddress',
+                amount: output.amount,
+            };
+
+        case 'send-max-noaddress' :
+            return {
+                type: 'send-max-noaddress',
+            };
+
         default :
-        case 'complete' :
             validateParams(output, [
                 { name: 'amount', type: 'string', obligatory: true },
                 { name: 'address', type: 'string', obligatory: true },
@@ -93,7 +106,7 @@ export const validateHDOutput = (output: BuildTxOutputRequest, coinInfo: Bitcoin
  *******/
 export const outputToTrezor = (output: BuildTxOutput, coinInfo: BitcoinNetworkInfo): TransactionOutput => {
     if (output.opReturnData) {
-        if (output.hasOwnProperty('value')) {
+        if (Object.prototype.hasOwnProperty.call(output, 'value')) {
             throw new Error('Wrong type.');
         }
         const data: Buffer = output.opReturnData;

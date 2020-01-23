@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
@@ -31,8 +30,8 @@ export default class GetPublicKey extends AbstractMethod {
         this.info = 'Export public key';
 
         // create a bundle with only one batch if bundle doesn't exists
-        this.hasBundle = message.payload.hasOwnProperty('bundle');
-        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
+        this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
+        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
@@ -88,7 +87,7 @@ export default class GetPublicKey extends AbstractMethod {
         }
 
         // request confirmation view
-        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'export-xpub',
             label,
         }));
@@ -112,7 +111,7 @@ export default class GetPublicKey extends AbstractMethod {
 
             if (this.hasBundle) {
                 // send progress
-                this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
+                this.postMessage(UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
                     response,
                 }));

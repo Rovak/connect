@@ -5,14 +5,16 @@ import type {
     TransactionOutput,
     RefTransaction,
     DebugLinkDecision,
+    MultisigRedeemScriptType,
+    InputScriptType,
 } from './trezor';
-import type { AccountAddresses } from './account';
+import type { AccountAddresses, AccountUtxo } from './account';
 
-export type $BlockchainDisconnect = {
+export type $BlockchainDisconnect = {|
     coin: string,
-}
+|}
 
-export type $BlockchainEstimateFee = {
+export type $BlockchainEstimateFee = {|
     coin: string,
     request?: {
         blocks?: number[],
@@ -23,20 +25,26 @@ export type $BlockchainEstimateFee = {
             to?: string, // eth to
             data?: string, // eth tx data
         },
+        feeLevels?: 'preloaded' | 'smart',
     },
-}
+|}
 
 export type SubscriptionAccountInfo = {
     descriptor: string,
     addresses?: AccountAddresses, // bitcoin addresses
 }
 
-export type $BlockchainSubscribe = {
+export type $BlockchainGetTransactions = {|
+    coin: string,
+    txs: string[],
+|}
+
+export type $BlockchainSubscribe = {|
     coin: string,
     accounts: SubscriptionAccountInfo[],
-}
+|}
 
-export type $Common = {
+export type $Common = {|
     device?: {
         path: string,
         instance?: ?number,
@@ -46,7 +54,7 @@ export type $Common = {
     allowSeedlessDevice?: boolean,
     keepSession?: boolean,
     skipFinalReload?: boolean,
-}
+|}
 
 export type $Path = string | Array<number>;
 
@@ -69,13 +77,31 @@ type ComposeTransactionOutput = {|
 |} | {|
     type: 'opreturn',
     dataHex: string,
+|} | {|
+    type: 'noaddress',
+    amount: string,
+|} | {|
+    type: 'send-max-noaddress',
 |};
 
-export type $ComposeTransaction = $Common & {
+export type $ComposeTransaction = {|
     outputs: Array<ComposeTransactionOutput>,
     coin: string,
     push?: boolean,
-}
+|}
+
+export type $$ComposeTransaction = {|
+    outputs: Array<ComposeTransactionOutput>,
+    coin: string,
+    account: {
+        path: string,
+        addresses: AccountAddresses,
+        utxo: AccountUtxo[],
+    },
+    feeLevels: {
+        feePerUnit: string,
+    }[],
+|}
 
 export type $CustomMessage = $Common & {
     messages?: JSON,
@@ -90,11 +116,11 @@ export type $DebugLinkDecision = DebugLinkDecision & {
     },
 }
 
-export type $DebugLinkGetState = {
+export type $DebugLinkGetState = {|
     device: {
         path: string,
     },
-}
+|}
 
 export type $GetAccountInfo = $Common & {
     coin: string,
@@ -120,6 +146,8 @@ export type $GetAddress = {|
     coin?: string,
     showOnTrezor?: boolean,
     crossChain?: boolean,
+    multisig?: MultisigRedeemScriptType,
+    scriptType?: InputScriptType,
 |};
 
 export type $GetDeviceState = $Common;

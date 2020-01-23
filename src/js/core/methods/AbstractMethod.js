@@ -7,7 +7,7 @@ import DataManager from '../../data/DataManager';
 import * as UI from '../../constants/ui';
 import * as DEVICE from '../../constants/device';
 import * as ERROR from '../../constants/errors';
-import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../../iframe/storage';
+import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../../storage';
 
 import { UiMessage, DeviceMessage } from '../../message/builder';
 import type { Deferred, CoreMessage, UiPromiseResponse, FirmwareRange } from '../../types';
@@ -64,7 +64,7 @@ export default class AbstractMethod implements MethodInterface {
         // expected state from method parameter.
         // it could be null
         this.deviceState = payload.device ? payload.device.state : null;
-        this.hasExpectedDeviceState = payload.device ? payload.device.hasOwnProperty('state') : false;
+        this.hasExpectedDeviceState = payload.device ? Object.prototype.hasOwnProperty.call(payload.device, 'state') : false;
         this.keepSession = typeof payload.keepSession === 'boolean' ? payload.keepSession : false;
         this.skipFinalReload = typeof payload.skipFinalReload === 'boolean' ? payload.skipFinalReload : false;
         this.skipFirmwareCheck = false;
@@ -89,6 +89,11 @@ export default class AbstractMethod implements MethodInterface {
         this.useUi = true;
     }
 
+    setDevice(device: Device) {
+        this.device = device;
+        this.devicePath = device.getDevicePath();
+    }
+
     async run(): Promise<Object | Array<Object>> {
         // to override
         return new Promise(resolve => resolve({}));
@@ -99,7 +104,7 @@ export default class AbstractMethod implements MethodInterface {
         await this.getPopupPromise().promise;
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_PERMISSION, this.device);
-        this.postMessage(new UiMessage(UI.REQUEST_PERMISSION, {
+        this.postMessage(UiMessage(UI.REQUEST_PERMISSION, {
             permissions: this.requiredPermissions,
             device: this.device.toMessageObject(),
         }));
@@ -168,7 +173,7 @@ export default class AbstractMethod implements MethodInterface {
         saveStorage(PERMISSIONS_KEY, savedPermissions.concat(permissionsToSave), temporary);
 
         if (emitEvent) {
-            this.postMessage(new DeviceMessage(DEVICE.CONNECT, this.device.toMessageObject()));
+            this.postMessage(DeviceMessage(DEVICE.CONNECT, this.device.toMessageObject()));
         }
     }
 
@@ -199,7 +204,7 @@ export default class AbstractMethod implements MethodInterface {
                 // initialize user response promise
                 const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, device);
                 // show unexpected state information and wait for confirmation
-                this.postMessage(new UiMessage(UI.FIRMWARE_NOT_COMPATIBLE, device.toMessageObject()));
+                this.postMessage(UiMessage(UI.FIRMWARE_NOT_COMPATIBLE, device.toMessageObject()));
 
                 const uiResp: UiPromiseResponse = await uiPromise.promise;
                 if (!uiResp.payload) {

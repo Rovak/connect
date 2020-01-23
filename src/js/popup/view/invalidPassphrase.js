@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';
@@ -13,12 +12,12 @@ export const initInvalidPassphraseView = (payload: $PropertyType<DeviceMessage, 
     const cancelButton: HTMLElement = container.getElementsByClassName('cancel')[0];
 
     confirmButton.onclick = () => {
-        postMessage(new UiMessage(UI.INVALID_PASSPHRASE_ACTION, false));
+        postMessage(UiMessage(UI.INVALID_PASSPHRASE_ACTION, false));
         showView('loader');
     };
 
     cancelButton.onclick = () => {
-        postMessage(new UiMessage(UI.INVALID_PASSPHRASE_ACTION, true));
+        postMessage(UiMessage(UI.INVALID_PASSPHRASE_ACTION, true));
         showView('loader');
     };
 };
