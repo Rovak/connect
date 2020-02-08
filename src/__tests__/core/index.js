@@ -55,6 +55,8 @@ import { binanceSignTransaction } from './binanceSignTransaction.spec';
 import { applySettings } from './applySettings.spec';
 import { applyFlags } from './applyFlags.spec';
 import { stellarSignTransaction } from './stellarSignTransaction.spec';
+import { tronSignTransaction } from './tronSignTransaction.spec';
+import { tronGetAddress } from './tronGetAddress.spec';
 
 export const testFunctions: AvailableTestFunctions = {
     cardanoGetAddress,

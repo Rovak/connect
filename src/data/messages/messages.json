@@ -1691,10 +1691,6 @@
                             "id": 12
                         },
                         {
-                            "name": "Failure_WipeCodeMismatch",
-                            "id": 13
-                        },
-                        {
                             "name": "Failure_FirmwareError",
                             "id": 99
                         }
@@ -1715,6 +1711,13 @@
                     "type": "ButtonRequestType",
                     "name": "code",
                     "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "data",
+                    "id": 2
                 }
             ],
             "enums": [
@@ -1835,14 +1838,6 @@
                         {
                             "name": "PinMatrixRequestType_NewSecond",
                             "id": 3
-                        },
-                        {
-                            "name": "PinMatrixRequestType_WipeCodeFirst",
-                            "id": 4
-                        },
-                        {
-                            "name": "PinMatrixRequestType_WipeCodeSecond",
-                            "id": 5
                         }
                     ],
                     "options": {}
@@ -2344,27 +2339,6 @@
                     "type": "string",
                     "name": "input",
                     "id": 3
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "x",
-                    "id": 4
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "y",
-                    "id": 5
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "wait",
-                    "id": 6
                 }
             ],
             "enums": [
@@ -2396,22 +2370,6 @@
             "oneofs": {}
         },
         {
-            "name": "DebugLinkLayout",
-            "fields": [
-                {
-                    "rule": "repeated",
-                    "options": {},
-                    "type": "string",
-                    "name": "lines",
-                    "id": 1
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
             "name": "DebugLinkGetState",
             "fields": [
                 {
@@ -2427,13 +2385,6 @@
                     "type": "bool",
                     "name": "wait_word_pos",
                     "id": 2
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "wait_layout",
-                    "id": 3
                 }
             ],
             "enums": [],
@@ -2527,13 +2478,6 @@
                     "type": "uint32",
                     "name": "mnemonic_type",
                     "id": 12
-                },
-                {
-                    "rule": "repeated",
-                    "options": {},
-                    "type": "string",
-                    "name": "layout_lines",
-                    "id": 13
                 }
             ],
             "enums": [],
@@ -4540,13 +4484,6 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "BackupType",
-                    "name": "backup_type",
-                    "id": 31
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
                     "type": "bool",
                     "name": "sd_card_present",
                     "id": 32
@@ -4557,13 +4494,6 @@
                     "type": "bool",
                     "name": "sd_protection",
                     "id": 33
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "wipe_code_protection",
-                    "id": 34
                 }
             ],
             "enums": [
@@ -4760,57 +4690,6 @@
             "oneofs": {}
         },
         {
-            "name": "ChangeWipeCode",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "remove",
-                    "id": 1
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "SdProtect",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "SdProtectOperationType",
-                    "name": "operation",
-                    "id": 1
-                }
-            ],
-            "enums": [
-                {
-                    "name": "SdProtectOperationType",
-                    "values": [
-                        {
-                            "name": "DISABLE",
-                            "id": 0
-                        },
-                        {
-                            "name": "ENABLE",
-                            "id": 1
-                        },
-                        {
-                            "name": "REFRESH",
-                            "id": 2
-                        }
-                    ],
-                    "options": {}
-                }
-            ],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
             "name": "SdProtect",
             "fields": [
                 {
@@ -4943,6 +4822,13 @@
                 {
                     "rule": "optional",
                     "options": {},
+                    "type": "HDNodeType",
+                    "name": "node",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
                     "type": "string",
                     "name": "pin",
                     "id": 3
@@ -4983,20 +4869,6 @@
                     "type": "uint32",
                     "name": "u2f_counter",
                     "id": 8
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "needs_backup",
-                    "id": 9
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "no_backup",
-                    "id": 10
                 }
             ],
             "enums": [],
@@ -5263,30 +5135,6 @@
         },
         {
             "name": "SetU2FCounter",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "u2f_counter",
-                    "id": 1
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "GetNextU2FCounter",
-            "fields": [],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "NextU2FCounter",
             "fields": [
                 {
                     "rule": "optional",
@@ -8503,9 +8351,9 @@
                         {
                             "rule": "optional",
                             "options": {},
-                            "type": "bytes",
+                            "type": "TezosContractID",
                             "name": "source",
-                            "id": 7
+                            "id": 1
                         },
                         {
                             "rule": "optional",
@@ -8554,9 +8402,9 @@
                         {
                             "rule": "optional",
                             "options": {},
-                            "type": "bytes",
+                            "type": "TezosContractID",
                             "name": "source",
-                            "id": 9
+                            "id": 1
                         },
                         {
                             "rule": "optional",
@@ -8606,72 +8454,10 @@
                             "type": "bytes",
                             "name": "parameters",
                             "id": 8
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TezosParametersManager",
-                            "name": "parameters_manager",
-                            "id": 10
                         }
                     ],
                     "enums": [],
-                    "messages": [
-                        {
-                            "name": "TezosParametersManager",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "bytes",
-                                    "name": "set_delegate",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "bool",
-                                    "name": "cancel_delegate",
-                                    "id": 2
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "TezosManagerTransfer",
-                                    "name": "transfer",
-                                    "id": 3
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [
-                                {
-                                    "name": "TezosManagerTransfer",
-                                    "fields": [
-                                        {
-                                            "rule": "optional",
-                                            "options": {},
-                                            "type": "TezosContractID",
-                                            "name": "destination",
-                                            "id": 1
-                                        },
-                                        {
-                                            "rule": "optional",
-                                            "options": {},
-                                            "type": "uint64",
-                                            "name": "amount",
-                                            "id": 2
-                                        }
-                                    ],
-                                    "enums": [],
-                                    "messages": [],
-                                    "options": {},
-                                    "oneofs": {}
-                                }
-                            ],
-                            "options": {},
-                            "oneofs": {}
-                        }
-                    ],
+                    "messages": [],
                     "options": {},
                     "oneofs": {}
                 },
@@ -8681,9 +8467,9 @@
                         {
                             "rule": "optional",
                             "options": {},
-                            "type": "bytes",
+                            "type": "TezosContractID",
                             "name": "source",
-                            "id": 12
+                            "id": 1
                         },
                         {
                             "rule": "optional",
@@ -8767,9 +8553,9 @@
                         {
                             "rule": "optional",
                             "options": {},
-                            "type": "bytes",
+                            "type": "TezosContractID",
                             "name": "source",
-                            "id": 7
+                            "id": 1
                         },
                         {
                             "rule": "optional",
@@ -8933,142 +8719,6 @@
             "oneofs": {}
         },
         {
-            "name": "WebAuthnListResidentCredentials",
-            "fields": [],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "WebAuthnAddResidentCredential",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "credential_id",
-                    "id": 1
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "WebAuthnRemoveResidentCredential",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "index",
-                    "id": 1
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "WebAuthnCredentials",
-            "fields": [
-                {
-                    "rule": "repeated",
-                    "options": {},
-                    "type": "WebAuthnCredential",
-                    "name": "credentials",
-                    "id": 1
-                }
-            ],
-            "enums": [],
-            "messages": [
-                {
-                    "name": "WebAuthnCredential",
-                    "fields": [
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "uint32",
-                            "name": "index",
-                            "id": 1
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bytes",
-                            "name": "id",
-                            "id": 2
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "string",
-                            "name": "rp_id",
-                            "id": 3
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "string",
-                            "name": "rp_name",
-                            "id": 4
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bytes",
-                            "name": "user_id",
-                            "id": 5
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "string",
-                            "name": "user_name",
-                            "id": 6
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "string",
-                            "name": "user_display_name",
-                            "id": 7
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "uint32",
-                            "name": "creation_time",
-                            "id": 8
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bool",
-                            "name": "hmac_secret",
-                            "id": 9
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bool",
-                            "name": "use_sign_count",
-                            "id": 10
-                        }
-                    ],
-                    "enums": [],
-                    "messages": [],
-                    "options": {},
-                    "oneofs": {}
-                }
-            ],
-            "options": {},
-            "oneofs": {}
-        },
-        {
             "name": "TronGetAddress",
             "fields": [
                 {
@@ -9158,6 +8808,20 @@
                     "type": "uint64",
                     "name": "timestamp",
                     "id": 7
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint64",
+                    "name": "fee_limit",
+                    "id": 8
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "permission_id",
+                    "id": 9
                 }
             ],
             "enums": [],
@@ -10525,24 +10189,6 @@
             "options": {}
         },
         {
-            "name": "BackupType",
-            "values": [
-                {
-                    "name": "Bip39",
-                    "id": 0
-                },
-                {
-                    "name": "Slip39_Basic",
-                    "id": 1
-                },
-                {
-                    "name": "Slip39_Advanced",
-                    "id": 2
-                }
-            ],
-            "options": {}
-        },
-        {
             "name": "MessageType",
             "values": [
                 {
@@ -10672,18 +10318,6 @@
                 {
                     "name": "MessageType_SdProtect",
                     "id": 79
-                },
-                {
-                    "name": "MessageType_GetNextU2FCounter",
-                    "id": 80
-                },
-                {
-                    "name": "MessageType_NextU2FCounter",
-                    "id": 81
-                },
-                {
-                    "name": "MessageType_ChangeWipeCode",
-                    "id": 82
                 },
                 {
                     "name": "MessageType_FirmwareErase",
@@ -10816,10 +10450,6 @@
                 {
                     "name": "MessageType_DebugLinkFlashErase",
                     "id": 113
-                },
-                {
-                    "name": "MessageType_DebugLinkLayout",
-                    "id": 9001
                 },
                 {
                     "name": "MessageType_EthereumGetPublicKey",
@@ -11276,18 +10906,6 @@
                 {
                     "name": "MessageType_WebAuthnListResidentCredentials",
                     "id": 800
-                },
-                {
-                    "name": "MessageType_WebAuthnCredentials",
-                    "id": 801
-                },
-                {
-                    "name": "MessageType_WebAuthnAddResidentCredential",
-                    "id": 802
-                },
-                {
-                    "name": "MessageType_WebAuthnRemoveResidentCredential",
-                    "id": 803
                 },
                 {
                     "name": "MessageType_WebAuthnCredentials",

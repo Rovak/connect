@@ -803,7 +803,6 @@ const proposalDelete = (): SubtestTronSignTransaction => {
 };
 
 const transferTrc20 = (): SubtestTronSignTransaction => {
-
     const data = [
         // method id signalizing `transfer(address _to, uint256 _value)` function
         'a9059cbb',
@@ -835,7 +834,7 @@ const transferTrc20 = (): SubtestTronSignTransaction => {
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
             payload: {
-                signature: '485ea1bb8a233e821f64e2b3a495272fc4491e889ae17b221b18b388d66a43be13986eee5f1c7b67d29ea6113a4fcf13d5684834e7513028250112639f3e153d00',
+                signature: 'e1134004e64abe1be3f149c78d56384a9c9ada26f05c9cf86924a49cda63f9876e3a7c6948df0caddc2aa3763387663786c4099cd7594e1cf276dd50a0b576ae01',
             },
         },
     ];
@@ -848,7 +847,6 @@ const transferTrc20 = (): SubtestTronSignTransaction => {
 };
 
 const approveTrc20 = (): SubtestTronSignTransaction => {
-
     const data = [
         // method id signalizing `transfer(address _to, uint256 _value)` function
         'a9059cbb',
@@ -880,7 +878,7 @@ const approveTrc20 = (): SubtestTronSignTransaction => {
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
             payload: {
-                signature: 'ffc2d8e8f6297194f30d3c4af37bb47e956ab28025d601e472cae3bbfba75ab834d2197f46c9c9a71df65b3388357ba72ee3a45af17a1f48eadc80b75f0d572000',
+                signature: 'f9e2dabeb14f85ca27f3fea8e4ae197d698291148e1d64f44c88f06bad3f3d914bf4366b12fb2064a5fa9014afdece50bfc8852d8affbeea29009b036fe2b88001',
             },
         },
     ];
@@ -913,7 +911,7 @@ const transferTrc20NotInList = (): SubtestTronSignTransaction => {
     const expectedResponses: Array<ExpectedTronSignTransactionResponse> = [
         {
             payload: {
-                signature: 'ffc2d8e8f6297194f30d3c4af37bb47e956ab28025d601e472cae3bbfba75ab834d2197f46c9c9a71df65b3388357ba72ee3a45af17a1f48eadc80b75f0d572000',
+                signature: '485ea1bb8a233e821f64e2b3a495272fc4491e889ae17b221b18b388d66a43be13986eee5f1c7b67d29ea6113a4fcf13d5684834e7513028250112639f3e153d00',
             },
         },
     ];
